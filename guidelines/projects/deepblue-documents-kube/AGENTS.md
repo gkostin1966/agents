@@ -298,31 +298,6 @@ docker run --rm ghcr.io/mlibrary/dspace-containerization/dspace-source:umich \
 
 Every `-` in the DSpace name → `__D__`. Every `.` → `__P__`. Every `_` → literal `_`.
 
-## Email Drafts for Third Parties
-
-- **When the developer asks you to compose an email** to be sent to an external party,
-  write it as a **Markdown (`.md`) file**. Markdown opens natively in JetBrains with
-  preview, is easy to edit, and copies cleanly into any email client as plain text.
-- Save the file under **`emails/<short-descriptive-name>.md`**, e.g.
-  `emails/its-oidc-request.md`, `emails/hits-elements-request.md`.
-- The `emails/` directory is **tracked in git**. Do not add individual draft filenames to
-  `.gitignore`.
-- **Markdown structure for an email draft:**
-  ```
-  **Subject:** …
-
-  **To:** [placeholder]
-  **CC:** [placeholder]
-
-  Hi [Name],
-
-  Body paragraphs here. Use `backticks` for technical values (URLs, IDs, commands).
-  Use **bold** sparingly for emphasis.
-
-  Best,
-  [Your name]
-  ```
-- **Open the file** after creating it so the developer can review it immediately.
 
 ## Commit and PR Summaries
 

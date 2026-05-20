@@ -2,6 +2,17 @@
 
 <!-- Entries are prepended (newest first). -->
 
+## 2026-05-20T17:20:00 — Standardize communication drafts as Markdown in `communications/`
+
+Made base guidance use `communications/*.md` for email/Slack/etc drafts and removed
+project-specific overrides for this section so the shared default applies consistently.
+
+- [x] Update `guidelines/base/AGENTS.md` to define Markdown drafts in `communications/`
+- [x] Remove project overrides for the communication-drafts section so base applies everywhere
+- [x] Regenerate affected merged guideline files and verify output
+- [x] Verify the current state of the project achieves the task goal
+- [x] Verify with the developer that the task is complete
+
 ## 2026-05-20T17:00:00 — Standardize framework utility scripts on `scripts/`
 
 Updated framework guidance and documentation so this repository uses `scripts/`

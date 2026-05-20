@@ -168,25 +168,21 @@ git commit -m "chore: single line message" | cat
 
 ## Email Drafts for Third Parties
 
-- **When the developer asks you to compose an email** to be sent to an external party
-  (e.g., ITS, HITS, a vendor, or any recipient outside the development team), write it
-  as a **Rich Text Format (`.rtf`) file** so the developer can open it in any mail client
-  or word processor, fill in the recipient fields, and send without reformatting.
-- Save the file under **`emails/<short-descriptive-name>.rtf`**, e.g.
-  `emails/its-oidc-request.rtf`, `emails/hits-elements-request.rtf`.
-- The `emails/` directory is **tracked in git**. Files are committed and remain in the
-  repository until the developer explicitly removes them. Do not add individual draft
+- **When the developer asks you to compose an external communication draft** (email,
+  Slack message, Teams post, issue comment, etc.), write it as a **Markdown (`.md`) file**
+  so the developer can edit, review, and copy/paste it into the target channel.
+- Save drafts under **`communications/<channel>-<short-topic>.md`**, for example:
+  - `communications/email-its-oidc-request.md`
+  - `communications/slack-release-status.md`
+- The `communications/` directory is **tracked in git**. Files are committed and remain in
+  the repository until the developer explicitly removes them. Do not add individual draft
   filenames to `.gitignore`.
-- **RTF structure for an email draft:**
-  1. `\b Subject:\b0` line
-  2. `\b To:\b0` and `\b CC:\b0` lines with `[placeholder]` values the developer fills in
-  3. Blank line, then the greeting and body
-  4. Use `\b … \b0` for bold headings, `\f1 … \f0` (monospace/Courier) for technical values
-     (client IDs, URLs, commands), and `- ` prefixed lines for bullet points
-  5. Use `\par` for paragraph breaks — do **not** use `\line`, `\emdash`, `\endash`,
-     `\rquote`, or other Word-specific control words; they prevent macOS TextEdit from
-     opening the file
-  6. A closing with `[Your name]` placeholder
+- **Markdown draft structure:**
+  1. `**Subject:** ...` (for email-style messages; omit for chat-only messages)
+  2. Optional `**To:**` and `**CC:**` placeholders when relevant
+  3. Greeting/body text in plain paragraphs
+  4. Use bullet lists for action items and inline backticks for technical values
+  5. End with a clear sign-off or next-step prompt, depending on channel
 - **Open the file** after creating it so the developer can review it immediately.
 
 ## Markdown Formatting
