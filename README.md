@@ -136,3 +136,7 @@ are `guidelines/base/AGENTS.md` and `guidelines/projects/<name>/AGENTS.md`.
 - The framework does not modify the source projects.
 - Mounted projects are expected under `mounted-projects/` via symlinks.
 - Add or update tasks in `config/projects.json` as project workflows evolve.
+- Agent meta-files for this project (`AGENTS.md`, `AGENT_PROMPT.md`, `AGENT_QUIZ.md`,
+  `AGENT_QUIZ_ANSWERS.md`, `AGENT_TODO.md`, `AGENT_DONE.md`) live at the repository root.
+- Agent files for each mounted project live under `guidelines/projects/<name>/`.
+- `AGENTS_MERGED.md` files are gitignored auto-generated artefacts; regenerate on demand.
