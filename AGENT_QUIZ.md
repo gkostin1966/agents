@@ -114,12 +114,20 @@ Look at the base `## File Access` section: what is the exact condition under whi
 agent may finally read `AGENT_QUIZ_ANSWERS.md`?
 
 **Q27.** You modify `guidelines/base/AGENTS.md` to add a new rule. What is the next step
-you must perform, and what CLI command would you use to check all six projects at once?
+you must perform, and what is the new CLI command to regenerate all six projects at once
+(added in the refactor — no shell loop required)?
 
 **Q28.** Where does the `agentsfw` CLI entry point live (module + function name)?
 
-**Q29.** The `config.py` module defines a `marker_path` property on `ProjectConfig`. What
-does it return, and is it currently used anywhere in `framework.py`?
+**Q29.** The framework has a shared merge module. What is its name, what are its three
+public functions, and which two modules import from it?
 
-**Q30.** Looking at the git log of this repository, what is the most recent commit message?
+**Q30.** The `agentsfw validate` command checks each project for required and recommended
+files. What are the required files and what are the recommended files?
+
+**Q31.** What does `agentsfw prompt generate all` do, and where is the merged output
+file written for each project?
+
+**Q32.** Looking at the git log of this repository, what is the most recent commit message?
+
 

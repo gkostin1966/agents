@@ -201,13 +201,24 @@ registered as a console script in `pyproject.toml`:
 agentsfw = "agents_framework.cli:main"
 ```
 
-**A29.** `marker_path` is a `@property` on `ProjectConfig` in `config.py`; it returns
-`Path(self.relative_path)`. It is **not currently used** anywhere in `framework.py` —
-`framework.py` constructs paths by joining `repo_root / config.projects_root /
-project.relative_path` directly in `resolve_project_path`.
+**A29.** The shared merge module is `src/agents_framework/merge.py`. Its three public
+functions are:
+- `split_sections(text)` — splits a Markdown document into `(header, [(key, chunk), ...])`.
+- `merge_sections(base_text, project_text)` — returns `(base_header, project_header, merged_chunks)`.
+- `read_and_merge(base_path, project_path)` — reads both files and calls `merge_sections`.
 
-**A30.** The most recent commit message begins with `"initial agents framework"` (the
-commit that added the framework files). Verify the exact wording with:
+`guidelines.py` and `prompts.py` both import from `merge.py` via `from .merge import read_and_merge`.
+
+**A30.** `agentsfw validate` checks every registered project's `guidelines/projects/<name>/`
+directory against two lists:
+- **Required**: `AGENTS.md`, `AGENT_PROMPT.md` — project fails validation if either is missing.
+- **Recommended**: `AGENT_QUIZ.md`, `AGENT_QUIZ_ANSWERS.md` — warnings only; project still passes.
+
+**A31.** `agentsfw prompt generate all` merges `guidelines/base/AGENT_PROMPT.md` with each
+project's `guidelines/projects/<name>/AGENT_PROMPT.md` in turn and writes the result to
+`guidelines/projects/<name>/AGENT_PROMPT_MERGED.md` (gitignored) for all six projects.
+
+**A32.** Verify the exact wording with:
 ```shell
 git --no-pager log --oneline -1 | cat
 ```

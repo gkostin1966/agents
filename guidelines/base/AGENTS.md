@@ -41,8 +41,8 @@
   **The universal fix — write to a file, run the file:**
 
   1. Use `insert_edit_into_file` (or `create_file`) to write the code to a file.
-     - Reusable scripts → `dotpy/myscript.py` (follow the `dotpy/` conventions).
-     - Truly one-off scripts → `/tmp/run.py` (no need to commit).
+     - If the project has a `dotpy/` directory: `dotpy/myscript.py` (reusable) or `/tmp/run.py` (one-off).
+     - Otherwise: `/tmp/run.py`.
   2. Run it:
      ```shell
      python3 dotpy/myscript.py | cat
@@ -78,8 +78,8 @@
   **Always use Python instead:**
   ```python
   # ✅ — write a Python file, run it
-  # Step 1: use insert_edit_into_file / create_file to write dotpy/myscript.py
-  # Step 2: python3 dotpy/myscript.py | cat
+  # Step 1: use insert_edit_into_file / create_file to write the script
+  # Step 2: python3 /tmp/run.py | cat  (or dotpy/myscript.py if the project uses dotpy/)
   ```
 
   If the terminal ever appears stuck (commands produce no output, or output looks like
@@ -90,12 +90,19 @@
 
 ## Python Utility Scripts (`dotpy/`)
 
-- **Use existing scripts** in `dotpy/` before writing ad-hoc Python one-liners. See
-  [`dotpy/README.md`](dotpy/README.md) for the full list and usage instructions.
+Some projects maintain a `dotpy/` directory of reusable Python utility scripts
+(table formatters, commit helpers, key validators, etc.).  When working in such
+a project:
+
+- **Check `dotpy/` first** before writing an ad-hoc Python one-liner. See the
+  project's `dotpy/README.md` for the full list and usage instructions.
 - **Save reusable scripts** to `dotpy/` rather than running them once and discarding them:
   - Add a `#!/usr/bin/env python3` shebang and a module-level docstring with a **Usage** section.
   - Accept a file path as the first positional argument and fall back to stdin.
   - Add an entry to `dotpy/README.md` following the existing format.
+
+If the project does **not** have a `dotpy/` directory, write one-off scripts to `/tmp/`
+and use `python3 /tmp/run.py | cat`.
 
 ## Git Commits
 
@@ -108,23 +115,26 @@
   commit locally but must never run `git push` (or any variant that targets `main`) unless
   the developer explicitly instructs it.
 
-### Writing commit messages — use `dotpy/commit.py`, never `git commit -m`
+### Writing commit messages
 
 **Never use `git commit -m "..."` for multi-line messages.** zsh mangles multi-line quoted
 strings and triggers heredoc mode, corrupting the terminal.
 
-**Always use this two-step pattern instead:**
+**If the project has `dotpy/commit.py`**, use it:
 
-1. Use `insert_edit_into_file` (or `create_file`) to write the desired commit message
-   (subject + blank line + body) to `dotpy/commit_msg.txt`.
+1. Write the commit message to `dotpy/commit_msg.txt` (subject + blank line + body).
 2. Run:
    ```shell
    python3 dotpy/commit.py | cat
    ```
 
-`dotpy/commit.py` reads `dotpy/commit_msg.txt`, writes its contents to a temp file, and
-calls `git commit -F`, bypassing all shell quoting entirely. `dotpy/commit_msg.txt` is
-listed in `.gitignore` and is never committed.
+**If the project does not have `dotpy/commit.py`**, write to a temp file instead:
+
+1. Write the commit message to `/tmp/commit-msg.txt`.
+2. Run:
+   ```shell
+   git commit -F /tmp/commit-msg.txt | cat
+   ```
 
 Single-line subject-only commits are the **one exception** where `-m` is safe:
 ```shell
