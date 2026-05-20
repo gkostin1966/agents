@@ -13,9 +13,6 @@ class ProjectConfig:
     relative_path: str
     commands: dict[str, str]
 
-    @property
-    def marker_path(self) -> Path:
-        return Path(self.relative_path)
 
 
 @dataclass(frozen=True)

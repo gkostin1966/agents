@@ -66,44 +66,45 @@ agents/
 Create mounts (symlinks) from the source root:
 
 ```bash
-cd /Users/gkostin/GitHub/gkostin1966/agents
-python3 -m agents_framework.cli init-mounts --source-root /Users/gkostin/GitHub/mlibrary
+PYTHONPATH=src python3 -m agents_framework.cli init-mounts --source-root /Users/gkostin/GitHub/mlibrary
 ```
 
 Scan status and marker detection:
 
 ```bash
-cd /Users/gkostin/GitHub/gkostin1966/agents
-python3 -m agents_framework.cli scan
+PYTHONPATH=src python3 -m agents_framework.cli scan
+```
+
+Validate that all projects have required agent files:
+
+```bash
+PYTHONPATH=src python3 -m agents_framework.cli validate
 ```
 
 Dry-run a task on one or more projects:
 
 ```bash
-cd /Users/gkostin/GitHub/gkostin1966/agents
-python3 -m agents_framework.cli run test --projects dor-react-app,dor-depot --dry-run
+PYTHONPATH=src python3 -m agents_framework.cli run test --projects dor-react-app,dor-depot --dry-run
 ```
 
 Run a configured task for all mounted projects:
 
 ```bash
-cd /Users/gkostin/GitHub/gkostin1966/agents
-python3 -m agents_framework.cli run lint --projects all
+PYTHONPATH=src python3 -m agents_framework.cli run lint --projects all
 ```
 
 ## Install as local CLI
 
 ```bash
-cd /Users/gkostin/GitHub/gkostin1966/agents
 python3 -m pip install -e .
 agentsfw scan
+agentsfw validate
 ```
 
 ## Tests and smoke run
 
 ```bash
-cd /Users/gkostin/GitHub/gkostin1966/agents
-python3 -m unittest discover -s tests -p 'test_*.py'
+PYTHONPATH=src python3 -m unittest discover -s tests -p 'test_*.py'
 zsh scripts/smoke_run.sh
 ```
 
@@ -133,6 +134,9 @@ project roots.
 # Write merged file to guidelines/projects/<name>/AGENTS_MERGED.md
 PYTHONPATH=src python3 -m agents_framework.cli guidelines generate deepblue-documents-kube
 
+# Regenerate all six projects at once
+PYTHONPATH=src python3 -m agents_framework.cli guidelines generate all
+
 # Print merged content to stdout (useful for review or piping)
 PYTHONPATH=src python3 -m agents_framework.cli guidelines generate dor-react-app --print
 ```
@@ -145,6 +149,9 @@ are `guidelines/base/AGENTS.md` and `guidelines/projects/<name>/AGENTS.md`.
 ```bash
 # Write merged file to guidelines/projects/<name>/AGENT_PROMPT_MERGED.md
 PYTHONPATH=src python3 -m agents_framework.cli prompt generate deepblue-documents-kube
+
+# Regenerate all six projects at once
+PYTHONPATH=src python3 -m agents_framework.cli prompt generate all
 
 # Print merged content to stdout (useful for review or piping)
 PYTHONPATH=src python3 -m agents_framework.cli prompt generate dor-react-app --print

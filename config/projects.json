@@ -5,7 +5,6 @@
       "name": "deepblue-documents-kube",
       "stack": "k8s-gitops",
       "relative_path": "deepblue-documents-kube",
-      "guidelines_path": "guidelines/projects/deepblue-documents-kube",
       "commands": {
         "validate": "tk show environments/clusters/deepblue-documents --dangerous-allow-redirect | head -n 30",
         "diff": "tk diff environments/clusters/deepblue-documents"
@@ -15,7 +14,6 @@
       "name": "dor-depot",
       "stack": "java-spring",
       "relative_path": "dor-depot",
-      "guidelines_path": "guidelines/projects/dor-depot",
       "commands": {
         "test": "./gradlew test",
         "dev": "./gradlew bootRun"
@@ -25,7 +23,6 @@
       "name": "dor-react-app",
       "stack": "react-vite",
       "relative_path": "dor-react-app",
-      "guidelines_path": "guidelines/projects/dor-react-app",
       "commands": {
         "test": "npm run test -- --run",
         "lint": "npm run lint",
@@ -36,7 +33,6 @@
       "name": "dspace-containerization",
       "stack": "dspace-docker",
       "relative_path": "dspace-containerization",
-      "guidelines_path": "guidelines/projects/dspace-containerization",
       "commands": {
         "test": "make test",
         "up": "make up"
@@ -46,7 +42,6 @@
       "name": "findingaids-argocd",
       "stack": "k8s-gitops",
       "relative_path": "findingaids-argocd",
-      "guidelines_path": "guidelines/projects/findingaids-argocd",
       "commands": {
         "validate": "tk show environments/clusters/findingaids --dangerous-allow-redirect | head -n 30"
       }
@@ -55,7 +50,6 @@
       "name": "umich-arclight",
       "stack": "rails-arclight",
       "relative_path": "umich-arclight",
-      "guidelines_path": "guidelines/projects/umich-arclight",
       "commands": {
         "test": "docker-compose exec -T app bundle exec rspec",
         "lint": "docker-compose exec -T app bundle exec rubocop"
@@ -63,4 +57,3 @@
     }
   ]
 }
-

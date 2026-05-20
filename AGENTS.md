@@ -161,8 +161,10 @@ open('AGENT_TODO.md', 'w').write(header + ''.join(tasks))
   - `cli.py` — CLI entry point and subcommand wiring
   - `config.py` — `FrameworkConfig` / `ProjectConfig` dataclasses; loads `config/projects.json`
   - `framework.py` — mount detection, `scan_projects`, `init_mounts`, `run_task`
+  - `merge.py` — shared `split_sections`, `merge_sections`, `read_and_merge` used by guidelines and prompts
   - `guidelines.py` — `merge_guidelines`, `generate_merged_file`
   - `prompts.py` — `merge_prompts`, `generate_merged_prompt`
+  - `validate.py` — `validate_projects`, `ProjectValidation`
 - **Tests**: Plain `unittest` in `tests/`. Run with:
   ```shell
   PYTHONPATH=src python3 -m unittest discover -s tests -p 'test_*.py'
