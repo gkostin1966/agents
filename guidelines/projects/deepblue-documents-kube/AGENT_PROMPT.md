@@ -1,49 +1,49 @@
-# New Session Startup Prompt
+# New Session Startup Prompt — deepblue-documents-kube
 
-> Copy and paste the block below into a new agent session, or tell the agent
-> (click the copy button 📋 on the line below):
->
-> ```text
-> Read AGENT_PROMPT.md and follow the instructions there.
-> ```
+> **Base prompt applies first**: `guidelines/base/AGENT_PROMPT.md`
+> Sections in this file with the same `## Heading` override base startup blocks.
 
----
+## Prompt Invocation
 
-## Prompt
+Copy and paste the line below into a new agent session:
 
-You are starting a new session in the `deepblue-documents-kube` repository — a Kubernetes
-GitOps configuration repository for Deep Blue Documents, the University of Michigan Library's
-institutional repository built on DSpace 7+. It uses Tanka (Jsonnet) to generate Kubernetes
-manifests and Argo CD to continuously reconcile them against the cluster.
+```text
+Read AGENT_PROMPT.md and follow the instructions there.
+```
 
-**Before doing anything else, follow these steps in order:**
+## Session Context
 
-1. **Orient yourself** — run the following to confirm your working state before touching
-   any files:
-   ```shell
-   git branch --show-current | cat
-   git --no-pager status | cat
-   git --no-pager log --oneline -5 | cat
-   ```
-   If there are uncommitted changes or you are on an unexpected branch, stop and tell
-   the developer before proceeding.
+You are starting a new session in the `deepblue-documents-kube` repository, a Kubernetes
+GitOps configuration repository for Deep Blue Documents. It uses Tanka (Jsonnet) and Argo CD
+to manage DSpace deployment state.
 
-2. **Read `AGENTS.md`** — it contains the rules and conventions that govern all
-   agent work in this repository. You must follow them for every action you take.
+## Required Developer Input
 
-3. **Read `AGENT_TODO.md`** — it is the active task list. Read the preamble first
-   (resumption steps, supporting files table, and per-step findings), then the task
-   list itself. The first unchecked subtask in the first task is where the previous
-   agent left off. Also read the top few entries of `AGENT_DONE.md` for recent
-   completion context.
+Before reading framework-managed files, ask for the absolute path to the `agents`
+repository root and store it as `AGENTS_ROOT` for this session.
 
-4. **Take the onboarding quiz in `AGENT_QUIZ.md`** — answer every question by
-   looking up the answer in the actual project files (do not rely on memory or
-   training data). When you have answered all 30 questions, stop and tell me:
+## Startup Workflow
 
-   > "I have answered all 30 quiz questions. Please open `AGENT_QUIZ_ANSWERS.md`
-   > to grade my answers, or let me know when I may read it to self-grade."
+After completing the base startup workflow, also read `README.md` in this repository for
+cluster topology and operational context before changing files.
 
-Do not read `AGENT_QUIZ_ANSWERS.md` until I explicitly tell you to.
-Do not start any development work until the quiz is complete and graded.
+## Task Files
 
+Read these files from `AGENTS_ROOT`:
+
+- `guidelines/projects/deepblue-documents-kube/AGENT_TODO.md` (active work)
+- `guidelines/projects/deepblue-documents-kube/AGENT_DONE.md` (recent completions)
+
+Use the first unchecked subtask in the first task in `AGENT_TODO.md` as the resume point.
+
+## Quiz Gate
+
+Take the onboarding quiz from:
+
+- `AGENTS_ROOT/guidelines/projects/deepblue-documents-kube/AGENT_QUIZ.md`
+
+After answering all questions, stop and report exactly:
+
+> "I have answered all quiz questions. Please open `AGENT_QUIZ_ANSWERS.md` to grade my answers, or let me know when I may read it to self-grade."
+
+Do not read `AGENT_QUIZ_ANSWERS.md` until explicitly told to compare.

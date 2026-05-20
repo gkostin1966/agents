@@ -11,3 +11,13 @@
 
 <!-- Add new tasks below this line. Keep the most urgent task first. -->
 
+## Add AGENT_PROMPT base+project merge support
+Create a mergeable base prompt, refactor project prompts to shared heading blocks, add CLI support, tests, and documentation.
+
+- [x] Create `guidelines/base/AGENT_PROMPT.md` with explicit heading blocks suitable for deterministic merges
+- [x] Refactor each `guidelines/projects/<name>/AGENT_PROMPT.md` to use the same heading-block structure and project-specific overrides
+- [x] Implement framework merge logic and CLI support for generating merged prompt files
+- [x] Add/update tests covering prompt merge behavior and CLI integration
+- [x] Update documentation to describe prompt architecture and generation workflow
+- [x] Verify the current state of the project achieves the task goal
+- [ ] Verify with the developer that the task is complete

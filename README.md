@@ -21,6 +21,7 @@ agents/
   guidelines/
     base/
       AGENTS.md                 # Shared rules for all projects
+      AGENT_PROMPT.md           # Shared startup prompt blocks for all projects
     projects/
       deepblue-documents-kube/
         AGENTS.md               # Project-specific overrides/additions
@@ -39,6 +40,7 @@ agents/
         tasks/
       dspace-containerization/
         AGENTS.md
+        AGENT_PROMPT.md / AGENT_QUIZ.md / AGENT_QUIZ_ANSWERS.md
         TODO.md / DONE.md
       findingaids-argocd/
         AGENTS.md
@@ -54,6 +56,7 @@ agents/
     config.py                   # Loads config/projects.json
     framework.py                # Mounting, scanning, task execution
     guidelines.py               # Base + project guidelines merge engine
+    prompts.py                  # Base + project startup prompt merge engine
   tests/
   scripts/smoke_run.sh
 ```
@@ -118,6 +121,12 @@ project roots.
   Any section with the same `## Heading` as the base **replaces** it; new sections are
   appended after the base.
 
+### How startup prompts work
+
+- **`guidelines/base/AGENT_PROMPT.md`** — shared startup workflow blocks.
+- **`guidelines/projects/<name>/AGENT_PROMPT.md`** — project-specific prompt overrides.
+  Prompts use the same heading-based merge semantics as guidelines.
+
 ### Generate a merged AGENTS.md
 
 ```bash
@@ -131,6 +140,20 @@ PYTHONPATH=src python3 -m agents_framework.cli guidelines generate dor-react-app
 `AGENTS_MERGED.md` is gitignored (auto-generated artefact). The two source-of-truth files
 are `guidelines/base/AGENTS.md` and `guidelines/projects/<name>/AGENTS.md`.
 
+### Generate a merged AGENT_PROMPT.md
+
+```bash
+# Write merged file to guidelines/projects/<name>/AGENT_PROMPT_MERGED.md
+PYTHONPATH=src python3 -m agents_framework.cli prompt generate deepblue-documents-kube
+
+# Print merged content to stdout (useful for review or piping)
+PYTHONPATH=src python3 -m agents_framework.cli prompt generate dor-react-app --print
+```
+
+`AGENT_PROMPT_MERGED.md` is gitignored (auto-generated artefact). The two source-of-truth
+files are `guidelines/base/AGENT_PROMPT.md` and
+`guidelines/projects/<name>/AGENT_PROMPT.md`.
+
 ## Notes
 
 - The framework does not modify the source projects.
@@ -139,4 +162,5 @@ are `guidelines/base/AGENTS.md` and `guidelines/projects/<name>/AGENTS.md`.
 - Agent meta-files for this project (`AGENTS.md`, `AGENT_PROMPT.md`, `AGENT_QUIZ.md`,
   `AGENT_QUIZ_ANSWERS.md`, `AGENT_TODO.md`, `AGENT_DONE.md`) live at the repository root.
 - Agent files for each mounted project live under `guidelines/projects/<name>/`.
-- `AGENTS_MERGED.md` files are gitignored auto-generated artefacts; regenerate on demand.
+- `AGENTS_MERGED.md` and `AGENT_PROMPT_MERGED.md` files are gitignored auto-generated
+  artefacts; regenerate on demand.

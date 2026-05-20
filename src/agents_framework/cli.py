@@ -6,6 +6,7 @@ from pathlib import Path
 from .config import FrameworkConfig, load_config
 from .framework import init_mounts, run_task, scan_projects
 from .guidelines import generate_merged_file
+from .prompts import generate_merged_prompt
 
 
 def _repo_root() -> Path:
@@ -86,6 +87,16 @@ def build_parser() -> argparse.ArgumentParser:
     g_gen.add_argument("--output", default=None, help="Custom output file path")
     g_gen.set_defaults(which="guidelines")
 
+    prompt = sub.add_parser("prompt", help="Generate or print merged AGENT_PROMPT.md for a project")
+    p_sub = prompt.add_subparsers(dest="p_command", required=True)
+
+    p_gen = p_sub.add_parser("generate", help="Merge base + project prompts into AGENT_PROMPT_MERGED.md")
+    p_gen.add_argument("project", help="Project name (must match a key in config/projects.json)")
+    p_gen.add_argument("--print", dest="print_only", action="store_true",
+                       help="Print merged content to stdout instead of writing a file")
+    p_gen.add_argument("--output", default=None, help="Custom output file path")
+    p_gen.set_defaults(which="prompt")
+
     return parser
 
 
@@ -112,6 +123,16 @@ def main() -> int:
             print(f"Error: {exc}")
             return 1
         return 0
+    if args.which == "prompt":
+        output_path = Path(args.output) if args.output else None
+        try:
+            result = generate_merged_prompt(root, args.project, output_path, print_only=args.print_only)
+            if result:
+                print(f"Written: {result}")
+        except FileNotFoundError as exc:
+            print(f"Error: {exc}")
+            return 1
+        return 0
 
     parser.print_help()
     return 2
@@ -119,4 +140,3 @@ def main() -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main())
-

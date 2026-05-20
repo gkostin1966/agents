@@ -15,7 +15,7 @@ The `agents` project serves two roles:
 1. **Guidelines repository** — canonical home for all agent rules (`AGENTS.md`), onboarding
    quizzes, session prompts, and task tracking for the six mounted projects.
 2. **Operational framework** — Python CLI (`agentsfw`) for mounting projects, scanning
-   status, running tasks, and generating merged agent guidelines.
+   status, running tasks, and generating merged agent guidelines and startup prompts.
 
 **Every file in this repository falls into one of these categories:**
 
@@ -23,7 +23,9 @@ The `agents` project serves two roles:
 |-----------------------|------------------------------------------------|---------------------------------------------|
 | Meta-agent files      | `AGENTS.md`, `AGENT_*.md` (project root)       | Rules for working on the agents project     |
 | Base guidelines       | `guidelines/base/AGENTS.md`                    | Shared rules for all mounted projects       |
+| Base startup prompt   | `guidelines/base/AGENT_PROMPT.md`              | Shared startup blocks for all projects      |
 | Project guidelines    | `guidelines/projects/<name>/AGENTS.md`         | Per-project overrides and additions         |
+| Project startup prompt| `guidelines/projects/<name>/AGENT_PROMPT.md`   | Per-project startup prompt overrides        |
 | Project task tracking | `guidelines/projects/<name>/AGENT_TODO.md` etc | Task/session state for each mounted project |
 | Framework source      | `src/agents_framework/`                        | Python CLI and merge engine                 |
 | Tests                 | `tests/`                                       | Framework unit tests                        |
@@ -47,7 +49,7 @@ The `agents` project serves two roles:
   have written out answers to all questions **and** the developer has explicitly told you
   to compare.
 
-## Guidelines Architecture — Know Before You Edit
+## Guidelines and Prompt Architecture — Know Before You Edit
 
 ### Three files, three roles
 
@@ -67,6 +69,20 @@ When `agentsfw guidelines generate <project>` is run, the base and project files
 
 The merged output is written to
 `guidelines/projects/<name>/AGENTS_MERGED.md` (gitignored — never commit it).
+
+### Prompt files and merge semantics
+
+Startup prompts use the same section-merge model with explicit heading blocks:
+
+- Base file: `guidelines/base/AGENT_PROMPT.md`
+- Project file: `guidelines/projects/<name>/AGENT_PROMPT.md`
+- Generated file: `guidelines/projects/<name>/AGENT_PROMPT_MERGED.md` (gitignored)
+
+When `agentsfw prompt generate <project>` is run:
+- A section in the project prompt whose `## Heading` matches a base heading replaces the
+  base section entirely.
+- Sections present only in the project prompt are appended after merged base sections.
+- Sections present only in the base prompt are kept as-is.
 
 ### Which file to edit
 
@@ -146,6 +162,7 @@ open('AGENT_TODO.md', 'w').write(header + ''.join(tasks))
   - `config.py` — `FrameworkConfig` / `ProjectConfig` dataclasses; loads `config/projects.json`
   - `framework.py` — mount detection, `scan_projects`, `init_mounts`, `run_task`
   - `guidelines.py` — `merge_guidelines`, `generate_merged_file`
+  - `prompts.py` — `merge_prompts`, `generate_merged_prompt`
 - **Tests**: Plain `unittest` in `tests/`. Run with:
   ```shell
   PYTHONPATH=src python3 -m unittest discover -s tests -p 'test_*.py'
@@ -184,6 +201,28 @@ open('AGENT_TODO.md', 'w').write(header + ''.join(tasks))
    ```
 3. Review `guidelines/projects/<name>/AGENTS_MERGED.md` to confirm the override is correct.
 4. Commit only `guidelines/projects/<name>/AGENTS.md`.
+
+### Editing base startup prompts
+
+1. Edit `guidelines/base/AGENT_PROMPT.md` using explicit `## Heading` blocks.
+2. Regenerate all project merged prompts:
+   ```shell
+   for p in deepblue-documents-kube dor-depot dor-react-app dspace-containerization findingaids-argocd umich-arclight; do
+     PYTHONPATH=src python3 -m agents_framework.cli prompt generate $p
+   done
+   ```
+3. Review relevant `AGENT_PROMPT_MERGED.md` output files.
+4. Commit only source files (`guidelines/base/AGENT_PROMPT.md`). Merged files are gitignored.
+
+### Editing project-specific startup prompts
+
+1. Edit `guidelines/projects/<name>/AGENT_PROMPT.md` with the standard heading blocks.
+2. Regenerate that project's merged prompt:
+   ```shell
+   PYTHONPATH=src python3 -m agents_framework.cli prompt generate <name>
+   ```
+3. Review `guidelines/projects/<name>/AGENT_PROMPT_MERGED.md`.
+4. Commit only `guidelines/projects/<name>/AGENT_PROMPT.md`.
 
 ### Adding a new mounted project
 

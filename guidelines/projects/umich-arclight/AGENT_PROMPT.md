@@ -1,38 +1,49 @@
-# New Session Startup Prompt
+# New Session Startup Prompt — umich-arclight
 
-> Copy and paste the block below into a new agent session, or tell the agent:
+> **Base prompt applies first**: `guidelines/base/AGENT_PROMPT.md`
+> Sections in this file with the same `## Heading` override base startup blocks.
 
-```
+## Prompt Invocation
+
+Copy and paste the line below into a new agent session:
+
+```text
 Read AGENT_PROMPT.md and follow the instructions there.
 ```
 
----
+## Session Context
 
-## Prompt
+You are starting a new session in the `umich-arclight` repository, a Ruby on Rails
+application for archival finding-aid discovery built on ArcLight and Blacklight.
 
-You are starting a new session in the `umich-arclight` repository — a Ruby on Rails
-application that provides discovery and access for archival finding aids at the University
-of Michigan Libraries. It is built on the ArcLight and Blacklight Rails engines and runs
-at [https://findingaids.lib.umich.edu](https://findingaids.lib.umich.edu/).
+## Required Developer Input
 
-**Before doing anything else, follow these steps in order:**
+Before reading framework-managed files, ask for the absolute path to the `agents`
+repository root and store it as `AGENTS_ROOT` for this session.
 
-1. **Read `AGENTS.md`** — it contains the rules and conventions that govern all
-   agent work in this repository. You must follow them for every action you take.
+## Startup Workflow
 
-2. **Read `tasks/README.md`** — it is the task index showing what is active and
-   what is archived. Then read `tasks/ARC-nnn/STATUS.md` for the active ticket
-   (infer the ticket key from the current branch name, e.g. `ARC-123/my-feature` →
-   `tasks/ARC-123/STATUS.md`). This tells you exactly where the previous agent
-   left off.
+After completing the base startup workflow, infer the active Jira ticket from the branch
+name (for example `ARC-123/my-feature`) and use it to locate ticket files under `tasks/`.
 
-3. **Take the onboarding quiz in `AGENT_QUIZ.md`** — answer every question by
-   looking up the answer in the actual project files (do not rely on memory or
-   training data). When you have answered all questions, stop and tell me:
+## Task Files
 
-   > "I have answered all quiz questions. Please open `AGENT_QUIZ_ANSWERS.md`
-   > to grade my answers, or let me know when I may read it to self-grade."
+Read these files from `AGENTS_ROOT`:
 
-Do not read `AGENT_QUIZ_ANSWERS.md` until I explicitly tell you to.
-Do not start any development work until the quiz is complete and graded.
+- `guidelines/projects/umich-arclight/tasks/README.md` (task index)
+- `guidelines/projects/umich-arclight/tasks/ARC-nnn/STATUS.md` (active ticket state)
+- `guidelines/projects/umich-arclight/tasks/ARC-nnn/TODO.md` (active subtasks)
 
+Replace `ARC-nnn` using the ticket from the current branch.
+
+## Quiz Gate
+
+Take the onboarding quiz from:
+
+- `AGENTS_ROOT/guidelines/projects/umich-arclight/AGENT_QUIZ.md`
+
+After answering all questions, stop and report exactly:
+
+> "I have answered all quiz questions. Please open `AGENT_QUIZ_ANSWERS.md` to grade my answers, or let me know when I may read it to self-grade."
+
+Do not read `AGENT_QUIZ_ANSWERS.md` until explicitly told to compare.

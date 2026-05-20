@@ -1,36 +1,49 @@
-# New Session Startup Prompt
+# New Session Startup Prompt — dor-depot
 
-> Copy and paste the block below into a new agent session, or tell the agent:
+> **Base prompt applies first**: `guidelines/base/AGENT_PROMPT.md`
+> Sections in this file with the same `## Heading` override base startup blocks.
 
-```
+## Prompt Invocation
+
+Copy and paste the line below into a new agent session:
+
+```text
 Read AGENT_PROMPT.md and follow the instructions there.
 ```
 
----
+## Session Context
 
-## Prompt
+You are starting a new session in the `dor-depot` repository, a Java Spring Boot
+application for digital object preservation with Spring Modulith and OCFL.
 
-You are starting a new session in the `dor-depot` repository — a Java application
-built with Spring Boot, Spring Modulith, and OCFL for digital object preservation.
+## Required Developer Input
 
-**Before doing anything else, follow these steps in order:**
+Before reading framework-managed files, ask for the absolute path to the `agents`
+repository root and store it as `AGENTS_ROOT` for this session.
 
-1. **Read `AGENTS.md`** — it contains the rules and conventions that govern all
-   agent work in this repository. You must follow them for every action you take.
+## Startup Workflow
 
-2. **Read `tasks/README.md`** — it is the task index showing what is active and
-   what is archived. Then read `tasks/DOR-nnn/STATUS.md` for the active ticket
-   (infer the ticket key from the current branch name, e.g. `DOR-142/foo` →
-   `tasks/DOR-142/STATUS.md`). This tells you exactly where the previous agent
-   left off.
+After completing the base startup workflow, infer the active Jira ticket from the branch
+name (for example `DOR-142/foo`) and use it to locate ticket files under `tasks/`.
 
-3. **Take the onboarding quiz in `AGENT_QUIZ.md`** — answer every question by
-   looking up the answer in the actual project files (do not rely on memory or
-   training data). When you have answered all 32 questions, stop and tell me:
+## Task Files
 
-   > "I have answered all 32 quiz questions. Please open `AGENT_QUIZ_ANSWERS.md`
-   > to grade my answers, or let me know when I may read it to self-grade."
+Read these files from `AGENTS_ROOT`:
 
-Do not read `AGENT_QUIZ_ANSWERS.md` until I explicitly tell you to.
-Do not start any development work until the quiz is complete and graded.
+- `guidelines/projects/dor-depot/tasks/README.md` (task index)
+- `guidelines/projects/dor-depot/tasks/DOR-nnn/STATUS.md` (active ticket state)
+- `guidelines/projects/dor-depot/tasks/DOR-nnn/TODO.md` (active subtasks)
 
+Replace `DOR-nnn` using the ticket from the current branch.
+
+## Quiz Gate
+
+Take the onboarding quiz from:
+
+- `AGENTS_ROOT/guidelines/projects/dor-depot/AGENT_QUIZ.md`
+
+After answering all questions, stop and report exactly:
+
+> "I have answered all quiz questions. Please open `AGENT_QUIZ_ANSWERS.md` to grade my answers, or let me know when I may read it to self-grade."
+
+Do not read `AGENT_QUIZ_ANSWERS.md` until explicitly told to compare.

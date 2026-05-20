@@ -6,4 +6,4 @@ __pycache__/
 .venv/
 mounted-projects/
 guidelines/projects/**/AGENTS_MERGED.md
-
+guidelines/projects/**/AGENT_PROMPT_MERGED.md

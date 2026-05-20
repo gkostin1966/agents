@@ -1,34 +1,48 @@
-# New Session Startup Prompt
+# New Session Startup Prompt — findingaids-argocd
 
-> Copy and paste the block below into a new agent session, or tell the agent:
-> **"Read AGENT_PROMPT.md and follow the instructions there."**
+> **Base prompt applies first**: `guidelines/base/AGENT_PROMPT.md`
+> Sections in this file with the same `## Heading` override base startup blocks.
 
----
+## Prompt Invocation
 
-## Prompt
+Copy and paste the line below into a new agent session:
 
-You are starting a new session in the `findingaids-argocd` repository — the
-Kubernetes/ArgoCD configuration for **Finding Aids** (`findingaids.lib.umich.edu`),
-a Rails application powered by the ArcLight engine, managed with Tanka (Jsonnet).
+```text
+Read AGENT_PROMPT.md and follow the instructions there.
+```
 
-**Before doing anything else, follow these steps in order:**
+## Session Context
 
-1. **Read `AGENTS.md`** — it contains the rules and conventions that govern all
-   agent work in this repository. You must follow them for every action you take.
+You are starting a new session in the `findingaids-argocd` repository, the Kubernetes
+and Argo CD configuration repository for the Finding Aids platform.
 
-2. **Read `README.md`** — it gives an overview of the project architecture,
-   cluster topology, and repository structure.
+## Required Developer Input
 
-3. **Read `AGENT_TODO.md`** — it shows exactly what work is in progress and what is
-   blocked or awaiting input.
+Before reading framework-managed files, ask for the absolute path to the `agents`
+repository root and store it as `AGENTS_ROOT` for this session.
 
-4. **Take the onboarding quiz in `AGENT_QUIZ.md`** — answer every question by
-   looking up the answer in the actual project files (do not rely on memory or
-   training data). When you have answered all 23 questions, stop and tell me:
+## Startup Workflow
 
-   > "I have answered all 23 quiz questions. Please open `AGENT_QUIZ_ANSWERS.md`
-   > to grade my answers, or let me know when I may read it to self-grade."
+After completing the base startup workflow, read the local `README.md` for architecture,
+cluster topology, and repository structure.
 
-Do not read `AGENT_QUIZ_ANSWERS.md` until I explicitly tell you to.
-Do not start any development work until the quiz is complete and graded.
+## Task Files
 
+Read these files from `AGENTS_ROOT`:
+
+- `guidelines/projects/findingaids-argocd/AGENT_TODO.md` (active work)
+- `guidelines/projects/findingaids-argocd/AGENT_DONE.md` (recent completions)
+
+Use the first unchecked subtask in the first task in `AGENT_TODO.md` as the resume point.
+
+## Quiz Gate
+
+Take the onboarding quiz from:
+
+- `AGENTS_ROOT/guidelines/projects/findingaids-argocd/AGENT_QUIZ.md`
+
+After answering all questions, stop and report exactly:
+
+> "I have answered all quiz questions. Please open `AGENT_QUIZ_ANSWERS.md` to grade my answers, or let me know when I may read it to self-grade."
+
+Do not read `AGENT_QUIZ_ANSWERS.md` until explicitly told to compare.
