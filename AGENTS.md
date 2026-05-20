@@ -29,6 +29,7 @@ The `agents` project serves two roles:
 | Project task tracking | `guidelines/projects/<name>/AGENT_TODO.md` etc | Task/session state for each mounted project |
 | Framework source      | `src/agents_framework/`                        | Python CLI and merge engine                 |
 | Tests                 | `tests/`                                       | Framework unit tests                        |
+| Utility scripts       | `scripts/`                                     | Reusable framework helper scripts           |
 | Config                | `config/projects.json`                         | Project catalog and metadata                |
 | Mount root            | `mounted-projects/`                            | Symlinks to source repos (gitignored)       |
 
@@ -145,8 +146,10 @@ open('AGENT_TODO.md', 'w').write(header + ''.join(tasks))
 
   **The universal fix — write to a file, run the file:**
 
-  1. Use `create_file` or `insert_edit_into_file` to write the code to a temp file.
-  2. Run: `python3 /tmp/run.py | cat`
+  1. Use `create_file` or `insert_edit_into_file` to write the code to a file.
+     - Reusable for this repository → `scripts/<name>.py`
+     - Truly one-off → `/tmp/run.py`
+  2. Run it with `python3 <path> | cat`
 
 - **Never use shell heredocs (`<< 'MARKER'`).** Write Python files instead.
 
@@ -154,6 +157,16 @@ open('AGENT_TODO.md', 'w').write(header + ''.join(tasks))
   ```shell
   PYTHONPATH=src python3 -m agents_framework.cli <subcommand>
   ```
+
+## Utility Scripts (`scripts/`)
+
+- **Canonical utility directory for this repository**: `scripts/`.
+  - Put reusable helper scripts in `scripts/` (`.py` or `.sh`).
+  - Keep one-off helpers in `/tmp/`.
+- **Do not create agent tooling under `mounted-projects/`**. Mounted projects must remain
+  unaware of coding agents; all agent support tooling lives in this repository.
+- Add or update `scripts/README.md` when introducing a reusable script so future agents can
+  discover it quickly.
 
 ## Python Framework Conventions
 

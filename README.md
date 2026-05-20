@@ -58,7 +58,9 @@ agents/
     guidelines.py               # Base + project guidelines merge engine
     prompts.py                  # Base + project startup prompt merge engine
   tests/
-  scripts/smoke_run.sh
+  scripts/
+    README.md                  # Utility scripts index and conventions
+    smoke_run.sh               # Non-interactive smoke run
 ```
 
 ## Quick start
@@ -165,6 +167,8 @@ files are `guidelines/base/AGENT_PROMPT.md` and
 
 - The framework does not modify the source projects.
 - Mounted projects are expected under `mounted-projects/` via symlinks.
+- Reusable framework helper scripts live in `scripts/`; mounted projects remain
+  agent-unaware.
 - Add or update tasks in `config/projects.json` as project workflows evolve.
 - Agent meta-files for this project (`AGENTS.md`, `AGENT_PROMPT.md`, `AGENT_QUIZ.md`,
   `AGENT_QUIZ_ANSWERS.md`, `AGENT_TODO.md`, `AGENT_DONE.md`) live at the repository root.

@@ -2,6 +2,18 @@
 
 <!-- Entries are prepended (newest first). -->
 
+## 2026-05-20T17:00:00 — Standardize framework utility scripts on `scripts/`
+
+Updated framework guidance and documentation so this repository uses `scripts/`
+as the canonical utility-script location while keeping mounted projects agent-unaware.
+
+- [x] Update root/framework guidance to explicitly use `scripts/` for this repository
+- [x] Remove or reword remaining repo-specific `dotpy/` references where they should point to `scripts/`
+- [x] Add `scripts/README.md` documenting script conventions and current utilities
+- [x] Verify commands and tests still pass after documentation/tooling updates
+- [x] Verify the current state of the project achieves the task goal
+- [x] Verify with the developer that the task is complete
+
 ## 2026-05-20T16:45:00 — Refactor and feature additions from review
 
 Ten-item improvement plan completed: DRY merge refactor, dead code removal, CLI feature additions,

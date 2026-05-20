@@ -41,10 +41,13 @@
   **The universal fix — write to a file, run the file:**
 
   1. Use `insert_edit_into_file` (or `create_file`) to write the code to a file.
-     - If the project has a `dotpy/` directory: `dotpy/myscript.py` (reusable) or `/tmp/run.py` (one-off).
-     - Otherwise: `/tmp/run.py`.
+     - If the project has a utility scripts directory (for example `scripts/` or `dotpy/`),
+       save reusable helpers there.
+     - Otherwise use `/tmp/run.py` for one-off helpers.
   2. Run it:
      ```shell
+     python3 scripts/myscript.py | cat
+     # or (project-specific utility dir)
      python3 dotpy/myscript.py | cat
      # or
      python3 /tmp/run.py | cat
@@ -79,7 +82,7 @@
   ```python
   # ✅ — write a Python file, run it
   # Step 1: use insert_edit_into_file / create_file to write the script
-  # Step 2: python3 /tmp/run.py | cat  (or dotpy/myscript.py if the project uses dotpy/)
+  # Step 2: python3 /tmp/run.py | cat  (or the project's utility-script path)
   ```
 
   If the terminal ever appears stuck (commands produce no output, or output looks like
@@ -88,20 +91,20 @@
   2. Run that marker as a standalone command to close the heredoc.
   3. Verify the shell is back to a normal prompt before continuing.
 
-## Python Utility Scripts (`dotpy/`)
+## Python Utility Scripts
 
-Some projects maintain a `dotpy/` directory of reusable Python utility scripts
-(table formatters, commit helpers, key validators, etc.).  When working in such
-a project:
+Some projects maintain a dedicated utility-scripts directory (for example `scripts/`
+or `dotpy/`) for reusable Python automation (table formatters, commit helpers,
+key validators, etc.). When working in such a project:
 
-- **Check `dotpy/` first** before writing an ad-hoc Python one-liner. See the
-  project's `dotpy/README.md` for the full list and usage instructions.
-- **Save reusable scripts** to `dotpy/` rather than running them once and discarding them:
+- **Check the project's utility-scripts directory first** before writing an ad-hoc
+  Python one-liner (for example `scripts/README.md` or `dotpy/README.md`).
+- **Save reusable scripts** to that directory rather than running them once and discarding them:
   - Add a `#!/usr/bin/env python3` shebang and a module-level docstring with a **Usage** section.
   - Accept a file path as the first positional argument and fall back to stdin.
-  - Add an entry to `dotpy/README.md` following the existing format.
+  - Add an entry to the directory README following the existing format.
 
-If the project does **not** have a `dotpy/` directory, write one-off scripts to `/tmp/`
+If the project does **not** have a utility-scripts directory, write one-off scripts to `/tmp/`
 and use `python3 /tmp/run.py | cat`.
 
 ## Git Commits
@@ -120,15 +123,19 @@ and use `python3 /tmp/run.py | cat`.
 **Never use `git commit -m "..."` for multi-line messages.** zsh mangles multi-line quoted
 strings and triggers heredoc mode, corrupting the terminal.
 
-**If the project has `dotpy/commit.py`**, use it:
+**If the project has a commit helper script** (for example `scripts/commit.py` or
+`dotpy/commit.py`), use it:
 
-1. Write the commit message to `dotpy/commit_msg.txt` (subject + blank line + body).
+1. Write the commit message to the helper's input file (for example
+   `scripts/commit_msg.txt` or `dotpy/commit_msg.txt`).
 2. Run:
    ```shell
+   python3 scripts/commit.py | cat
+   # or
    python3 dotpy/commit.py | cat
    ```
 
-**If the project does not have `dotpy/commit.py`**, write to a temp file instead:
+**If the project does not have a commit helper script**, write to a temp file instead:
 
 1. Write the commit message to `/tmp/commit-msg.txt`.
 2. Run:
