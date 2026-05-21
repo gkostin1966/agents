@@ -79,10 +79,11 @@ needed to ensure output is captured without a pager.
 
 ---
 
-**Q9.** Name the Spring Modulith modules in this project (by their Java package names
-relative to `edu.umich.lib.dor.depot`).
+**Q9.** According to `AGENTS.md` module-boundary guidance, which packages under
+`edu.umich.lib.dor.depot` should be treated as the application modules for cross-module
+event communication, and which listed package is support/infrastructure only?
 
-*(Hint: `src/main/java/edu/umich/lib/dor/depot/` — identify the sub-packages that represent Modulith modules, excluding support packages such as `config` if they are not modules)*
+*(Hint: `AGENTS.md` § Java / Gradle Conventions — Module boundaries)*
 
 ---
 
@@ -120,9 +121,9 @@ concrete example of a Curio in the repository?
 
 ---
 
-**Q14.** `AdminController` exposes four `POST` endpoints under `/admin`.
-Name all four paths, the query parameter(s) each accepts, and the Spring
-Modulith event each one publishes.
+**Q14.** `AdminController` currently exposes three `POST` endpoints under `/admin`
+(plus `GET /admin/test`). Name all three `POST` paths, the query parameter(s)
+each accepts, and the Spring Modulith event each one publishes.
 
 *(Hint: `src/main/java/edu/umich/lib/dor/depot/console/AdminController.java`)*
 
