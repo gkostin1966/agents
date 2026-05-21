@@ -31,6 +31,10 @@ def _run_generate(
     print_only: bool,
     generate_fn: Callable,
 ) -> int:
+    if project == ALL_PROJECTS and output:
+        print("Error: --output cannot be used when project is 'all'.")
+        return 2
+
     names = [p.name for p in cfg.projects] if project == ALL_PROJECTS else [project]
     output_path = Path(output) if output else None
     exit_code = 0

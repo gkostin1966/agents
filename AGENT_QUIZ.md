@@ -102,8 +102,8 @@ is the directory path where a new ARC-050 ticket's files should be created?
 ## Section 6 — Operational Knowledge
 
 **Q24.** You want to add a seventh mounted project called `new-project` with stack
-`ruby-rails`. List every file or directory you must create or modify inside the `agents`
-repository to fully register it.
+`ruby-rails`. Using the **current** `config/projects.json` schema, list every file or
+directory you must create or modify inside the `agents` repository to fully register it.
 
 **Q25.** An agent working on `deepblue-documents-kube` tries to run `tk apply
 environments/deepblue-documents/production` without asking the developer first. According

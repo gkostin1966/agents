@@ -166,7 +166,7 @@ at `guidelines/projects/umich-arclight/tasks/ARC-050/`.
 create or modify:
 
 1. **`config/projects.json`** — add a new JSON entry with `name`, `stack`,
-   `relative_path`, `guidelines_path`, and `commands`.
+   `relative_path`, and `commands`.
 2. **`guidelines/projects/new-project/AGENTS.md`** — project-specific guidelines.
 3. **`guidelines/projects/new-project/AGENT_PROMPT.md`** — session startup prompt.
 4. **`guidelines/projects/new-project/AGENT_QUIZ.md`** — onboarding quiz.

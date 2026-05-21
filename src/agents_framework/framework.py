@@ -61,8 +61,9 @@ def init_mounts(repo_root: Path, config: FrameworkConfig, source_root: Path) -> 
 
     results: list[str] = []
     for project in config.projects:
-        src = source_root / project.name
+        src = source_root / project.relative_path
         dst = target_root / project.relative_path
+        dst.parent.mkdir(parents=True, exist_ok=True)
         if dst.exists() or dst.is_symlink():
             results.append(f"skip {project.name}: already exists")
             continue

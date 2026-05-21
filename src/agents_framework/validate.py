@@ -49,7 +49,7 @@ def validate_projects(
     results: list[ProjectValidation] = []
 
     for project in config.projects:
-        if project_names and project.name not in project_names:
+        if project_names is not None and project.name not in project_names:
             continue
 
         project_dir = repo_root / "guidelines" / "projects" / project.name
