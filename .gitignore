@@ -1,0 +1,11 @@
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache/
+.venv/
+.idea*/
+mounted-projects/
+pr-summary.md
+guidelines/projects/**/AGENTS_MERGED.md
+guidelines/projects/**/AGENT_PROMPT_MERGED.md
