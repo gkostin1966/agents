@@ -12,7 +12,7 @@ SRC = ROOT / "src"
 if str(SRC) not in sys.path:
     sys.path.insert(0, str(SRC))
 
-from agents_framework.cli import ALL_PROJECTS, _run_generate, build_parser
+from agents_framework.cli import ALL_PROJECTS, _resolve_repo_root, _run_generate, build_parser
 from agents_framework.config import FrameworkConfig, ProjectConfig, load_config
 from agents_framework.framework import init_mounts, run_task, scan_projects
 from agents_framework.guidelines import generate_merged_file
@@ -167,6 +167,8 @@ class GenerateMergedFileWriteTests(unittest.TestCase):
             self.assertIn("Base rule.", content)
             self.assertIn("Project only.", content)
             self.assertIn("auto-generated", content)
+            self.assertIn("guidelines/projects/demo/AGENTS.md", content)
+            self.assertNotIn(str(root), content)
 
     def test_writes_merged_prompt_to_disk(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
@@ -189,6 +191,8 @@ class GenerateMergedFileWriteTests(unittest.TestCase):
             content = result.read_text(encoding="utf-8")
             self.assertIn("Base workflow.", content)
             self.assertIn("Demo tasks.", content)
+            self.assertIn("guidelines/projects/demo/AGENT_PROMPT.md", content)
+            self.assertNotIn(str(root), content)
 
 
 class ValidateTests(unittest.TestCase):
@@ -320,6 +324,29 @@ class GenerateCliSafetyTests(unittest.TestCase):
         self.assertEqual(code, 0)
         self.assertEqual(len(calls), 1)
         self.assertEqual(calls[0][0], "one")
+
+
+class RepoRootResolutionTests(unittest.TestCase):
+    def test_parser_accepts_repo_root_option(self) -> None:
+        parser = build_parser()
+        args = parser.parse_args(["--repo-root", "/tmp/demo", "scan"])
+        self.assertEqual(args.repo_root, "/tmp/demo")
+        self.assertEqual(args.which, "scan")
+
+    def test_resolve_repo_root_uses_cwd_by_default(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            cwd = Path.cwd()
+            try:
+                os.chdir(tmp)
+                resolved = _resolve_repo_root(None)
+                self.assertEqual(resolved, Path(tmp).resolve())
+            finally:
+                os.chdir(cwd)
+
+    def test_resolve_repo_root_uses_explicit_path(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            resolved = _resolve_repo_root(tmp)
+            self.assertEqual(resolved, Path(tmp).resolve())
 
 
 if __name__ == "__main__":

@@ -8,6 +8,18 @@ import re
 from .merge import read_and_merge
 
 
+def _stable_project_ref(project_path: Path) -> str:
+    """Return a deterministic, non-absolute project reference path for headers."""
+    parts = project_path.parts
+    try:
+        idx = parts.index("guidelines")
+        if idx + 1 < len(parts) and parts[idx + 1] == "projects":
+            return Path(*parts[idx:]).as_posix()
+    except ValueError:
+        pass
+    return project_path.name
+
+
 def merge_guidelines(base_path: Path, project_path: Path) -> str:
     """Return the merged AGENTS.md text for *project_path* on top of *base_path*."""
     _base_header, project_header, merged_chunks = read_and_merge(base_path, project_path)
@@ -22,11 +34,13 @@ def merge_guidelines(base_path: Path, project_path: Path) -> str:
     if not clean_title.endswith("— Merged Agent Guidelines"):
         clean_title = clean_title + " — Merged Agent Guidelines"
 
+    project_ref = _stable_project_ref(project_path)
+
     provenance = (
         f"{clean_title}\n\n"
         "> **This file is auto-generated.** Do not edit it directly.\n"
         "> Edit `guidelines/base/AGENTS.md` (shared rules) or\n"
-        f"> `{project_path}` (project overrides), then regenerate.\n\n"
+        f"> `{project_ref}` (project overrides), then regenerate.\n\n"
     )
 
     return provenance + "".join(merged_chunks)

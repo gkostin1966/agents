@@ -8,6 +8,18 @@ from typing import Optional
 from .merge import read_and_merge
 
 
+def _stable_project_ref(project_path: Path) -> str:
+    """Return a deterministic, non-absolute project reference path for headers."""
+    parts = project_path.parts
+    try:
+        idx = parts.index("guidelines")
+        if idx + 1 < len(parts) and parts[idx + 1] == "projects":
+            return Path(*parts[idx:]).as_posix()
+    except ValueError:
+        pass
+    return project_path.name
+
+
 def merge_prompts(base_path: Path, project_path: Path) -> str:
     """Return merged startup prompt text for *project_path* on top of *base_path*."""
     _base_header, project_header, merged_chunks = read_and_merge(base_path, project_path)
@@ -18,11 +30,13 @@ def merge_prompts(base_path: Path, project_path: Path) -> str:
     title_match = re.search(r"^# .+$", header, flags=re.MULTILINE)
     title = title_match.group(0) if title_match else "# New Session Startup Prompt"
 
+    project_ref = _stable_project_ref(project_path)
+
     provenance = (
         f"{title}\n\n"
         "> **This file is auto-generated.** Do not edit it directly.\n"
         "> Edit `guidelines/base/AGENT_PROMPT.md` (shared startup blocks) or\n"
-        f"> `{project_path}` (project prompt overrides), then regenerate.\n\n"
+        f"> `{project_ref}` (project prompt overrides), then regenerate.\n\n"
     )
 
     return provenance + "".join(merged_chunks)

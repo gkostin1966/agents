@@ -11,6 +11,25 @@
 
 <!-- Add new tasks below this line. Keep the most urgent task first. -->
 
+## Make merged provenance paths repo-relative
+Avoid absolute-path leakage and non-determinism in merged guideline/prompt headers.
+
+- [x] Use stable repo-relative project path text in merged provenance headers
+- [x] Add tests that fail if absolute project paths appear in merged output
+- [x] Verify tests pass
+- [x] Verify the current state of the project achieves the task goal
+- [ ] Verify with the developer that the task is complete
+
+## Make CLI repo-root resolution install-safe
+Ensure `agentsfw` does not rely on `__file__` paths that break in non-editable installs.
+
+- [x] Resolve repo root from `--repo-root` or current working directory
+- [x] Add clear error when resolved root does not contain `config/projects.json`
+- [x] Add tests for repo-root resolution behavior
+- [x] Verify tests pass
+- [x] Verify the current state of the project achieves the task goal
+- [ ] Verify with the developer that the task is complete
+
 ## Improve smoke script shell portability
 Switch `scripts/smoke_run.sh` to a portable shebang and align docs.
 

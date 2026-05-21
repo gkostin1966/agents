@@ -14,8 +14,10 @@ from .validate import validate_projects
 ALL_PROJECTS = "all"
 
 
-def _repo_root() -> Path:
-    return Path(__file__).resolve().parents[2]
+def _resolve_repo_root(repo_root: Optional[str]) -> Path:
+    if repo_root:
+        return Path(repo_root).expanduser().resolve()
+    return Path.cwd().resolve()
 
 
 def _select_projects(cfg: FrameworkConfig, selected: str) -> set[str]:
@@ -109,6 +111,11 @@ def cmd_run(cfg: FrameworkConfig, root: Path, projects: str, task: str, dry_run:
 
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(prog="agentsfw", description="Multi-project mounted repo framework")
+    parser.add_argument(
+        "--repo-root",
+        default=None,
+        help="Path to agents repository root (defaults to current working directory)",
+    )
     sub = parser.add_subparsers(dest="command", required=True)
 
     scan = sub.add_parser("scan", help="Show mounted project status")
@@ -158,7 +165,12 @@ def main() -> int:
     parser = build_parser()
     args = parser.parse_args()
 
-    root = _repo_root()
+    root = _resolve_repo_root(args.repo_root)
+    config_path = root / "config" / "projects.json"
+    if not config_path.exists():
+        print(f"Error: repo root does not contain config/projects.json: {root}")
+        return 2
+
     cfg = load_config(root)
 
     if args.which == "scan":
