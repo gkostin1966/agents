@@ -114,18 +114,22 @@ as `guidelines/projects/**/AGENTS_MERGED.md` and is **never committed**.
 PYTHONPATH=src python3 -m unittest discover -s tests -p 'test_*.py'
 ```
 
-**A17.** 7 tests across 2 classes:
+**A17.** ⚠️ **This answer is intentionally dynamic** — test count/class names/methods
+change as the framework evolves.
 
-`FrameworkTests` (`tests/test_framework.py`):
-- `test_detect_markers_for_react_stack`
-- `test_scan_projects_marks_missing_mounts`
-- `test_resolve_project_path`
+Grade against the current working tree, not a static snapshot. The agent should derive
+the answer from files under `tests/` (or from unittest verbose discovery output) and list:
+1. Total test count
+2. Every test class name
+3. Every test method name
 
-`GuidelinesMergeTests` (`tests/test_guidelines.py`):
-- `test_base_sections_kept_when_no_override`
-- `test_project_section_overrides_base`
-- `test_section_order_base_first_then_project_only`
-- `test_real_base_and_project_files_exist_and_merge`
+Reference command for current inventory:
+```shell
+PYTHONPATH=src python3 -m unittest discover -s tests -p 'test_*.py' -v | cat
+```
+
+Accept equivalent file-based derivations (for example, reading all `tests/test_*.py`
+files) as correct if the resulting class/method list matches the repository state.
 
 **A18.** The test asserts that `"## File Access"` and `"## Kubernetes Cluster Topology"`
 are both present in the merged output for `deepblue-documents-kube`.
@@ -187,13 +191,14 @@ approval before running**.
 the **developer has explicitly told you to compare**. Both conditions must be met.
 
 **A27.** After modifying `guidelines/base/AGENTS.md`, regenerate the merged files for all
-six projects and review them for correctness:
+six projects using the single all-project command, then review them for correctness:
 
 ```shell
-for p in deepblue-documents-kube dor-depot dor-react-app dspace-containerization findingaids-argocd umich-arclight; do
-  PYTHONPATH=src python3 -m agents_framework.cli guidelines generate $p
-done
+PYTHONPATH=src python3 -m agents_framework.cli guidelines generate all
 ```
+
+An explicit shell loop is an acceptable fallback, but `guidelines generate all` is the
+preferred command.
 
 Then commit only `guidelines/base/AGENTS.md` (the merged files are gitignored).
 
