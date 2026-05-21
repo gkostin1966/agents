@@ -8,13 +8,13 @@
 > Answer every question by looking it up in the actual project files — do not rely on
 > memory or training data. Each question includes a hint pointing to the authoritative
 > source. Write your answers in your response, then stop and prompt the developer
-> (see the instruction after Q20).
+> after the final question.
 >
 > **Instructions for the quiz-giver (developer):**
 > Run this quiz at the start of a new agent session to confirm the agent has read and
 > understood the project state before it begins work. When the agent prompts you after
-> Q20, open `AGENT_QUIZ_ANSWERS.md` and grade the answers yourself, or ask the agent
-> to read that file and self-grade at that point.
+> answering all questions, open `AGENT_QUIZ_ANSWERS.md` and grade the answers yourself,
+> or ask the agent to read that file and self-grade at that point.
 
 ---
 

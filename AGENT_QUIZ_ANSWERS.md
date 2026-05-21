@@ -19,6 +19,9 @@
 | `config.py`      | `ProjectConfig` and `FrameworkConfig` dataclasses; `load_config()` parses `config/projects.json` |
 | `framework.py`   | Mount detection (`STACK_MARKERS`), `scan_projects`, `init_mounts`, `run_task` |
 | `guidelines.py`  | `merge_guidelines` (section-level merge); `generate_merged_file` (writes/prints merged AGENTS.md) |
+| `merge.py`       | Additional package module in `src/agents_framework/`; include in the module inventory |
+| `prompts.py`     | Additional package module in `src/agents_framework/`; include in the module inventory |
+| `validate.py`    | Additional package module in `src/agents_framework/`; include in the module inventory |
 
 **A3.** `config/projects.json`. The six project names are:
 1. `deepblue-documents-kube`
@@ -30,8 +33,8 @@
 
 **A4.** Via symlinks — the `agentsfw init-mounts` subcommand (`framework.init_mounts`)
 creates `os.symlink` entries under `mounted-projects/` pointing at source repos elsewhere
-on disk. The `mounted-projects/` directory itself is listed in `.gitignore` except for a
-`.gitkeep` placeholder file.
+on disk. The `mounted-projects/` directory is gitignored and is not committed to the
+repository by default.
 
 **A5.** Task tracking for the `agents` project lives at the repository root:
 `AGENT_TODO.md` (active) and `AGENT_DONE.md` (archive). These are flat files with no
@@ -46,21 +49,21 @@ per-ticket subdirectory structure. This differs from mounted projects like `dor-
 **A6.** Path: `guidelines/base/AGENTS.md`. Current top-level `## ` sections:
 1. `## File Access`
 2. `## Command-Line Tool Usage`
-3. `## Python Utility Scripts (`dotpy/`)`
+3. `## Python Utility Scripts`
 4. `## Git Commits`
 5. `## Pull Request Summaries`
 6. `## Email Drafts for Third Parties`
 7. `## Markdown Formatting`
 
-**A7.** The project section **replaces** the base section entirely. The `_split_sections`
-function in `guidelines.py` normalises headings to lowercase for comparison; if a project
-heading matches a base heading, only the project's chunk is included in the merged output —
-the base chunk is discarded for that heading.
+**A7.** The project section **replaces** the base section entirely. The merge logic in
+`merge.py` normalises headings for comparison; if a project heading matches a base heading,
+only the project's chunk is included in the merged output — the base chunk is discarded for
+that heading.
 
-**A8.** `deepblue-documents-kube` overrides `## Email Drafts for Third Parties`: it uses
-**Markdown (`.md`) files** instead of RTF.  The base (and all other projects) use RTF
-(`.rtf`) so the file opens directly in mail clients. deepblue uses Markdown because it
-opens natively in the JetBrains IDE with preview.
+**A8.** The base guidelines for `## Email Drafts for Third Parties` now specify
+**Markdown** under `communications/`. `deepblue-documents-kube` is therefore not an
+exception using Markdown while other projects use RTF; the old answer describing base RTF
+is out of date.
 
 **A9.**
 - **Flat `AGENT_TODO.md` / `AGENT_DONE.md`** (project-level, no per-ticket dirs):
@@ -108,7 +111,6 @@ as `guidelines/projects/**/AGENTS_MERGED.md` and is **never committed**.
 
 **A16.**
 ```shell
-cd /Users/gkostin/GitHub/gkostin1966/agents
 PYTHONPATH=src python3 -m unittest discover -s tests -p 'test_*.py'
 ```
 

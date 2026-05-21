@@ -1,6 +1,6 @@
 # Agent Onboarding Quiz — Answer Key
 
-> ⚠️ **DO NOT READ THIS FILE** until you have answered all 30 questions in
+> ⚠️ **DO NOT READ THIS FILE** until you have answered all questions in
 > `AGENT_QUIZ.md` and the developer has told you to compare your answers.
 > Reading this file before completing the quiz defeats its purpose.
 
