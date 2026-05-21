@@ -35,8 +35,8 @@ currently define?
 **Q7.** What is the merge rule when a section heading appears in both
 `guidelines/base/AGENTS.md` and `guidelines/projects/<name>/AGENTS.md`?
 
-**Q8.** Which two projects override the `## Email Drafts for Third Parties` section, and
-what is the key difference from the base?
+**Q8.** Do any projects override the `## Email Drafts for Third Parties` section? If so,
+which ones and how do they differ from the base? If not, where does the canonical rule live?
 
 **Q9.** Which projects use a flat `AGENT_TODO.md` / `AGENT_DONE.md` pattern at the
 project level (not per-ticket), and which use a `tasks/<ticket-id>/` directory structure?

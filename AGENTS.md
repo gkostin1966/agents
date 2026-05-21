@@ -242,7 +242,7 @@ open('AGENT_TODO.md', 'w').write(header + ''.join(tasks))
 ### Adding a new mounted project
 
 1. Add an entry to `config/projects.json` with `name`, `stack`, `relative_path`,
-   `guidelines_path`, and `commands`.
+   and `commands`.
 2. Create `guidelines/projects/<name>/AGENTS.md` with the project-specific sections.
 3. Copy or create `AGENT_PROMPT.md`, `AGENT_QUIZ.md`, `AGENT_QUIZ_ANSWERS.md` as needed.
 4. Create any task tracking files or directories (`AGENT_TODO.md`, `AGENT_DONE.md`, or
