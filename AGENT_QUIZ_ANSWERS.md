@@ -60,10 +60,10 @@ per-ticket subdirectory structure. This differs from mounted projects like `dor-
 only the project's chunk is included in the merged output — the base chunk is discarded for
 that heading.
 
-**A8.** The base guidelines for `## Email Drafts for Third Parties` now specify
-**Markdown** under `communications/`. `deepblue-documents-kube` is therefore not an
-exception using Markdown while other projects use RTF; the old answer describing base RTF
-is out of date.
+**A8.** No project currently overrides `## Email Drafts for Third Parties`.
+The canonical rule lives in `guidelines/base/AGENTS.md` under
+`## Email Drafts for Third Parties`, which specifies **Markdown** drafts under
+`communications/`.
 
 **A9.**
 - **Flat `AGENT_TODO.md` / `AGENT_DONE.md`** (project-level, no per-ticket dirs):

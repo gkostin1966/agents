@@ -11,6 +11,15 @@
 
 <!-- Add new tasks below this line. Keep the most urgent task first. -->
 
+## Review reviewer changes and respond to comments
+Review code-reviewer edits for correctness, apply any needed follow-up fixes, and prepare responses to all reviewer comments.
+
+- [x] Review each reviewer-provided change for correctness and project-rule compliance
+- [x] Address any remaining reviewer comments with code or documentation updates
+- [x] Prepare concise response notes for each reviewer comment (resolved/updated/explanation)
+- [x] Verify the current state of the project achieves the task goal
+- [ ] Verify with the developer that the task is complete
+
 ## Sync agent files and refresh PR summary
 Bring project agent artifacts in line with the current framework state and update `pr-summary.md` accordingly.
 
