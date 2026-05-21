@@ -1,10 +1,12 @@
 from __future__ import annotations
 
 import json
+import io
 import os
 import sys
 import tempfile
 import unittest
+from contextlib import redirect_stdout
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -12,7 +14,7 @@ SRC = ROOT / "src"
 if str(SRC) not in sys.path:
     sys.path.insert(0, str(SRC))
 
-from agents_framework.cli import ALL_PROJECTS, _resolve_repo_root, _run_generate, build_parser
+from agents_framework.cli import ALL_PROJECTS, _resolve_repo_root, _run_generate, build_parser, cmd_bootstrap
 from agents_framework.config import FrameworkConfig, ProjectConfig, load_config
 from agents_framework.framework import init_mounts, run_task, scan_projects
 from agents_framework.guidelines import generate_merged_file
@@ -347,6 +349,56 @@ class RepoRootResolutionTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as tmp:
             resolved = _resolve_repo_root(tmp)
             self.assertEqual(resolved, Path(tmp).resolve())
+
+
+class BootstrapCommandTests(unittest.TestCase):
+    def _cfg(self) -> FrameworkConfig:
+        return FrameworkConfig(
+            projects_root=Path("mounted-projects"),
+            projects=(
+                ProjectConfig(name="demo", stack="react-vite", relative_path="demo", commands={}),
+            ),
+        )
+
+    def test_cli_bootstrap_parser(self) -> None:
+        parser = build_parser()
+        args = parser.parse_args(["bootstrap", "demo"])
+        self.assertEqual(args.which, "bootstrap")
+        self.assertEqual(args.project, "demo")
+
+    def test_bootstrap_generates_files_and_prints_one_shot_prompt(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            base_dir = root / "guidelines" / "base"
+            base_dir.mkdir(parents=True)
+            proj_dir = root / "guidelines" / "projects" / "demo"
+            proj_dir.mkdir(parents=True)
+
+            (base_dir / "AGENTS.md").write_text("# Base\n\n## File Access\n\nBase.\n", encoding="utf-8")
+            (base_dir / "AGENT_PROMPT.md").write_text("# Base Prompt\n\n## Startup Workflow\n\nBase prompt.\n", encoding="utf-8")
+            (proj_dir / "AGENTS.md").write_text("# Demo\n\n## Extra\n\nProject.\n", encoding="utf-8")
+            (proj_dir / "AGENT_PROMPT.md").write_text("# Demo Prompt\n\n## Task Files\n\nProject prompt.\n", encoding="utf-8")
+
+            out = io.StringIO()
+            with redirect_stdout(out):
+                code = cmd_bootstrap(self._cfg(), root, "demo")
+
+            self.assertEqual(code, 0)
+            self.assertTrue((proj_dir / "AGENTS_MERGED.md").exists())
+            self.assertTrue((proj_dir / "AGENT_PROMPT_MERGED.md").exists())
+
+            text = out.getvalue()
+            self.assertIn("Copy/paste into a new coding-agent chat", text)
+            self.assertIn("AGENT_PROMPT_MERGED.md", text)
+            self.assertIn("AGENTS_MERGED.md", text)
+
+    def test_bootstrap_rejects_unknown_project(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            out = io.StringIO()
+            with redirect_stdout(out):
+                code = cmd_bootstrap(self._cfg(), Path(tmp), "unknown")
+            self.assertEqual(code, 2)
+            self.assertIn("unknown project", out.getvalue())
 
 
 if __name__ == "__main__":

@@ -2,6 +2,17 @@
 
 <!-- Entries are prepended (newest first). -->
 
+## 2026-05-21T16:27:06Z — Add mounted-project bootstrap prompt command
+
+Implemented a framework command that regenerates merged project files and prints a one-shot bootstrap prompt suitable for starting an agent session in a mounted project.
+
+- [x] Design CLI UX for bootstrap setup output
+- [x] Implement command to regenerate merged prompt/guidelines for a project and print one-shot bootstrap text
+- [x] Add or update tests for parser wiring and command behavior
+- [x] Verify tests pass
+- [x] Verify the current state of the project achieves the task goal
+- [x] Verify with the developer that the task is complete
+
 ## 2026-05-21T14:57:43Z — Mount dor-depot project symlink
 
 Created the `mounted-projects/dor-depot` symlink from the provided source path and verified framework scan now detects `dor-depot` as mounted.

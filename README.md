@@ -163,6 +163,15 @@ PYTHONPATH=src python3 -m agents_framework.cli prompt generate dor-react-app --p
 files are `guidelines/base/AGENT_PROMPT.md` and
 `guidelines/projects/<name>/AGENT_PROMPT.md`.
 
+### Generate one-shot bootstrap prompt text
+
+Regenerate both merged files for one project and print copy/paste text for starting a
+coding-agent session in that mounted project:
+
+```bash
+PYTHONPATH=src python3 -m agents_framework.cli bootstrap dor-depot
+```
+
 ## Notes
 
 - The framework does not modify the source projects.
