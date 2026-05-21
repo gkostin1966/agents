@@ -28,6 +28,6 @@ Reusable helper scripts for the `agents` framework repository.
 ## Usage
 
 ```shell
-zsh scripts/smoke_run.sh
+bash scripts/smoke_run.sh
 ```
 

@@ -11,6 +11,15 @@
 
 <!-- Add new tasks below this line. Keep the most urgent task first. -->
 
+## Improve smoke script shell portability
+Switch `scripts/smoke_run.sh` to a portable shebang and align docs.
+
+- [x] Change `scripts/smoke_run.sh` shebang from zsh to bash
+- [x] Update `scripts/README.md` invocation example to bash
+- [x] Run `bash scripts/smoke_run.sh` to verify behavior
+- [x] Verify the current state of the project achieves the task goal
+- [ ] Verify with the developer that the task is complete
+
 ## Review reviewer changes and respond to comments
 Review code-reviewer edits for correctness, apply any needed follow-up fixes, and prepare responses to all reviewer comments.
 
