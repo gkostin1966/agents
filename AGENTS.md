@@ -13,7 +13,7 @@
 The `agents` project serves two roles:
 
 1. **Guidelines repository** — canonical home for all agent rules (`AGENTS.md`), onboarding
-   quizzes, session prompts, and task tracking for the six mounted projects.
+   quizzes, session prompts, and task tracking for configured mounted projects.
 2. **Operational framework** — Python CLI (`agentsfw`) for mounting projects, scanning
    status, running tasks, and generating merged agent guidelines and startup prompts.
 
@@ -32,6 +32,10 @@ The `agents` project serves two roles:
 | Utility scripts       | `scripts/`                                     | Reusable framework helper scripts           |
 | Config                | `config/projects.json`                         | Project catalog and metadata                |
 | Mount root            | `mounted-projects/`                            | Symlinks to source repos (gitignored)       |
+
+`config/projects.json` is the framework source of truth for mounted projects.
+If a project is mounted for the first time, register it there before using framework CLI
+commands that target it.
 
 ## File Access
 

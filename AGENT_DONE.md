@@ -2,6 +2,26 @@
 
 <!-- Entries are prepended (newest first). -->
 
+## 2026-05-21T14:52:45Z — Systematic framework-purpose alignment review
+
+Reviewed root framework docs and onboarding artifacts for wording that overfit current mounted repositories, and updated them to emphasize the framework's generic meta-purpose and config-driven project registration.
+
+- [x] Audit root docs/prompts for project-specific assumptions that conflict with framework-first guidance
+- [x] Update root docs/prompts to treat mounted projects as configured abstract entries
+- [x] Ensure first-time mount registration in `config/projects.json` is explicitly documented
+- [x] Verify the current state of the project achieves the task goal
+- [x] Verify with the developer that the task is complete
+
+## 2026-05-21T14:52:44Z — Refactor root onboarding quiz to framework-only scope
+
+Updated `AGENT_QUIZ.md` and `AGENT_QUIZ_ANSWERS.md` to focus on the `agents` framework itself, treat mounted projects as abstract entries, and codify first-time registration in `config/projects.json`.
+
+- [x] Redraft `AGENT_QUIZ.md` to remove concrete mounted-project trivia and use framework-scoped questions
+- [x] Redraft `AGENT_QUIZ_ANSWERS.md` to match the new framework-scoped quiz
+- [x] Verify the new quiz explicitly states that first-time mounted projects must be added to `config/projects.json`
+- [x] Verify the current state of the project achieves the task goal
+- [x] Verify with the developer that the task is complete
+
 ## 2026-05-21T10:26:50 — Make merged provenance paths repo-relative
 
 Avoid absolute-path leakage and non-determinism in merged guideline/prompt headers.
