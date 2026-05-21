@@ -2,6 +2,15 @@
 
 <!-- Entries are prepended (newest first). -->
 
+## 2026-05-21T14:57:43Z — Mount dor-depot project symlink
+
+Created the `mounted-projects/dor-depot` symlink from the provided source path and verified framework scan now detects `dor-depot` as mounted.
+
+- [x] Resolve source root and mount only `dor-depot`
+- [x] Run framework scan to verify `dor-depot` is mounted
+- [x] Verify the current state of the project achieves the task goal
+- [x] Verify with the developer that the task is complete
+
 ## 2026-05-21T14:52:45Z — Systematic framework-purpose alignment review
 
 Reviewed root framework docs and onboarding artifacts for wording that overfit current mounted repositories, and updated them to emphasize the framework's generic meta-purpose and config-driven project registration.
