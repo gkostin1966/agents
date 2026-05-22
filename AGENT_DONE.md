@@ -2,6 +2,25 @@
 
 <!-- Entries are prepended (newest first). -->
 
+## 2026-05-22T21:14:49Z — Add local Ollama helper scripts
+
+Implemented local scripts that use the Ollama HTTP API for prompt compression and PR draft generation so repetitive drafting can be done off-cloud.
+
+- [x] Add `scripts/ollama_prompt_compress.py` and `scripts/ollama_pr_draft.py`
+- [x] Add tests covering script core behavior without real network calls
+- [x] Document script usage in `scripts/README.md` and `docs/low-token-playbook.md`
+- [x] Verify tests pass
+- [x] Verify the current state of the project achieves the task goal
+- [x] Verify with the developer that the task is complete
+
+## 2026-05-22T21:14:48Z — Create low-token session playbook document
+
+Created a reusable markdown guide that captures the daily low-token workflow for starting and running agent sessions efficiently.
+
+- [x] Add `docs/low-token-playbook.md` with startup commands, prompting rules, and weekly maintenance checks
+- [x] Verify the current state of the project achieves the task goal
+- [x] Verify with the developer that the task is complete
+
 ## 2026-05-22T21:05:43Z — Add token guardrails and terse-default regression checks
 
 Implemented guardrails to keep always-on instruction files within budget and added tests to prevent drift in terse Copilot defaults.

@@ -27,11 +27,19 @@ Reusable helper scripts for the `agents` framework repository.
 - `scripts/check_token_budgets.py` — always-on context budget guardrail:
   - checks line-count and byte-size budgets for `AGENTS.md`, `guidelines/base/AGENTS.md`, and `.github/copilot-instructions.md`
   - exits non-zero when files exceed budget or are missing
+- `scripts/ollama_prompt_compress.py` — local prompt compressor via Ollama:
+  - reads input from stdin or `--input` file
+  - rewrites into concise coding prompt text
+- `scripts/ollama_pr_draft.py` — local PR draft generator via Ollama:
+  - reads diff/context from stdin or `--input` file
+  - emits concise markdown PR draft sections
 
 ## Usage
 
 ```shell
 bash scripts/smoke_run.sh
 python3 scripts/check_token_budgets.py | cat
+python3 scripts/ollama_prompt_compress.py --input /tmp/prompt.txt | cat
+git --no-pager diff --staged | python3 scripts/ollama_pr_draft.py | cat
 ```
 
