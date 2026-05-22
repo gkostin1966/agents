@@ -24,10 +24,14 @@ Reusable helper scripts for the `agents` framework repository.
   - runs `agentsfw validate`
   - regenerates merged guidelines/prompts for all projects
   - runs one dry-run task command
+- `scripts/check_token_budgets.py` — always-on context budget guardrail:
+  - checks line-count and byte-size budgets for `AGENTS.md`, `guidelines/base/AGENTS.md`, and `.github/copilot-instructions.md`
+  - exits non-zero when files exceed budget or are missing
 
 ## Usage
 
 ```shell
 bash scripts/smoke_run.sh
+python3 scripts/check_token_budgets.py | cat
 ```
 

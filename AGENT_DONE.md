@@ -2,6 +2,17 @@
 
 <!-- Entries are prepended (newest first). -->
 
+## 2026-05-22T21:05:43Z — Add token guardrails and terse-default regression checks
+
+Implemented guardrails to keep always-on instruction files within budget and added tests to prevent drift in terse Copilot defaults.
+
+- [x] Add `scripts/check_token_budgets.py` to validate line-count and byte-size budgets for always-on files
+- [x] Add tests for budget checker behavior and required terse defaults in `.github/copilot-instructions.md`
+- [x] Document usage in `scripts/README.md`
+- [x] Verify tests pass
+- [x] Verify the current state of the project achieves the task goal
+- [x] Verify with the developer that the task is complete
+
 ## 2026-05-22T21:00:10Z — Token optimization for agents framework
 
 Applied token-optimization guidance from `github-copilot-token-optimization/` to reduce always-on context cost across the agents framework and all project guideline files.
