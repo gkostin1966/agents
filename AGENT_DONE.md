@@ -2,6 +2,14 @@
 
 <!-- Entries are prepended (newest first). -->
 
+## 2026-05-22T21:24:17Z — Create recent changes summary document
+
+Created a single markdown handoff summary covering recent framework changes and key usage commands.
+
+- [x] Add `docs/recent-changes-summary.md` with recent commits and practical impact
+- [x] Verify the current state of the project achieves the task goal
+- [x] Verify with the developer that the task is complete
+
 ## 2026-05-22T21:19:48Z — Add prompt_from_git helper script
 
 Created a local utility that builds a compact AI-ready prompt from staged git changes (summary + file list + capped diff) to reduce token-heavy context setup.

@@ -12,3 +12,14 @@
 <!-- Add new tasks below this line. Keep the most urgent task first. -->
 
 
+
+## Consistency audit and developer cheatsheet
+
+Review framework docs/scripts for consistency after recent optimization changes, fix mismatches, and add a practical developer cheatsheet.
+
+- [ ] Audit core docs/scripts for contradictory or outdated guidance
+- [ ] Apply consistency fixes where needed
+- [ ] Add `docs/developer-cheatsheet.md` with practical daily commands/workflows
+- [ ] Verify tests pass
+- [ ] Verify the current state of the project achieves the task goal
+- [ ] Verify with the developer that the task is complete
