@@ -317,8 +317,9 @@ Calls `preservationGateway.checkIntegrity()` (OCFL object validation) and stores
 - **`IntegrityCheckTargetMissing`** — object does not exist (`PreservationNotFoundException` caught).
 
 **`PerformIngestValidation`** (listener: `on(PerformIngestValidation)`):
-Iterates all `.dor/` sidecar files, compares each sidecar's recorded inbox digest against
-the OCFL manifest digest (via `getContentFileDigests()`), writes a PREMIS `VALIDATION`
+Fetches content files via `getContentFiles()` and SHA-512 manifest digests via
+`getContentFileFixityRecords()`, reads each `.dor/` sidecar header, compares the sidecar's
+recorded inbox digest against the OCFL manifest digest, writes a PREMIS `VALIDATION`
 event, and publishes one of:
 - **`IngestValidationPassed`** — all sidecar digests match the OCFL manifest.
 - **`IngestValidationDiscrepancyDetected`** — one or more digest mismatches found,

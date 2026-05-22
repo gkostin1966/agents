@@ -1,55 +1,27 @@
 # New Session Startup Prompt
 
-> Copy and paste the block below into a new agent session, or tell the agent:
->
-> ```text
-> Read AGENT_PROMPT.md and follow the instructions there.
-> ```
-
----
+> Tell agent: `Read AGENT_PROMPT.md and follow the instructions there.`
 
 ## Prompt
 
-You are starting a new session in the `agents` repository — a multi-project development
-framework that manages agent guidelines, task tracking, and operational tooling for
-**configured mounted projects** listed in `config/projects.json`.
+You are in the `agents` repository — meta-framework for mounted projects listed in `config/projects.json`. Treat mounted projects as abstract config-driven entries; `mounted-projects/` is read-only.
 
-Treat mounted projects as abstract framework entries keyed by `name`, `stack`, and
-`relative_path`, not as a fixed hardcoded list.
+**Before anything else:**
 
-The sub-projects are mounted as symlinks under `mounted-projects/`. All agent guidelines
-and task-tracking files for those projects live in `guidelines/projects/<name>/` inside
-this repository — **not** in the mounted project roots.
-
-If a project is being mounted for the first time, it must be added to `config/projects.json`
-before framework commands can discover or manage it.
-
-**Before doing anything else, follow these steps in order:**
-
-1. **Orient yourself** — run the following to confirm your working state:
+1. Run orientation:
    ```shell
    git branch --show-current | cat
    git --no-pager status | cat
    git --no-pager log --oneline -5 | cat
    ```
-   If there are uncommitted changes or you are on an unexpected branch, stop and tell the
-   developer before proceeding.
+   Uncommitted changes or unexpected branch → stop and tell developer.
 
-2. **Read `AGENTS.md`** (this repository's root) — it contains the meta-rules and
-   conventions that govern all agent work on the framework itself. Follow them for every
-   action you take.
+2. Read `AGENTS.md` — meta-rules for this repo.
 
-3. **Read `AGENT_TODO.md`** — it is the active task list for framework work. Read the task
-   list in full. The first unchecked subtask in the first task is where the previous agent
-   left off. Also read the top entry of `AGENT_DONE.md` for recent completion context.
+3. Read `AGENT_TODO.md` — active task list. First unchecked subtask = where previous agent left off. Also read top entry of `AGENT_DONE.md`.
 
-4. **Take the onboarding quiz in `AGENT_QUIZ.md`** — answer every question by looking up
-   the answer in the actual project files (do not rely on memory or training data). When
-   you have answered all questions, stop and tell me:
-
-   > "I have answered all quiz questions. Please open `AGENT_QUIZ_ANSWERS.md` to grade my
-   > answers, or let me know when I may read it to self-grade."
-
-   Do not read `AGENT_QUIZ_ANSWERS.md` until explicitly told to.
-   Do not start any framework development work until the quiz is complete and graded.
+4. Ask the developer: **"Should I take the onboarding quiz in `AGENT_QUIZ.md`?"**
+   - **Yes** → answer every question by looking up answers in actual files; stop when done and say: *"I have answered all quiz questions. Please open `AGENT_QUIZ_ANSWERS.md` to grade my answers, or let me know when I may read it to self-grade."* Do not read `AGENT_QUIZ_ANSWERS.md` until explicitly told.
+   - **No / Skip** → proceed directly to the task list.
+   Do not start framework development work until quiz is complete and graded (or explicitly skipped).
 

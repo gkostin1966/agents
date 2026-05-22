@@ -42,9 +42,11 @@ Before doing anything else, follow these steps in order:
 3. **Read framework-managed task state** under `AGENTS_ROOT/guidelines/projects/<project>/...`
    as defined in the project-specific `## Task Files` block.
 
-4. **Take onboarding quiz** as defined in the project-specific `## Quiz Gate` block.
+4. **Ask the developer:** "Should I take the onboarding quiz?" — wait for the answer before proceeding.
+   - **Yes** → follow the project-specific `## Quiz Gate` block.
+   - **No / Skip** → proceed directly to the task list.
 
-Do not begin implementation work until the quiz is complete and graded (or explicitly self-graded with developer approval).
+Do not begin implementation work until quiz is complete/graded (or explicitly skipped).
 
 ## Task Files
 

@@ -2,6 +2,18 @@
 
 <!-- Entries are prepended (newest first). -->
 
+## 2026-05-22T21:00:10Z — Token optimization for agents framework
+
+Applied token-optimization guidance from `github-copilot-token-optimization/` to reduce always-on context cost across the agents framework and all project guideline files.
+
+- [x] T1 — Add `.github/copilot-instructions.md` with output-control defaults (code-only, terse, no explanations unless asked)
+- [x] T2 — Compress root `AGENTS.md` to landmines-only: remove discoverable facts, keep only non-obvious rules that cause silent mistakes when missed
+- [x] T3 — Compress `guidelines/base/AGENTS.md` with same filter
+- [x] T4 — Create scoped `.github/instructions/` files using `applyTo:` for project-specific guideline sections so they load only when relevant files are open (instead of always-on)
+- [x] T5 — Compress the root `AGENT_PROMPT.md` and `guidelines/base/AGENT_PROMPT.md` to remove prose that agents don't need pre-loaded
+- [x] Verify the current state of the project achieves the task goal
+- [x] Verify with the developer that the task is complete
+
 ## 2026-05-21T16:27:06Z — Add mounted-project bootstrap prompt command
 
 Implemented a framework command that regenerates merged project files and prints a one-shot bootstrap prompt suitable for starting an agent session in a mounted project.
