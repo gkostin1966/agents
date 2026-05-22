@@ -33,6 +33,9 @@ Reusable helper scripts for the `agents` framework repository.
 - `scripts/ollama_pr_draft.py` — local PR draft generator via Ollama:
   - reads diff/context from stdin or `--input` file
   - emits concise markdown PR draft sections
+- `scripts/prompt_from_git.py` — staged-diff prompt builder:
+  - reads staged file list + diff from git
+  - emits compact AI-ready prompt text with capped diff length
 
 ## Usage
 
@@ -41,5 +44,6 @@ bash scripts/smoke_run.sh
 python3 scripts/check_token_budgets.py | cat
 python3 scripts/ollama_prompt_compress.py --input /tmp/prompt.txt | cat
 git --no-pager diff --staged | python3 scripts/ollama_pr_draft.py | cat
+python3 scripts/prompt_from_git.py --max-diff-chars 4000 | cat
 ```
 

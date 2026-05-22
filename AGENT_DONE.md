@@ -2,6 +2,17 @@
 
 <!-- Entries are prepended (newest first). -->
 
+## 2026-05-22T21:19:48Z — Add prompt_from_git helper script
+
+Created a local utility that builds a compact AI-ready prompt from staged git changes (summary + file list + capped diff) to reduce token-heavy context setup.
+
+- [x] Add `scripts/prompt_from_git.py`
+- [x] Add tests for prompt generation behavior
+- [x] Document usage in `scripts/README.md` and `docs/low-token-playbook.md`
+- [x] Verify tests pass
+- [x] Verify the current state of the project achieves the task goal
+- [x] Verify with the developer that the task is complete
+
 ## 2026-05-22T21:14:49Z — Add local Ollama helper scripts
 
 Implemented local scripts that use the Ollama HTTP API for prompt compression and PR draft generation so repetitive drafting can be done off-cloud.

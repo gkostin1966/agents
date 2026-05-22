@@ -75,6 +75,7 @@ Use local Ollama for prep tasks, then send compact output to Copilot.
 ```shell
 python3 scripts/ollama_prompt_compress.py --input /tmp/prompt.txt | cat
 git --no-pager diff --staged | python3 scripts/ollama_pr_draft.py --title "feat: short hint" | cat
+python3 scripts/prompt_from_git.py --max-diff-chars 4000 | cat
 ```
 
 Best use cases: prompt compression, first-pass PR summaries, rewrite-to-bullets.
