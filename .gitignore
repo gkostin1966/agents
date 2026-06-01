@@ -9,3 +9,4 @@ mounted-projects/
 pr-summary.md
 guidelines/projects/**/AGENTS_MERGED.md
 guidelines/projects/**/AGENT_PROMPT_MERGED.md
+github-copilot-token-optimization/

@@ -75,17 +75,18 @@ a pager must suppress it so output is captured without waiting for user input.
 
 ---
 
-**A9.** There are two Spring Modulith application modules with Spring-managed beans:
-1. **`preservation`** — (`edu.umich.lib.dor.depot.preservation`) — handles OCFL storage, ingest, integrity checks
-2. **`console`** — (`edu.umich.lib.dor.depot.console`) — the web UI / admin REST layer
+**A9.** Per `AGENTS.md` module-boundary guidance, treat these as the application
+modules for cross-module event communication:
+1. **`preservation`** — (`edu.umich.lib.dor.depot.preservation`)
+2. **`console`** — (`edu.umich.lib.dor.depot.console`)
 
-A third top-level package, **`config`**, exists and is detected by Spring Modulith
-(a `module-config.adoc` is generated for it), but it contains only a MyBatis
-`UuidTypeHandler` annotated with `@MappedTypes` — it has no Spring-managed beans and
-is a support/infrastructure package, not an application module.
+Treat **`config`** as support/infrastructure only (no Spring beans).
 
-*(Source: `src/main/java/edu/umich/lib/dor/depot/` — sub-package structure;
-`build/spring-modulith-docs/module-config.adoc`)*
+Note: generated Spring Modulith docs can list additional technical package modules
+(for example `auth`), but quiz grading for this question follows the explicit
+`AGENTS.md` rule above.
+
+*(Source: `AGENTS.md` § Java / Gradle Conventions — Module boundaries)*
 
 ---
 
@@ -135,14 +136,15 @@ fixture at `src/test/resources/inbox/e145de0c-8ffb-49fc-af26-c5b735622b3e`)*
 
 ---
 
-**A14.** `AdminController` exposes four `POST` endpoints:
+**A14.** `AdminController` currently exposes three `POST` endpoints:
 
-| Path                            | Query parameters                                   | Event published           |
-|---------------------------------|----------------------------------------------------|---------------------------|
-| `POST /admin/submit`            | `packageId`                                        | `PackageSubmitted`        |
-| `POST /admin/publish`           | `objectId`, `agentName`, `agentAddress`, `message` | `PublishDraft`            |
-| `POST /admin/integrity-check`   | `objectId`, `agentName`, `agentAddress`            | `PerformIntegrityCheck`   |
-| `POST /admin/ingest-validation` | `objectId`, `agentName`, `agentAddress`            | `PerformIngestValidation` |
+| Path                          | Query parameters                                   | Event published         |
+|-------------------------------|----------------------------------------------------|-------------------------|
+| `POST /admin/submit`          | `packageId`                                        | `PackageSubmitted`      |
+| `POST /admin/publish`         | `objectId`, `agentName`, `agentAddress`, `message` | `PublishDraft`          |
+| `POST /admin/integrity-check` | `objectId`, `agentName`, `agentAddress`            | `PerformIntegrityCheck` |
+
+`GET /admin/test` exists for a simple test response and does not publish an event.
 
 *(Source: `src/main/java/edu/umich/lib/dor/depot/console/AdminController.java`)*
 
@@ -315,8 +317,9 @@ Calls `preservationGateway.checkIntegrity()` (OCFL object validation) and stores
 - **`IntegrityCheckTargetMissing`** — object does not exist (`PreservationNotFoundException` caught).
 
 **`PerformIngestValidation`** (listener: `on(PerformIngestValidation)`):
-Iterates all `.dor/` sidecar files, compares each sidecar's recorded inbox digest against
-the OCFL manifest digest (via `getContentFileDigests()`), writes a PREMIS `VALIDATION`
+Fetches content files via `getContentFiles()` and SHA-512 manifest digests via
+`getContentFileFixityRecords()`, reads each `.dor/` sidecar header, compares the sidecar's
+recorded inbox digest against the OCFL manifest digest, writes a PREMIS `VALIDATION`
 event, and publishes one of:
 - **`IngestValidationPassed`** — all sidecar digests match the OCFL manifest.
 - **`IngestValidationDiscrepancyDetected`** — one or more digest mismatches found,

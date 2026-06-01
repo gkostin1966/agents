@@ -2,16 +2,16 @@
 
 This repository now provides a lightweight framework for coordinating development tasks across multiple mounted projects under one root.
 
-## Included project catalog
+## Project catalog
 
-`config/projects.json` contains the six requested projects and stack-specific commands:
+`config/projects.json` is the source of truth for configured mounted projects and
+stack-specific commands.
 
-- `deepblue-documents-kube`
-- `dor-depot`
-- `dor-react-app`
-- `dspace-containerization`
-- `findingaids-argocd`
-- `umich-arclight`
+- Each project is an abstract framework entry with `name`, `stack`, `relative_path`, and
+  `commands`.
+- If a project is mounted for the first time, add it to `config/projects.json` before
+  running framework commands that target it.
+- The currently configured project names are listed in that file.
 
 ## Directory layout
 
@@ -68,7 +68,7 @@ agents/
 Create mounts (symlinks) from the source root:
 
 ```bash
-PYTHONPATH=src python3 -m agents_framework.cli init-mounts --source-root /Users/gkostin/GitHub/mlibrary
+PYTHONPATH=src python3 -m agents_framework.cli init-mounts --source-root /path/to/source-root
 ```
 
 Scan status and marker detection:
@@ -136,7 +136,7 @@ project roots.
 # Write merged file to guidelines/projects/<name>/AGENTS_MERGED.md
 PYTHONPATH=src python3 -m agents_framework.cli guidelines generate deepblue-documents-kube
 
-# Regenerate all six projects at once
+# Regenerate all configured projects at once
 PYTHONPATH=src python3 -m agents_framework.cli guidelines generate all
 
 # Print merged content to stdout (useful for review or piping)
@@ -152,7 +152,7 @@ are `guidelines/base/AGENTS.md` and `guidelines/projects/<name>/AGENTS.md`.
 # Write merged file to guidelines/projects/<name>/AGENT_PROMPT_MERGED.md
 PYTHONPATH=src python3 -m agents_framework.cli prompt generate deepblue-documents-kube
 
-# Regenerate all six projects at once
+# Regenerate all configured projects at once
 PYTHONPATH=src python3 -m agents_framework.cli prompt generate all
 
 # Print merged content to stdout (useful for review or piping)
@@ -162,6 +162,15 @@ PYTHONPATH=src python3 -m agents_framework.cli prompt generate dor-react-app --p
 `AGENT_PROMPT_MERGED.md` is gitignored (auto-generated artefact). The two source-of-truth
 files are `guidelines/base/AGENT_PROMPT.md` and
 `guidelines/projects/<name>/AGENT_PROMPT.md`.
+
+### Generate one-shot bootstrap prompt text
+
+Regenerate both merged files for one project and print copy/paste text for starting a
+coding-agent session in that mounted project:
+
+```bash
+PYTHONPATH=src python3 -m agents_framework.cli bootstrap dor-depot
+```
 
 ## Notes
 

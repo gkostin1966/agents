@@ -51,6 +51,43 @@ def _run_generate(
     return exit_code
 
 
+def _bootstrap_prompt_text(prompt_path: Path, guidelines_path: Path) -> str:
+    prompt_ref = prompt_path.resolve()
+    guidelines_ref = guidelines_path.resolve()
+    return (
+        "Copy/paste into a new coding-agent chat:\n\n"
+        f"Read {prompt_ref} and follow it.\n"
+        f"Then read {guidelines_ref} and follow those rules for all code changes.\n"
+    )
+
+
+def cmd_bootstrap(cfg: FrameworkConfig, root: Path, project: str) -> int:
+    configured = {p.name for p in cfg.projects}
+    if project not in configured:
+        print(f"Error: unknown project '{project}'.")
+        return 2
+
+    try:
+        prompt_path = generate_merged_prompt(root, project)
+        guidelines_path = generate_merged_file(root, project)
+    except FileNotFoundError as exc:
+        print(f"Error: {exc}")
+        return 1
+
+    if prompt_path is None or guidelines_path is None:
+        print("Error: bootstrap generation unexpectedly returned no output path.")
+        return 1
+
+    if prompt_path:
+        print(f"Written: {prompt_path}")
+    if guidelines_path:
+        print(f"Written: {guidelines_path}")
+
+    print()
+    print(_bootstrap_prompt_text(prompt_path, guidelines_path))
+    return 0
+
+
 def cmd_validate(cfg: FrameworkConfig, root: Path, projects: str) -> int:
     names = list(_select_projects(cfg, projects)) if projects != ALL_PROJECTS else None
     results = validate_projects(root, cfg, names)
@@ -138,6 +175,13 @@ def build_parser() -> argparse.ArgumentParser:
     )
     validate.set_defaults(which="validate")
 
+    bootstrap = sub.add_parser(
+        "bootstrap",
+        help="Regenerate merged project files and print one-shot startup prompt text",
+    )
+    bootstrap.add_argument("project", help="Project name")
+    bootstrap.set_defaults(which="bootstrap")
+
     guidelines = sub.add_parser("guidelines", help="Generate or print merged AGENTS.md for a project")
     g_sub = guidelines.add_subparsers(dest="g_command", required=True)
 
@@ -179,6 +223,8 @@ def main() -> int:
         return cmd_validate(cfg, root, args.projects)
     if args.which == "init-mounts":
         return cmd_init_mounts(cfg, root, args.source_root)
+    if args.which == "bootstrap":
+        return cmd_bootstrap(cfg, root, args.project)
     if args.which == "run":
         return cmd_run(cfg, root, args.projects, args.task, args.dry_run)
     if args.which == "guidelines":

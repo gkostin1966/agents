@@ -4,130 +4,89 @@
 > Do **not** read `AGENT_QUIZ_ANSWERS.md` until you have answered all questions and the
 > developer has told you to compare.
 >
+> This quiz is scoped to the `agents` framework itself.
+> Treat mounted projects as abstract configured entries (not stack-specific trivia targets).
+>
 > Write your answers inline under each question before moving on.
 
 ---
 
-## Section 1 — Project Structure
+## Section 1 — Framework Scope and Layout
 
-**Q1.** What is the absolute path to the Python source package for the framework, and
-what is the name of the Python package?
+**Q1.** What are the two primary roles of this repository, as described in root `AGENTS.md`?
 
-**Q2.** List every module (`.py` file) inside `src/agents_framework/` and give one
-sentence describing what each one does.
+**Q2.** What is the Python package path for the framework code, and what is the package name?
 
-**Q3.** What file controls the list of mounted projects, and what are the six project
-names registered in it?
+**Q3.** List every module in `src/agents_framework/` and give a one-line purpose for each.
 
-**Q4.** The `mounted-projects/` directory is gitignored. How are the actual source
-repositories made available under it?
+**Q4.** What file defines the mounted-project catalog, and which fields are required per project entry in the current schema?
 
-**Q5.** Where does task tracking for work on the `agents` project itself live? How is
-this different from where task tracking for mounted projects lives?
+**Q5.** In this framework, what does `mounted-projects/` represent, and what are the read/write restrictions for that directory?
 
 ---
 
-## Section 2 — Guidelines Architecture
+## Section 2 — Config and Registration Rules
 
-**Q6.** What is the path to the shared base guidelines file? What sections does it
-currently define?
+**Q6.** When a project is mounted for the first time, what must be updated first so the framework recognizes it?
 
-**Q7.** What is the merge rule when a section heading appears in both
-`guidelines/base/AGENTS.md` and `guidelines/projects/<name>/AGENTS.md`?
+**Q7.** In `config/projects.json`, what is the purpose of `relative_path`, and where in the code is it used to resolve mount paths?
 
-**Q8.** Do any projects override the `## Email Drafts for Third Parties` section? If so,
-which ones and how do they differ from the base? If not, where does the canonical rule live?
+**Q8.** If a project uses a stack value not currently listed in `STACK_MARKERS`, what code file and symbol must be updated?
 
-**Q9.** Which projects use a flat `AGENT_TODO.md` / `AGENT_DONE.md` pattern at the
-project level (not per-ticket), and which use a `tasks/<ticket-id>/` directory structure?
-
-**Q10.** The `AGENTS_MERGED.md` files are gitignored. What command generates one for
-`dor-react-app`?
+**Q9.** What is the difference between `name` and `relative_path` in practical CLI behavior?
 
 ---
 
-## Section 3 — Framework Code
+## Section 3 — Merge Architecture
 
-**Q11.** What is the class name and file that loads the project catalog from
-`config/projects.json`? What two dataclasses does it return?
+**Q10.** What are the source and generated files for guidelines merging?
 
-**Q12.** What is `STACK_MARKERS` in `framework.py`? Give the markers for the `rails-arclight`
-stack as evidence you have read the file.
+**Q11.** What are the source and generated files for prompt merging?
 
-**Q13.** What argument must be passed to `agentsfw run` to target only `dor-depot` and
-`umich-arclight`?
+**Q12.** What happens when a `## Heading` exists in both base and project files during merge?
 
-**Q14.** A call to `merge_guidelines(base_path, proj_path)` where the project file has a
-`## Git Commits` section: what happens to the base `## Git Commits` section in the output?
+**Q13.** Which shared module implements section splitting/merging, and what are its three public functions?
 
-**Q15.** What function in `guidelines.py` writes the merged file to disk, what is the
-default output path, and is that file committed to git?
+**Q14.** Which two modules import that shared merge helper?
 
 ---
 
-## Section 4 — Testing
+## Section 4 — CLI Behavior
 
-**Q16.** How do you run the full test suite without installing the package? What is the
-exact command?
+**Q15.** What is the console entry point (`module:function`) for `agentsfw`?
 
-**Q17.** How many tests exist as of your reading? List the test class names and the name
-of each test method.
+**Q16.** What does `agentsfw scan` report at a high level?
 
-**Q18.** `test_real_base_and_project_files_exist_and_merge` verifies two specific
-`## Heading` values are present in the merged output. What are they?
+**Q17.** What does `agentsfw validate` check, and which files are required vs recommended?
 
----
+**Q18.** What safety rule applies to `guidelines generate all --output ...` and `prompt generate all --output ...`?
 
-## Section 5 — Guidelines Content
-
-**Q19.** The base `## Command-Line Tool Usage` section includes a warning about shell
-heredocs that is **not** present in most of the original per-project `AGENTS.md` files.
-Which project introduced that rule, and why should it be in the base?
-
-**Q20.** What is the exact `## Heading` of the section in
-`guidelines/projects/deepblue-documents-kube/AGENTS.md` that explains ConfigMap key
-encoding, and what are the two encoding tokens and what each represents?
-
-**Q21.** The `dor-depot` project uses Spring Modulith. What constraint does this impose
-on cross-module calls, and what is the name of the Java package that contains the web UI?
-
-**Q22.** Read `guidelines/projects/findingaids-argocd/AGENTS.md`. How many Kubernetes
-clusters does that project use, and what are their kubectl context names?
-
-**Q23.** What is the Jira ticket prefix used in `umich-arclight` task tracking, and what
-is the directory path where a new ARC-050 ticket's files should be created?
+**Q19.** What command should be used to run the full test suite without installing the package?
 
 ---
 
-## Section 6 — Operational Knowledge
+## Section 5 — Task Tracking and Workflow
 
-**Q24.** You want to add a seventh mounted project called `new-project` with stack
-`ruby-rails`. Using the **current** `config/projects.json` schema, list every file or
-directory you must create or modify inside the `agents` repository to fully register it.
+**Q20.** Where does task tracking for framework work live, and what is the required final subtask in every task?
 
-**Q25.** An agent working on `deepblue-documents-kube` tries to run `tk apply
-environments/deepblue-documents/production` without asking the developer first. According
-to the project guidelines, is this allowed? Where exactly is the rule that says so?
+**Q21.** Before executing any multi-step plan, what must be done in `AGENT_TODO.md`?
 
-**Q26.** The `AGENT_QUIZ_ANSWERS.md` quiz-protection rule appears in the base guidelines.
-Look at the base `## File Access` section: what is the exact condition under which an
-agent may finally read `AGENT_QUIZ_ANSWERS.md`?
+**Q22.** When a framework task is fully complete, how is it archived from `AGENT_TODO.md` to `AGENT_DONE.md`?
 
-**Q27.** You modify `guidelines/base/AGENTS.md` to add a new rule. What is the next step
-you must perform, and what is the new CLI command to regenerate all six projects at once
-(added in the refactor — no shell loop required)?
+**Q23.** What is the rule about reading `AGENT_QUIZ_ANSWERS.md`?
 
-**Q28.** Where does the `agentsfw` CLI entry point live (module + function name)?
+---
 
-**Q29.** The framework has a shared merge module. What is its name, what are its three
-public functions, and which two modules import from it?
+## Section 6 — Operational Checks
 
-**Q30.** The `agentsfw validate` command checks each project for required and recommended
-files. What are the required files and what are the recommended files?
+**Q24.** What startup git-orientation commands must be run at the beginning of a new session?
 
-**Q31.** What does `agentsfw prompt generate all` do, and where is the merged output
-file written for each project?
+**Q25.** If branch or working state is unexpected during startup checks, what should the agent do next?
 
-**Q32.** Looking at the git log of this repository, what is the most recent commit message?
+**Q26.** You update `guidelines/base/AGENTS.md`. What is the next framework step to validate merged outputs across all configured projects?
+
+**Q27.** What does `agentsfw prompt generate all` do, and where are outputs written?
+
+**Q28.** Looking at current git history, what is the most recent commit message?
 
 

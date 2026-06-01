@@ -24,10 +24,26 @@ Reusable helper scripts for the `agents` framework repository.
   - runs `agentsfw validate`
   - regenerates merged guidelines/prompts for all projects
   - runs one dry-run task command
+- `scripts/check_token_budgets.py` — always-on context budget guardrail:
+  - checks line-count and byte-size budgets for `AGENTS.md`, `guidelines/base/AGENTS.md`, and `.github/copilot-instructions.md`
+  - exits non-zero when files exceed budget or are missing
+- `scripts/ollama_prompt_compress.py` — local prompt compressor via Ollama:
+  - reads input from stdin or `--input` file
+  - rewrites into concise coding prompt text
+- `scripts/ollama_pr_draft.py` — local PR draft generator via Ollama:
+  - reads diff/context from stdin or `--input` file
+  - emits concise markdown PR draft sections
+- `scripts/prompt_from_git.py` — staged-diff prompt builder:
+  - reads staged file list + diff from git
+  - emits compact AI-ready prompt text with capped diff length
 
 ## Usage
 
 ```shell
 bash scripts/smoke_run.sh
+python3 scripts/check_token_budgets.py | cat
+python3 scripts/ollama_prompt_compress.py --input /tmp/prompt.txt | cat
+git --no-pager diff --staged | python3 scripts/ollama_pr_draft.py | cat
+python3 scripts/prompt_from_git.py --max-diff-chars 4000 | cat
 ```
 
