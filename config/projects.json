@@ -2,6 +2,17 @@
   "projects_root": "mounted-projects",
   "projects": [
     {
+      "name": "boxwalker",
+      "stack": "rails-arclight",
+      "relative_path": "boxwalker",
+      "commands": {
+        "up": "docker compose up",
+        "build": "docker compose build",
+        "test": "docker compose exec app bundle exec rails test",
+        "lint": "docker compose exec app bundle exec rubocop"
+      }
+    },
+    {
       "name": "deepblue-documents-kube",
       "stack": "k8s-gitops",
       "relative_path": "deepblue-documents-kube",
