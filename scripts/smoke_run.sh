@@ -8,5 +8,5 @@ python3 -m agents_framework.cli scan
 python3 -m agents_framework.cli validate
 python3 -m agents_framework.cli guidelines generate all
 python3 -m agents_framework.cli prompt generate all
-python3 -m agents_framework.cli run test --projects dor-react-app --dry-run || true
+python3 -m agents_framework.cli run test --projects dor-depot --dry-run || true
 

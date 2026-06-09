@@ -2,6 +2,17 @@
 
 <!-- Entries are prepended (newest first). -->
 
+## 2026-06-09T20:03:56Z — Consistency audit and developer cheatsheet
+
+Audited the core docs/scripts for stale guidance, aligned the smoke-run target with an actually mounted project, added a daily developer cheatsheet, and refreshed stale summary wording.
+
+- [x] Audit core docs/scripts for contradictory or outdated guidance
+- [x] Apply consistency fixes where needed
+- [x] Add `docs/developer-cheatsheet.md` with practical daily commands/workflows
+- [x] Verify tests pass
+- [x] Verify the current state of the project achieves the task goal
+- [x] Verify with the developer that the task is complete
+
 ## 2026-06-09T20:00:58Z — Link mounted project `.agents` to project guidelines
 
 Refactored the mount flow so each mounted project gets a `.agents` symlink to its `guidelines/projects/<mounted-project>` directory and added tests plus docs coverage.

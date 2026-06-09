@@ -178,6 +178,7 @@ PYTHONPATH=src python3 -m agents_framework.cli bootstrap dor-depot
 - Mounted projects are expected under `mounted-projects/` via symlinks.
 - Reusable framework helper scripts live in `scripts/`; mounted projects remain
   agent-unaware.
+- Day-to-day commands and workflows live in `docs/developer-cheatsheet.md`.
 - Add or update tasks in `config/projects.json` as project workflows evolve.
 - Agent meta-files for this project (`AGENTS.md`, `AGENT_PROMPT.md`, `AGENT_QUIZ.md`,
   `AGENT_QUIZ_ANSWERS.md`, `AGENT_TODO.md`, `AGENT_DONE.md`) live at the repository root.

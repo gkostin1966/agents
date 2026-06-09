@@ -1,6 +1,6 @@
 # Recent Changes Summary
 
-Quick handoff summary of recent `agents` framework updates on branch `dor-depot`.
+Quick handoff summary of recent `agents` framework updates.
 
 ## Latest Commits (newest first)
 
