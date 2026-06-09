@@ -8,6 +8,7 @@ import tempfile
 import unittest
 from contextlib import redirect_stdout
 from pathlib import Path
+from typing import Optional
 
 ROOT = Path(__file__).resolve().parents[1]
 SRC = ROOT / "src"
@@ -16,14 +17,14 @@ if str(SRC) not in sys.path:
 
 from agents_framework.cli import ALL_PROJECTS, _resolve_repo_root, _run_generate, build_parser, cmd_bootstrap
 from agents_framework.config import FrameworkConfig, ProjectConfig, load_config
-from agents_framework.framework import init_mounts, run_task, scan_projects
+from agents_framework.framework import init_mounts, run_task
 from agents_framework.guidelines import generate_merged_file
 from agents_framework.prompts import generate_merged_prompt
 from agents_framework.validate import validate_projects
 
 
 class InitMountsTests(unittest.TestCase):
-    def _make_cfg(self, name: str, relative_path: str | None = None) -> FrameworkConfig:
+    def _make_cfg(self, name: str, relative_path: Optional[str] = None) -> FrameworkConfig:
         rel = relative_path if relative_path is not None else name
         return FrameworkConfig(
             projects_root=Path("mounted-projects"),
@@ -94,6 +95,43 @@ class InitMountsTests(unittest.TestCase):
             self.assertEqual(len(results), 1)
             self.assertIn("linked", results[0])
             self.assertTrue((root / "mounted-projects" / "team" / "demo").is_symlink())
+
+    def test_creates_agents_link_for_mounted_project(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            source_root = root / "sources"
+            source_root.mkdir()
+            (source_root / "demo").mkdir()
+
+            guidelines_dir = root / "guidelines" / "projects" / "demo"
+            guidelines_dir.mkdir(parents=True)
+
+            cfg = self._make_cfg("demo")
+            results = init_mounts(root, cfg, source_root)
+
+            agents_link = root / "mounted-projects" / "demo" / ".agents"
+            self.assertTrue(agents_link.is_symlink())
+            self.assertEqual(agents_link.resolve(), guidelines_dir.resolve())
+            self.assertTrue(any(".agents" in line for line in results))
+
+    def test_keeps_existing_agents_link(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            source_root = root / "sources"
+            source_root.mkdir()
+            (source_root / "demo").mkdir()
+
+            guidelines_dir = root / "guidelines" / "projects" / "demo"
+            guidelines_dir.mkdir(parents=True)
+
+            cfg = self._make_cfg("demo")
+            init_mounts(root, cfg, source_root)
+            results = init_mounts(root, cfg, source_root)
+
+            agents_link = root / "mounted-projects" / "demo" / ".agents"
+            self.assertTrue(agents_link.is_symlink())
+            self.assertEqual(agents_link.resolve(), guidelines_dir.resolve())
+            self.assertTrue(any("skip .agents: already exists" in line for line in results))
 
 
 class RunTaskTests(unittest.TestCase):

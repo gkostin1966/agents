@@ -2,6 +2,17 @@
 
 <!-- Entries are prepended (newest first). -->
 
+## 2026-06-09T20:00:58Z — Link mounted project `.agents` to project guidelines
+
+Refactored the mount flow so each mounted project gets a `.agents` symlink to its `guidelines/projects/<mounted-project>` directory and added tests plus docs coverage.
+
+- [x] Audit mount, scan, and guideline-resolution code paths
+- [x] Implement `.agents` link creation/maintenance for mounted projects
+- [x] Add or update tests for the new link behavior
+- [x] Verify tests pass
+- [x] Verify the current state of the project achieves the task goal
+- [x] Verify with the developer that the task is complete
+
 ## 2026-05-22T21:24:17Z — Create recent changes summary document
 
 Created a single markdown handoff summary covering recent framework changes and key usage commands.

@@ -12,7 +12,6 @@
 <!-- Add new tasks below this line. Keep the most urgent task first. -->
 
 
-
 ## Consistency audit and developer cheatsheet
 
 Review framework docs/scripts for consistency after recent optimization changes, fix mismatches, and add a practical developer cheatsheet.

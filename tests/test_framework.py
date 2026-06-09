@@ -43,6 +43,36 @@ class FrameworkTests(unittest.TestCase):
             self.assertEqual(len(statuses), 1)
             self.assertFalse(statuses[0].mounted)
 
+    def test_scan_projects_marks_agents_linked(self) -> None:
+        cfg = FrameworkConfig(
+            projects_root=Path("mounted-projects"),
+            projects=(
+                ProjectConfig(
+                    name="demo",
+                    stack="react-vite",
+                    relative_path="demo",
+                    commands={},
+                ),
+            ),
+        )
+
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            mounted_root = root / "mounted-projects"
+            mounted_root.mkdir()
+            target = root / "sources" / "demo"
+            target.mkdir(parents=True)
+            (root / "guidelines" / "projects" / "demo").mkdir(parents=True)
+
+            project_root = mounted_root / "demo"
+            project_root.symlink_to(target, target_is_directory=True)
+            (project_root / ".agents").symlink_to(root / "guidelines" / "projects" / "demo", target_is_directory=True)
+
+            statuses = scan_projects(root, cfg)
+            self.assertEqual(len(statuses), 1)
+            self.assertTrue(statuses[0].mounted)
+            self.assertTrue(statuses[0].agents_linked)
+
     def test_resolve_project_path(self) -> None:
         cfg = FrameworkConfig(projects_root=Path("mounted-projects"), projects=())
         p = ProjectConfig("demo", "react-vite", "demo", {})

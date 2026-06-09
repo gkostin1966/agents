@@ -22,11 +22,28 @@ class ProjectStatus:
     project: ProjectConfig
     path: Path
     mounted: bool
-    detected_markers: tuple[str, ...]
+    agents_linked: bool = False
+    detected_markers: tuple[str, ...] = ()
 
 
 def resolve_project_path(repo_root: Path, config: FrameworkConfig, project: ProjectConfig) -> Path:
     return repo_root / config.projects_root / project.relative_path
+
+
+def _project_guidelines_path(repo_root: Path, project: ProjectConfig) -> Path:
+    return repo_root / "guidelines" / "projects" / project.name
+
+
+def _ensure_symlink(link: Path, target: Path) -> bool:
+    if link.is_symlink():
+        if link.resolve(strict=False) == target.resolve(strict=False):
+            return False
+        link.unlink()
+    elif link.exists():
+        return False
+
+    os.symlink(target, link, target_is_directory=target.is_dir())
+    return True
 
 
 def detect_markers(path: Path, stack: str) -> tuple[str, ...]:
@@ -43,12 +60,14 @@ def scan_projects(repo_root: Path, config: FrameworkConfig) -> list[ProjectStatu
     for project in config.projects:
         path = resolve_project_path(repo_root, config, project)
         mounted = path.exists()
+        agents_linked = mounted and (path / ".agents").exists()
         markers = detect_markers(path, project.stack) if mounted else ()
         statuses.append(
             ProjectStatus(
                 project=project,
                 path=path,
                 mounted=mounted,
+                agents_linked=agents_linked,
                 detected_markers=markers,
             )
         )
@@ -63,15 +82,28 @@ def init_mounts(repo_root: Path, config: FrameworkConfig, source_root: Path) -> 
     for project in config.projects:
         src = source_root / project.relative_path
         dst = target_root / project.relative_path
+        guidelines_dir = _project_guidelines_path(repo_root, project)
         dst.parent.mkdir(parents=True, exist_ok=True)
+        messages: list[str] = []
         if dst.exists() or dst.is_symlink():
-            results.append(f"skip {project.name}: already exists")
-            continue
-        if not src.exists():
+            messages.append("skip mount: already exists")
+        elif not src.exists():
             results.append(f"skip {project.name}: source missing")
             continue
-        os.symlink(src, dst, target_is_directory=True)
-        results.append(f"linked {project.name} -> {src}")
+
+        if not (dst.exists() or dst.is_symlink()):
+            os.symlink(src, dst, target_is_directory=True)
+            messages.append(f"linked mount -> {src}")
+
+        agents_link = dst / ".agents"
+        if not guidelines_dir.exists():
+            messages.append("skip .agents: guidelines missing")
+        elif _ensure_symlink(agents_link, guidelines_dir):
+            messages.append(f"linked .agents -> {guidelines_dir}")
+        elif agents_link.exists() or agents_link.is_symlink():
+            messages.append("skip .agents: already exists")
+
+        results.append(f"{project.name}: {'; '.join(messages)}")
     return results
 
 

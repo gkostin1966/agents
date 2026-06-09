@@ -50,7 +50,7 @@ agents/
         AGENTS.md
         AGENT_PROMPT.md / AGENT_QUIZ.md / AGENT_QUIZ_ANSWERS.md
         tasks/
-  mounted-projects/             # Symlinks to source repos are created here
+  mounted-projects/             # Symlinks to source repos are created here; each mount also gets `.agents`
   src/agents_framework/
     cli.py                      # CLI entry point
     config.py                   # Loads config/projects.json
@@ -65,7 +65,7 @@ agents/
 
 ## Quick start
 
-Create mounts (symlinks) from the source root:
+Create mounts (symlinks) from the source root; each mounted project also gets a `.agents` link to `guidelines/projects/<name>`:
 
 ```bash
 PYTHONPATH=src python3 -m agents_framework.cli init-mounts --source-root /path/to/source-root
