@@ -1,7 +1,7 @@
 # Agent Rules — boxwalker (project-specific additions)
 
 > Base: `guidelines/base/AGENTS.md`. Matching `## Heading` here replaces base section.
-> Task tracking: `guidelines/projects/boxwalker/tasks/`
+> Task tracking primary path: `.agents/tasks/` (fallback: `AGENTS_ROOT/guidelines/projects/boxwalker/tasks/`)
 
 ## Session State (`tasks/BW-nnn/STATUS.md`)
 
@@ -23,14 +23,16 @@ End of session: update Last Updated, Recent Activity, Next Steps. Commit `STATUS
 
 ## Task Tracking (`tasks/BW-nnn/TODO.md` / `tasks/BW-nnn/DONE.md`)
 
-Files live at `guidelines/projects/boxwalker/tasks/BW-nnn/` (TODO.md, DONE.md, STATUS.md, plans/).
+Primary location: `.agents/tasks/BW-nnn/` (TODO.md, DONE.md, STATUS.md, plans/).
 
-New ticket: `mkdir -p guidelines/projects/boxwalker/tasks/BW-nnn/plans` + create TODO.md + STATUS.md + row in `tasks/README.md`.
+Fallback location when `.agents` is unavailable: `AGENTS_ROOT/guidelines/projects/boxwalker/tasks/BW-nnn/`.
+
+New ticket: `mkdir -p .agents/tasks/BW-nnn/plans` + create TODO.md + STATUS.md + row in `.agents/tasks/README.md`.
 
 - Record plan in `TODO.md` before executing. Check off (`- [x]`) as completed.
 - Every task ends with `- [ ] Verify with the developer that the task is complete`.
 - All done → create `tasks/BW-nnn/DONE.md` with timestamp + summary + checklist.
-- Complete ticket (after PR merges): `git mv guidelines/projects/boxwalker/tasks/BW-nnn guidelines/projects/boxwalker/archive/BW-nnn`
+- Complete ticket (after PR merges): `git mv .agents/tasks/BW-nnn .agents/archive/BW-nnn`
 - Reorder subtasks with Python only — never string-replace.
 
 ## Ruby on Rails Conventions

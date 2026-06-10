@@ -19,8 +19,10 @@ Solr 9 SolrCloud, using SQLite and Docker Compose for local development.
 
 ## Required Developer Input
 
-Before reading framework-managed files, ask for the absolute path to the `agents`
-repository root and store it as `AGENTS_ROOT` for this session.
+Use local `.agents` paths first.
+
+- Primary: read guidance from `.agents/` in the project root.
+- Fallback only if `.agents/` is missing or unreadable: ask for absolute `AGENTS_ROOT`.
 
 ## Startup Workflow
 
@@ -29,11 +31,17 @@ name (for example `BW-42/my-feature`) and use it to locate ticket files under `t
 
 ## Task Files
 
-Read these files from `AGENTS_ROOT`:
+Read these files from `.agents/`:
 
-- `guidelines/projects/boxwalker/tasks/README.md` (task index)
-- `guidelines/projects/boxwalker/tasks/BW-nnn/STATUS.md` (active ticket state)
-- `guidelines/projects/boxwalker/tasks/BW-nnn/TODO.md` (active subtasks)
+- `.agents/tasks/README.md` (task index)
+- `.agents/tasks/BW-nnn/STATUS.md` (active ticket state)
+- `.agents/tasks/BW-nnn/TODO.md` (active subtasks)
+
+Fallback paths when `.agents/` is unavailable:
+
+- `AGENTS_ROOT/guidelines/projects/boxwalker/tasks/README.md`
+- `AGENTS_ROOT/guidelines/projects/boxwalker/tasks/BW-nnn/STATUS.md`
+- `AGENTS_ROOT/guidelines/projects/boxwalker/tasks/BW-nnn/TODO.md`
 
 Replace `BW-nnn` using the ticket from the current branch.
 
@@ -41,7 +49,8 @@ Replace `BW-nnn` using the ticket from the current branch.
 
 Take the onboarding quiz from:
 
-- `AGENTS_ROOT/guidelines/projects/boxwalker/AGENT_QUIZ.md`
+- Primary: `.agents/AGENT_QUIZ.md`
+- Fallback: `AGENTS_ROOT/guidelines/projects/boxwalker/AGENT_QUIZ.md`
 
 After answering all questions, stop and report exactly:
 

@@ -2,6 +2,25 @@
 
 <!-- Entries are prepended (newest first). -->
 
+## 2026-06-10T00:30:05Z — Implement `.agents`-first boxwalker startup for devcontainers
+
+Refactored boxwalker startup guidance so agents use `.agents` paths inside the mounted project first, with `AGENTS_ROOT` only as fallback when `.agents` is unavailable.
+
+- [x] Update boxwalker prompt/rules to use `.agents` paths first with `AGENTS_ROOT` fallback only when `.agents` is unavailable
+- [x] Update `docs/boxwalker-agent-quick-start.md` after implementation to reflect `.agents`-first workflow
+- [x] Verify the current state of the project achieves the task goal
+- [x] Verify with the developer that the task is complete
+
+## 2026-06-10T00:30:05Z — Create boxwalker developer quick start guide
+
+Added a story-style quick start walkthrough showing how to prepare task files and start a new boxwalker agent session with practical commands.
+
+- [x] Outline startup flow and required pre-task steps for boxwalker
+- [x] Add a new docs guide with boxwalker-specific commands and a storybook walkthrough
+- [x] Link the guide from existing docs index/location
+- [x] Verify the current state of the project achieves the task goal
+- [x] Verify with the developer that the task is complete
+
 ## 2026-06-09T20:03:56Z — Consistency audit and developer cheatsheet
 
 Audited the core docs/scripts for stale guidance, aligned the smoke-run target with an actually mounted project, added a daily developer cheatsheet, and refreshed stale summary wording.
