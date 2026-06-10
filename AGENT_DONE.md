@@ -2,6 +2,17 @@
 
 <!-- Entries are prepended (newest first). -->
 
+## 2026-06-10T00:58:18Z — Harden two-hat workflow for mounted projects
+
+Documented a formal two-hat workflow, added a mounted-project `.agents` integrity checker, and introduced boxwalker `.agents/scripts` conventions for reusable vs local helper scripts.
+
+- [x] Add a Two-Hat Workflow section to `README.md`
+- [x] Add a `.agents` integrity checker script for mounted projects
+- [x] Add `.agents/scripts/README.md` conventions for boxwalker
+- [x] Verify tests pass
+- [x] Verify the current state of the project achieves the task goal
+- [x] Verify with the developer that the task is complete
+
 ## 2026-06-10T00:30:05Z — Implement `.agents`-first boxwalker startup for devcontainers
 
 Refactored boxwalker startup guidance so agents use `.agents` paths inside the mounted project first, with `AGENTS_ROOT` only as fallback when `.agents` is unavailable.

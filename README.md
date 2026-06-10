@@ -110,6 +110,36 @@ PYTHONPATH=src python3 -m unittest discover -s tests -p 'test_*.py'
 zsh scripts/smoke_run.sh
 ```
 
+## Two-Hat Workflow
+
+Use two IDE contexts depending on what you are doing:
+
+- **Project hat** (`mounted-projects/<name>/`): work inside the mounted project root and `.agents/` only.
+- **Framework hat** (`agents/` repo root): update framework-managed guidance, run generation commands, and run framework utilities.
+
+### Project hat (local IDE or devcontainer)
+
+- Start agent sessions from the mounted project root.
+- Read startup/rules/tasks through `.agents/`.
+- Keep project-local helper scripts under `.agents/scripts/`.
+
+```bash
+cd /Users/gkostin/GitHub/gkostin1966/agents/mounted-projects/boxwalker
+ls -la .agents/AGENT_PROMPT.md .agents/AGENTS.md .agents/tasks/README.md | cat
+```
+
+### Framework hat (local IDE)
+
+- Edit source-of-truth files under `guidelines/projects/<name>/`.
+- Regenerate merged files when needed.
+- Run `.agents` integrity checks for mounted projects.
+
+```bash
+cd /Users/gkostin/GitHub/gkostin1966/agents
+PYTHONPATH=src python3 -m agents_framework.cli bootstrap boxwalker
+python3 scripts/check_agents_link.py --project boxwalker | cat
+```
+
 ## Agent guidelines
 
 All agent files (`AGENTS.md`, `AGENT_PROMPT.md`, `AGENT_QUIZ.*`, task tracking files) are

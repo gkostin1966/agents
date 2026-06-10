@@ -36,6 +36,9 @@ Reusable helper scripts for the `agents` framework repository.
 - `scripts/prompt_from_git.py` — staged-diff prompt builder:
   - reads staged file list + diff from git
   - emits compact AI-ready prompt text with capped diff length
+- `scripts/check_agents_link.py` — mounted-project `.agents` integrity checker:
+  - validates that a mounted project exists and `.agents` points to `guidelines/projects/<name>`
+  - checks required files under `.agents/` (`AGENTS.md`, `AGENT_PROMPT.md`, `tasks/README.md`)
 
 ## Usage
 
@@ -45,5 +48,6 @@ python3 scripts/check_token_budgets.py | cat
 python3 scripts/ollama_prompt_compress.py --input /tmp/prompt.txt | cat
 git --no-pager diff --staged | python3 scripts/ollama_pr_draft.py | cat
 python3 scripts/prompt_from_git.py --max-diff-chars 4000 | cat
+python3 scripts/check_agents_link.py --project boxwalker | cat
 ```
 
