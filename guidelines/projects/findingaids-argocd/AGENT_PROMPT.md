@@ -1,8 +1,5 @@
 # New Session Startup Prompt — findingaids-argocd
 
-> **Base prompt applies first**: `guidelines/base/AGENT_PROMPT.md`
-> Sections in this file with the same `## Heading` override base startup blocks.
-
 ## Prompt Invocation
 
 Copy and paste the line below into a new agent session:
@@ -18,8 +15,10 @@ and Argo CD configuration repository for the Finding Aids platform.
 
 ## Required Developer Input
 
-Before reading framework-managed files, ask for the absolute path to the `agents`
-repository root and store it as `AGENTS_ROOT` for this session.
+Use local `.agents` paths first.
+
+- Primary: read guidance from `.agents/` in the project root.
+- Fallback only if `.agents/` is missing or unreadable: ask for absolute `AGENTS_ROOT`.
 
 ## Startup Workflow
 
@@ -39,7 +38,7 @@ Use the first unchecked subtask in the first task in `AGENT_TODO.md` as the resu
 
 Take the onboarding quiz from:
 
-- `AGENTS_ROOT/guidelines/projects/findingaids-argocd/AGENT_QUIZ.md`
+- `.agents/AGENT_QUIZ.md`
 
 After answering all questions, stop and report exactly:
 

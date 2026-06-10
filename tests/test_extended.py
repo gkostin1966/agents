@@ -404,31 +404,28 @@ class BootstrapCommandTests(unittest.TestCase):
         self.assertEqual(args.which, "bootstrap")
         self.assertEqual(args.project, "demo")
 
-    def test_bootstrap_generates_files_and_prints_one_shot_prompt(self) -> None:
+    def test_bootstrap_prints_one_shot_prompt_without_generating_artifacts(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)
-            base_dir = root / "guidelines" / "base"
-            base_dir.mkdir(parents=True)
             proj_dir = root / "guidelines" / "projects" / "demo"
             proj_dir.mkdir(parents=True)
 
-            (base_dir / "AGENTS.md").write_text("# Base\n\n## File Access\n\nBase.\n", encoding="utf-8")
-            (base_dir / "AGENT_PROMPT.md").write_text("# Base Prompt\n\n## Startup Workflow\n\nBase prompt.\n", encoding="utf-8")
-            (proj_dir / "AGENTS.md").write_text("# Demo\n\n## Extra\n\nProject.\n", encoding="utf-8")
-            (proj_dir / "AGENT_PROMPT.md").write_text("# Demo Prompt\n\n## Task Files\n\nProject prompt.\n", encoding="utf-8")
+            (proj_dir / "AGENTS.md").write_text("# Demo\n\n## Rules\n\nProject rules.\n", encoding="utf-8")
+            (proj_dir / "AGENT_PROMPT.md").write_text("# Demo Prompt\n\n## Startup\n\nProject prompt.\n", encoding="utf-8")
 
             out = io.StringIO()
             with redirect_stdout(out):
                 code = cmd_bootstrap(self._cfg(), root, "demo")
 
             self.assertEqual(code, 0)
-            self.assertTrue((proj_dir / "AGENTS_MERGED.md").exists())
-            self.assertTrue((proj_dir / "AGENT_PROMPT_MERGED.md").exists())
+            # No merged artifact files should be created.
+            self.assertFalse((proj_dir / "AGENTS_MERGED.md").exists())
+            self.assertFalse((proj_dir / "AGENT_PROMPT_MERGED.md").exists())
 
             text = out.getvalue()
             self.assertIn("Copy/paste into a new coding-agent chat", text)
-            self.assertIn("AGENT_PROMPT_MERGED.md", text)
-            self.assertIn("AGENTS_MERGED.md", text)
+            self.assertIn("AGENT_PROMPT.md", text)
+            self.assertIn("AGENTS.md", text)
 
     def test_bootstrap_rejects_unknown_project(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:

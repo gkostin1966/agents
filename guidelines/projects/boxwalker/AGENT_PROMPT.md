@@ -1,8 +1,5 @@
 # New Session Startup Prompt — boxwalker
 
-> **Base prompt applies first**: `guidelines/base/AGENT_PROMPT.md`
-> Sections in this file with the same `## Heading` override base startup blocks.
-
 ## Prompt Invocation
 
 Copy and paste the line below into a new agent session:

@@ -17,19 +17,27 @@ PYTHONPATH=src python3 -m agents_framework.cli scan
 PYTHONPATH=src python3 -m agents_framework.cli validate
 ```
 
-## Regenerate merged guidance for a project
+## Regenerate startup text for a project
 
 ```bash
-PYTHONPATH=src python3 -m agents_framework.cli guidelines generate dor-depot
-PYTHONPATH=src python3 -m agents_framework.cli prompt generate dor-depot
 PYTHONPATH=src python3 -m agents_framework.cli bootstrap dor-depot
+PYTHONPATH=src python3 -m agents_framework.cli bootstrap boxwalker
 ```
 
-## Regenerate all configured projects
+## Propagate base rule changes to project files (framework hat)
 
 ```bash
-PYTHONPATH=src python3 -m agents_framework.cli guidelines generate all
-PYTHONPATH=src python3 -m agents_framework.cli prompt generate all
+# See what has drifted from base
+PYTHONPATH=src python3 -m agents_framework.cli diff-base boxwalker
+
+# Sync unchanged sections (skip customized ones)
+PYTHONPATH=src python3 -m agents_framework.cli sync-base boxwalker
+
+# Force sync all sections including customized ones
+PYTHONPATH=src python3 -m agents_framework.cli sync-base boxwalker --force
+
+# Sync a specific file only
+PYTHONPATH=src python3 -m agents_framework.cli sync-base boxwalker --file AGENTS.md
 ```
 
 ## Mount projects from a source root

@@ -8,6 +8,14 @@ from .config import FrameworkConfig, load_config
 from .framework import init_mounts, run_task, scan_projects
 from .guidelines import generate_merged_file
 from .prompts import generate_merged_prompt
+from .sync_base import (
+    SECTION_STATUS_CUSTOMIZED,
+    SECTION_STATUS_MISSING,
+    SECTION_STATUS_PROJECT_ONLY,
+    SECTION_STATUS_SAME,
+    diff_base,
+    sync_base,
+)
 from .validate import validate_projects
 
 
@@ -62,30 +70,81 @@ def _bootstrap_prompt_text(prompt_path: Path, guidelines_path: Path) -> str:
 
 
 def cmd_bootstrap(cfg: FrameworkConfig, root: Path, project: str) -> int:
+    """Print startup text for a project session without generating merge artifacts."""
     configured = {p.name for p in cfg.projects}
     if project not in configured:
         print(f"Error: unknown project '{project}'.")
         return 2
 
-    try:
-        prompt_path = generate_merged_prompt(root, project)
-        guidelines_path = generate_merged_file(root, project)
-    except FileNotFoundError as exc:
-        print(f"Error: {exc}")
+    proj_dir = root / "guidelines" / "projects" / project
+    prompt_path = proj_dir / "AGENT_PROMPT.md"
+    guidelines_path = proj_dir / "AGENTS.md"
+
+    missing = [str(p) for p in (prompt_path, guidelines_path) if not p.exists()]
+    if missing:
+        for m in missing:
+            print(f"Error: missing file: {m}")
         return 1
 
-    if prompt_path is None or guidelines_path is None:
-        print("Error: bootstrap generation unexpectedly returned no output path.")
-        return 1
-
-    if prompt_path:
-        print(f"Written: {prompt_path}")
-    if guidelines_path:
-        print(f"Written: {guidelines_path}")
-
+    print(f"Project:    {project}")
+    print(f"Guidelines: {guidelines_path}")
+    print(f"Prompt:     {prompt_path}")
     print()
     print(_bootstrap_prompt_text(prompt_path, guidelines_path))
     return 0
+
+
+def cmd_sync_base(
+    cfg: FrameworkConfig,
+    root: Path,
+    project: str,
+    filename: str,
+    force: bool,
+) -> int:
+    configured = {p.name for p in cfg.projects}
+    if project not in configured:
+        print(f"Error: unknown project '{project}'.")
+        return 2
+
+    for fname in ([filename] if filename != "all" else ["AGENTS.md", "AGENT_PROMPT.md"]):
+        try:
+            messages = sync_base(root, project, fname, force=force)
+        except FileNotFoundError as exc:
+            print(f"Error: {exc}")
+            return 1
+        print(f"\n{project}/{fname}")
+        for msg in messages:
+            print(f"  {msg}")
+    return 0
+
+
+def cmd_diff_base(cfg: FrameworkConfig, root: Path, project: str, filename: str) -> int:
+    configured = {p.name for p in cfg.projects}
+    if project not in configured:
+        print(f"Error: unknown project '{project}'.")
+        return 2
+
+    STATUS_ICON = {
+        SECTION_STATUS_SAME: "=",
+        SECTION_STATUS_CUSTOMIZED: "~",
+        SECTION_STATUS_MISSING: "!",
+        SECTION_STATUS_PROJECT_ONLY: "+",
+    }
+
+    exit_code = 0
+    for fname in ([filename] if filename != "all" else ["AGENTS.md", "AGENT_PROMPT.md"]):
+        try:
+            diffs = diff_base(root, project, fname)
+        except FileNotFoundError as exc:
+            print(f"Error: {exc}")
+            return 1
+        print(f"\n{project}/{fname}")
+        for d in diffs:
+            icon = STATUS_ICON.get(d.status, "?")
+            print(f"  {icon} {d.status:12} {d.key}")
+            if d.status == SECTION_STATUS_MISSING:
+                exit_code = 1
+    return exit_code
 
 
 def cmd_validate(cfg: FrameworkConfig, root: Path, projects: str) -> int:
@@ -177,10 +236,41 @@ def build_parser() -> argparse.ArgumentParser:
 
     bootstrap = sub.add_parser(
         "bootstrap",
-        help="Regenerate merged project files and print one-shot startup prompt text",
+        help="Print one-shot startup prompt text for a project (no merge artifacts generated)",
     )
     bootstrap.add_argument("project", help="Project name")
     bootstrap.set_defaults(which="bootstrap")
+
+    sync = sub.add_parser(
+        "sync-base",
+        help="Propagate base section changes into a self-contained project file",
+    )
+    sync.add_argument("project", help="Project name")
+    sync.add_argument(
+        "--file",
+        default="all",
+        dest="filename",
+        help="File to sync: AGENTS.md | AGENT_PROMPT.md | all (default: all)",
+    )
+    sync.add_argument(
+        "--force",
+        action="store_true",
+        help="Replace customized sections too (not just unchanged ones)",
+    )
+    sync.set_defaults(which="sync-base")
+
+    diff = sub.add_parser(
+        "diff-base",
+        help="Show drift between base sections and a self-contained project file",
+    )
+    diff.add_argument("project", help="Project name")
+    diff.add_argument(
+        "--file",
+        default="all",
+        dest="filename",
+        help="File to diff: AGENTS.md | AGENT_PROMPT.md | all (default: all)",
+    )
+    diff.set_defaults(which="diff-base")
 
     guidelines = sub.add_parser("guidelines", help="Generate or print merged AGENTS.md for a project")
     g_sub = guidelines.add_subparsers(dest="g_command", required=True)
@@ -225,6 +315,10 @@ def main() -> int:
         return cmd_init_mounts(cfg, root, args.source_root)
     if args.which == "bootstrap":
         return cmd_bootstrap(cfg, root, args.project)
+    if args.which == "sync-base":
+        return cmd_sync_base(cfg, root, args.project, args.filename, args.force)
+    if args.which == "diff-base":
+        return cmd_diff_base(cfg, root, args.project, args.filename)
     if args.which == "run":
         return cmd_run(cfg, root, args.projects, args.task, args.dry_run)
     if args.which == "guidelines":

@@ -1,8 +1,5 @@
 # New Session Startup Prompt — dor-depot
 
-> **Base prompt applies first**: `guidelines/base/AGENT_PROMPT.md`
-> Sections in this file with the same `## Heading` override base startup blocks.
-
 ## Prompt Invocation
 
 Copy and paste the line below into a new agent session:
@@ -18,8 +15,10 @@ application for digital object preservation with Spring Modulith and OCFL.
 
 ## Required Developer Input
 
-Before reading framework-managed files, ask for the absolute path to the `agents`
-repository root and store it as `AGENTS_ROOT` for this session.
+Use local `.agents` paths first.
+
+- Primary: read guidance from `.agents/` in the project root.
+- Fallback only if `.agents/` is missing or unreadable: ask for absolute `AGENTS_ROOT`.
 
 ## Startup Workflow
 
@@ -40,7 +39,7 @@ Replace `DOR-nnn` using the ticket from the current branch.
 
 Take the onboarding quiz from:
 
-- `AGENTS_ROOT/guidelines/projects/dor-depot/AGENT_QUIZ.md`
+- `.agents/AGENT_QUIZ.md`
 
 After answering all questions, stop and report exactly:
 

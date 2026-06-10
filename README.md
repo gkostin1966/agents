@@ -144,63 +144,44 @@ python3 scripts/check_agents_link.py --project boxwalker | cat
 
 All agent files (`AGENTS.md`, `AGENT_PROMPT.md`, `AGENT_QUIZ.*`, task tracking files) are
 stored in this repository under `guidelines/projects/<project-name>/`, not in the mounted
-project roots.
+project roots. Each project file is **self-contained** — base rules are inlined and managed
+through the two-hat workflow.
 
 ### How guidelines work
 
-- **`guidelines/base/AGENTS.md`** — shared rules that apply to all projects: file access,
-  CLI usage, git commits, pager suppression, markdown formatting, etc.
-- **`guidelines/projects/<name>/AGENTS.md`** — project-specific overrides and additions.
-  Any section with the same `## Heading` as the base **replaces** it; new sections are
-  appended after the base.
+- **`guidelines/base/AGENTS.md`** — shared rules used as the reference for `sync-base`.
+- **`guidelines/projects/<name>/AGENTS.md`** — self-contained project file with base rules
+  inlined. Sections that differ from base are considered customized and protected from
+  automatic sync.
+
+### Propagate base rule changes (framework hat)
+
+```bash
+# Show which sections have drifted from base
+PYTHONPATH=src python3 -m agents_framework.cli diff-base boxwalker
+
+# Sync unchanged sections; skip project-customized sections
+PYTHONPATH=src python3 -m agents_framework.cli sync-base boxwalker
+
+# Force-replace all sections including customized ones
+PYTHONPATH=src python3 -m agents_framework.cli sync-base boxwalker --force
+```
 
 ### How startup prompts work
 
-- **`guidelines/base/AGENT_PROMPT.md`** — shared startup workflow blocks.
-- **`guidelines/projects/<name>/AGENT_PROMPT.md`** — project-specific prompt overrides.
-  Prompts use the same heading-based merge semantics as guidelines.
+- **`guidelines/base/AGENT_PROMPT.md`** — reference prompt blocks.
+- **`guidelines/projects/<name>/AGENT_PROMPT.md`** — self-contained project startup prompt.
 
-### Generate a merged AGENTS.md
+### Get one-shot bootstrap text
 
-```bash
-# Write merged file to guidelines/projects/<name>/AGENTS_MERGED.md
-PYTHONPATH=src python3 -m agents_framework.cli guidelines generate deepblue-documents-kube
-
-# Regenerate all configured projects at once
-PYTHONPATH=src python3 -m agents_framework.cli guidelines generate all
-
-# Print merged content to stdout (useful for review or piping)
-PYTHONPATH=src python3 -m agents_framework.cli guidelines generate dor-react-app --print
-```
-
-`AGENTS_MERGED.md` is gitignored (auto-generated artefact). The two source-of-truth files
-are `guidelines/base/AGENTS.md` and `guidelines/projects/<name>/AGENTS.md`.
-
-### Generate a merged AGENT_PROMPT.md
-
-```bash
-# Write merged file to guidelines/projects/<name>/AGENT_PROMPT_MERGED.md
-PYTHONPATH=src python3 -m agents_framework.cli prompt generate deepblue-documents-kube
-
-# Regenerate all configured projects at once
-PYTHONPATH=src python3 -m agents_framework.cli prompt generate all
-
-# Print merged content to stdout (useful for review or piping)
-PYTHONPATH=src python3 -m agents_framework.cli prompt generate dor-react-app --print
-```
-
-`AGENT_PROMPT_MERGED.md` is gitignored (auto-generated artefact). The two source-of-truth
-files are `guidelines/base/AGENT_PROMPT.md` and
-`guidelines/projects/<name>/AGENT_PROMPT.md`.
-
-### Generate one-shot bootstrap prompt text
-
-Regenerate both merged files for one project and print copy/paste text for starting a
-coding-agent session in that mounted project:
+Print copy/paste startup text for a project session:
 
 ```bash
 PYTHONPATH=src python3 -m agents_framework.cli bootstrap dor-depot
 ```
+
+No merge artifacts are generated. The agent reads `AGENTS.md` and `AGENT_PROMPT.md`
+directly from `.agents/` inside the project.
 
 ## Notes
 
@@ -213,6 +194,5 @@ PYTHONPATH=src python3 -m agents_framework.cli bootstrap dor-depot
 - Add or update tasks in `config/projects.json` as project workflows evolve.
 - Agent meta-files for this project (`AGENTS.md`, `AGENT_PROMPT.md`, `AGENT_QUIZ.md`,
   `AGENT_QUIZ_ANSWERS.md`, `AGENT_TODO.md`, `AGENT_DONE.md`) live at the repository root.
-- Agent files for each mounted project live under `guidelines/projects/<name>/`.
-- `AGENTS_MERGED.md` and `AGENT_PROMPT_MERGED.md` files are gitignored auto-generated
-  artefacts; regenerate on demand.
+- Agent files for each mounted project live under `guidelines/projects/<name>/` and are
+  self-contained — no merge artifacts are generated.

@@ -2,6 +2,21 @@
 
 <!-- Entries are prepended (newest first). -->
 
+## 2026-06-10T01:29:31Z — Abandon merge model — flatten project files and add sync-base/diff-base
+
+Replaced the base+override merge model with self-contained per-project files. Added `sync-base` and `diff-base` CLI commands for two-hat propagation. Simplified `bootstrap` to no longer generate artifacts. Removed `*_MERGED.md` patterns from `.gitignore` and deleted all existing artifacts.
+
+- [x] Flatten all project AGENTS.md and AGENT_PROMPT.md to self-contained (base rules inlined)
+- [x] Add `sync-base` CLI command to propagate base section changes into a project file
+- [x] Add `diff-base` CLI command to show drift between base and a project file
+- [x] Simplify `bootstrap` to validate files present and print startup text without a merge step
+- [x] Remove `*_MERGED.md` from `.gitignore`, delete any existing merged artifacts
+- [x] Update tests
+- [x] Update docs and cheatsheet
+- [x] Verify tests pass
+- [x] Verify the current state of the project achieves the task goal
+- [x] Verify with the developer that the task is complete
+
 ## 2026-06-10T00:58:18Z — Harden two-hat workflow for mounted projects
 
 Documented a formal two-hat workflow, added a mounted-project `.agents` integrity checker, and introduced boxwalker `.agents/scripts` conventions for reusable vs local helper scripts.
