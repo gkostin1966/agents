@@ -40,10 +40,10 @@ PYTHONPATH=src python3 -m agents_framework.cli sync-base boxwalker --force
 PYTHONPATH=src python3 -m agents_framework.cli sync-base boxwalker --file AGENTS.md
 ```
 
-## Mount projects from a source root
+## Mount projects from configured source paths
 
 ```bash
-PYTHONPATH=src python3 -m agents_framework.cli init-mounts --source-root /path/to/source-root
+PYTHONPATH=src python3 -m agents_framework.cli init-mounts
 ```
 
 ## Run checks before asking for help

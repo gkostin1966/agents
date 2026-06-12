@@ -15,7 +15,14 @@ SRC = ROOT / "src"
 if str(SRC) not in sys.path:
     sys.path.insert(0, str(SRC))
 
-from agents_framework.cli import ALL_PROJECTS, _resolve_repo_root, _run_generate, build_parser, cmd_bootstrap
+from agents_framework.cli import (
+    ALL_PROJECTS,
+    _resolve_repo_root,
+    _run_generate,
+    build_parser,
+    cmd_bootstrap,
+    cmd_project_add,
+)
 from agents_framework.config import FrameworkConfig, ProjectConfig, load_config
 from agents_framework.framework import init_mounts, run_task
 from agents_framework.guidelines import generate_merged_file
@@ -24,22 +31,35 @@ from agents_framework.validate import validate_projects
 
 
 class InitMountsTests(unittest.TestCase):
-    def _make_cfg(self, name: str, relative_path: Optional[str] = None) -> FrameworkConfig:
+    def _make_cfg(
+        self,
+        name: str,
+        relative_path: Optional[str] = None,
+        source_path: Optional[str] = None,
+    ) -> FrameworkConfig:
         rel = relative_path if relative_path is not None else name
+        src = source_path if source_path is not None else f"/tmp/{name}"
         return FrameworkConfig(
             projects_root=Path("mounted-projects"),
-            projects=(ProjectConfig(name=name, stack="react-vite", relative_path=rel, commands={}),),
+            projects=(
+                ProjectConfig(
+                    name=name,
+                    stack="react-vite",
+                    relative_path=rel,
+                    commands={},
+                    source_path=src,
+                ),
+            ),
         )
 
     def test_creates_symlink(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)
-            source_root = root / "sources"
-            source_root.mkdir()
-            (source_root / "demo").mkdir()
+            source = root / "sources" / "demo"
+            source.mkdir(parents=True)
 
-            cfg = self._make_cfg("demo")
-            results = init_mounts(root, cfg, source_root)
+            cfg = self._make_cfg("demo", source_path=str(source))
+            results = init_mounts(root, cfg)
             self.assertEqual(len(results), 1)
             self.assertIn("linked", results[0])
             link = root / "mounted-projects" / "demo"
@@ -48,36 +68,30 @@ class InitMountsTests(unittest.TestCase):
     def test_skips_when_already_exists(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)
-            source_root = root / "sources"
-            source_root.mkdir()
-            (source_root / "demo").mkdir()
+            source = root / "sources" / "demo"
+            source.mkdir(parents=True)
 
-            cfg = self._make_cfg("demo")
-            init_mounts(root, cfg, source_root)
-            results = init_mounts(root, cfg, source_root)
+            cfg = self._make_cfg("demo", source_path=str(source))
+            init_mounts(root, cfg)
+            results = init_mounts(root, cfg)
             self.assertIn("skip", results[0])
 
     def test_skips_when_source_missing(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)
-            source_root = root / "sources"
-            source_root.mkdir()
-
-            cfg = self._make_cfg("demo")
-            results = init_mounts(root, cfg, source_root)
+            cfg = self._make_cfg("demo", source_path=str(root / "sources" / "demo"))
+            results = init_mounts(root, cfg)
             self.assertIn("skip", results[0])
             self.assertIn("source missing", results[0])
 
     def test_uses_relative_path_for_source_lookup(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)
-            source_root = root / "sources"
-            source_root.mkdir()
-            # Source exists at relative_path, not at project name.
-            (source_root / "custom-path").mkdir()
+            source = root / "sources" / "custom-path"
+            source.mkdir(parents=True)
 
-            cfg = self._make_cfg("demo-project", relative_path="custom-path")
-            results = init_mounts(root, cfg, source_root)
+            cfg = self._make_cfg("demo-project", relative_path="custom-path", source_path=str(source))
+            results = init_mounts(root, cfg)
             self.assertEqual(len(results), 1)
             self.assertIn("linked", results[0])
             self.assertTrue((root / "mounted-projects" / "custom-path").is_symlink())
@@ -85,29 +99,69 @@ class InitMountsTests(unittest.TestCase):
     def test_creates_parent_dirs_for_nested_relative_path(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)
-            source_root = root / "sources"
-            source_root.mkdir()
-            nested = source_root / "team" / "demo"
+            nested = root / "sources" / "team" / "demo"
             nested.mkdir(parents=True)
 
-            cfg = self._make_cfg("demo", relative_path="team/demo")
-            results = init_mounts(root, cfg, source_root)
+            cfg = self._make_cfg("demo", relative_path="team/demo", source_path=str(nested))
+            results = init_mounts(root, cfg)
             self.assertEqual(len(results), 1)
             self.assertIn("linked", results[0])
             self.assertTrue((root / "mounted-projects" / "team" / "demo").is_symlink())
 
+    def test_uses_project_source_path_without_source_root(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            source = root / "wherever" / "demo"
+            source.mkdir(parents=True)
+            (root / "guidelines" / "projects" / "demo").mkdir(parents=True)
+
+            cfg = FrameworkConfig(
+                projects_root=Path("mounted-projects"),
+                projects=(
+                    ProjectConfig(
+                        name="demo",
+                        stack="react-vite",
+                        relative_path="demo",
+                        commands={},
+                        source_path=str(source),
+                    ),
+                ),
+            )
+
+            results = init_mounts(root, cfg)
+            self.assertEqual(len(results), 1)
+            self.assertIn("linked", results[0])
+            self.assertTrue((root / "mounted-projects" / "demo").is_symlink())
+
+    def test_reports_missing_source_root_when_source_path_not_set(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            cfg = FrameworkConfig(
+                projects_root=Path("mounted-projects"),
+                projects=(
+                    ProjectConfig(
+                        name="demo",
+                        stack="react-vite",
+                        relative_path="demo",
+                        commands={},
+                        source_path=None,
+                    ),
+                ),
+            )
+            results = init_mounts(root, cfg)
+            self.assertIn("source missing", results[0])
+
     def test_creates_agents_link_for_mounted_project(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)
-            source_root = root / "sources"
-            source_root.mkdir()
-            (source_root / "demo").mkdir()
+            source = root / "sources" / "demo"
+            source.mkdir(parents=True)
 
             guidelines_dir = root / "guidelines" / "projects" / "demo"
             guidelines_dir.mkdir(parents=True)
 
-            cfg = self._make_cfg("demo")
-            results = init_mounts(root, cfg, source_root)
+            cfg = self._make_cfg("demo", source_path=str(source))
+            results = init_mounts(root, cfg)
 
             agents_link = root / "mounted-projects" / "demo" / ".agents"
             self.assertTrue(agents_link.is_symlink())
@@ -117,16 +171,15 @@ class InitMountsTests(unittest.TestCase):
     def test_keeps_existing_agents_link(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)
-            source_root = root / "sources"
-            source_root.mkdir()
-            (source_root / "demo").mkdir()
+            source = root / "sources" / "demo"
+            source.mkdir(parents=True)
 
             guidelines_dir = root / "guidelines" / "projects" / "demo"
             guidelines_dir.mkdir(parents=True)
 
-            cfg = self._make_cfg("demo")
-            init_mounts(root, cfg, source_root)
-            results = init_mounts(root, cfg, source_root)
+            cfg = self._make_cfg("demo", source_path=str(source))
+            init_mounts(root, cfg)
+            results = init_mounts(root, cfg)
 
             agents_link = root / "mounted-projects" / "demo" / ".agents"
             self.assertTrue(agents_link.is_symlink())
@@ -170,18 +223,61 @@ class LoadConfigTests(unittest.TestCase):
             data = {
                 "projects_root": "mounted-projects",
                 "projects": [
-                    {"name": "demo", "stack": "react-vite", "relative_path": "demo", "commands": {}}
+                    {
+                        "name": "demo",
+                        "stack": "react-vite",
+                        "relative_path": "demo",
+                        "commands": {},
+                        "source_path": "/tmp/demo-src",
+                    }
                 ],
             }
             (config_dir / "projects.json").write_text(json.dumps(data), encoding="utf-8")
             cfg = load_config(root)
             self.assertEqual(len(cfg.projects), 1)
             self.assertEqual(cfg.projects[0].name, "demo")
+            self.assertEqual(cfg.projects[0].source_path, "/tmp/demo-src")
+
+    def test_loads_optional_source_path(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            config_dir = root / "config"
+            config_dir.mkdir()
+            data = {
+                "projects_root": "mounted-projects",
+                "projects": [
+                    {
+                        "name": "demo",
+                        "stack": "react-vite",
+                        "relative_path": "demo",
+                        "commands": {},
+                        "source_path": "/tmp/demo-src",
+                    }
+                ],
+            }
+            (config_dir / "projects.json").write_text(json.dumps(data), encoding="utf-8")
+            cfg = load_config(root)
+            self.assertEqual(cfg.projects[0].source_path, "/tmp/demo-src")
 
     def test_missing_file_raises(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             with self.assertRaises(FileNotFoundError):
                 load_config(Path(tmp))
+
+    def test_missing_source_path_raises(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            config_dir = root / "config"
+            config_dir.mkdir()
+            data = {
+                "projects_root": "mounted-projects",
+                "projects": [
+                    {"name": "demo", "stack": "react-vite", "relative_path": "demo", "commands": {}}
+                ],
+            }
+            (config_dir / "projects.json").write_text(json.dumps(data), encoding="utf-8")
+            with self.assertRaises(ValueError):
+                load_config(root)
 
 
 class GenerateMergedFileWriteTests(unittest.TestCase):
@@ -434,6 +530,120 @@ class BootstrapCommandTests(unittest.TestCase):
                 code = cmd_bootstrap(self._cfg(), Path(tmp), "unknown")
             self.assertEqual(code, 2)
             self.assertIn("unknown project", out.getvalue())
+
+
+class ProjectAddCommandTests(unittest.TestCase):
+    def test_parser_accepts_project_add(self) -> None:
+        parser = build_parser()
+        args = parser.parse_args(
+            [
+                "project",
+                "add",
+                "demo",
+                "--stack",
+                "react-vite",
+                "--source-path",
+                "/tmp/demo",
+            ]
+        )
+        self.assertEqual(args.which, "project-add")
+        self.assertEqual(args.name, "demo")
+
+    def test_project_add_writes_config_and_mounts(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            (root / "config").mkdir(parents=True)
+            (root / "config" / "projects.json").write_text(
+                json.dumps({"projects_root": "mounted-projects", "projects": []}),
+                encoding="utf-8",
+            )
+
+            src = root / "sources" / "demo"
+            src.mkdir(parents=True)
+            (root / "guidelines" / "base").mkdir(parents=True)
+            (root / "guidelines" / "base" / "AGENTS.md").write_text("# Base rules\n", encoding="utf-8")
+            (root / "guidelines" / "base" / "AGENT_PROMPT.md").write_text("# Base prompt\n", encoding="utf-8")
+
+            code = cmd_project_add(
+                root,
+                name="demo",
+                stack="react-vite",
+                relative_path="demo",
+                source_path=str(src),
+                mount=True,
+            )
+            self.assertEqual(code, 0)
+
+            cfg = load_config(root)
+            self.assertEqual(cfg.projects[0].name, "demo")
+            self.assertEqual(cfg.projects[0].source_path, str(src))
+            self.assertTrue((root / "mounted-projects" / "demo").is_symlink())
+            self.assertTrue((root / "mounted-projects" / "demo" / ".agents").is_symlink())
+            self.assertEqual((root / "guidelines" / "projects" / "demo" / "AGENTS.md").read_text(encoding="utf-8"), "# Base rules\n")
+
+    def test_parser_rejects_unknown_stack(self) -> None:
+        parser = build_parser()
+        with self.assertRaises(SystemExit):
+            parser.parse_args(
+                [
+                    "project",
+                    "add",
+                    "demo",
+                    "--stack",
+                    "unknown-stack",
+                    "--source-path",
+                    "/tmp/demo",
+                ]
+            )
+
+    def test_project_add_rejects_unknown_stack(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            (root / "config").mkdir(parents=True)
+            (root / "config" / "projects.json").write_text(
+                json.dumps({"projects_root": "mounted-projects", "projects": []}),
+                encoding="utf-8",
+            )
+
+            code = cmd_project_add(
+                root,
+                name="demo",
+                stack="unknown-stack",
+                relative_path="demo",
+                source_path=str(root / "sources" / "demo"),
+                mount=False,
+            )
+            self.assertEqual(code, 2)
+            cfg = load_config(root)
+            self.assertEqual(len(cfg.projects), 0)
+
+    def test_project_add_keeps_existing_guideline_files(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            (root / "config").mkdir(parents=True)
+            (root / "config" / "projects.json").write_text(
+                json.dumps({"projects_root": "mounted-projects", "projects": []}),
+                encoding="utf-8",
+            )
+
+            src = root / "sources" / "demo"
+            src.mkdir(parents=True)
+            project_dir = root / "guidelines" / "projects" / "demo"
+            project_dir.mkdir(parents=True)
+            (project_dir / "AGENTS.md").write_text("# Existing agents\n", encoding="utf-8")
+            (project_dir / "AGENT_PROMPT.md").write_text("# Existing prompt\n", encoding="utf-8")
+
+            code = cmd_project_add(
+                root,
+                name="demo",
+                stack="react-vite",
+                relative_path="demo",
+                source_path=str(src),
+                mount=False,
+            )
+            self.assertEqual(code, 0)
+            self.assertEqual((project_dir / "AGENTS.md").read_text(encoding="utf-8"), "# Existing agents\n")
+            self.assertEqual((project_dir / "AGENT_PROMPT.md").read_text(encoding="utf-8"), "# Existing prompt\n")
 
 
 if __name__ == "__main__":

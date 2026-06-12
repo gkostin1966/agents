@@ -4,8 +4,8 @@ import argparse
 from pathlib import Path
 from typing import Callable, Optional
 
-from .config import FrameworkConfig, load_config
-from .framework import init_mounts, run_task, scan_projects
+from .config import FrameworkConfig, add_project_to_config, load_config
+from .framework import STACK_MARKERS, init_mounts, run_task, scan_projects
 from .guidelines import generate_merged_file
 from .prompts import generate_merged_prompt
 from .sync_base import (
@@ -20,6 +20,7 @@ from .validate import validate_projects
 
 
 ALL_PROJECTS = "all"
+SUPPORTED_STACKS = tuple(sorted(STACK_MARKERS.keys()))
 
 
 def _resolve_repo_root(repo_root: Optional[str]) -> Path:
@@ -67,6 +68,36 @@ def _bootstrap_prompt_text(prompt_path: Path, guidelines_path: Path) -> str:
         f"Read {prompt_ref} and follow it.\n"
         f"Then read {guidelines_ref} and follow those rules for all code changes.\n"
     )
+
+
+def _ensure_project_guidelines(root: Path, project: str) -> list[str]:
+    project_dir = root / "guidelines" / "projects" / project
+    project_dir.mkdir(parents=True, exist_ok=True)
+
+    messages: list[str] = []
+    for filename, fallback in (
+        (
+            "AGENTS.md",
+            f"# {project}\n\n## Project Notes\n\nAdd project-specific rules here.\n",
+        ),
+        (
+            "AGENT_PROMPT.md",
+            f"# {project} prompt\n\n## Startup Workflow\n\nAdd project startup instructions here.\n",
+        ),
+    ):
+        target = project_dir / filename
+        if target.exists():
+            messages.append(f"keep {target}: already exists")
+            continue
+
+        base_path = root / "guidelines" / "base" / filename
+        if base_path.exists():
+            target.write_text(base_path.read_text(encoding="utf-8"), encoding="utf-8")
+            messages.append(f"created {target} from {base_path}")
+        else:
+            target.write_text(fallback, encoding="utf-8")
+            messages.append(f"created {target} with minimal starter content")
+    return messages
 
 
 def cmd_bootstrap(cfg: FrameworkConfig, root: Path, project: str) -> int:
@@ -173,8 +204,59 @@ def cmd_scan(cfg: FrameworkConfig, root: Path) -> int:
     return 0
 
 
-def cmd_init_mounts(cfg: FrameworkConfig, root: Path, source_root: str) -> int:
-    results = init_mounts(root, cfg, Path(source_root))
+def cmd_init_mounts(
+    cfg: FrameworkConfig,
+    root: Path,
+    project: Optional[str],
+) -> int:
+    selected: set[str] | None = None
+    if project:
+        configured = {p.name for p in cfg.projects}
+        if project not in configured:
+            print(f"Error: unknown project '{project}'.")
+            return 2
+        selected = {project}
+
+    results = init_mounts(root, cfg, selected_projects=selected)
+    for line in results:
+        print(line)
+    return 0
+
+
+def cmd_project_add(
+    root: Path,
+    name: str,
+    stack: str,
+    relative_path: str,
+    source_path: str,
+    mount: bool,
+) -> int:
+    if stack not in SUPPORTED_STACKS:
+        print(
+            f"Error: unknown stack '{stack}'. Supported stacks: {', '.join(SUPPORTED_STACKS)}"
+        )
+        return 2
+
+    added, message = add_project_to_config(
+        root,
+        name=name,
+        stack=stack,
+        relative_path=relative_path,
+        source_path=source_path,
+    )
+    if not added:
+        print(f"Error: {message}")
+        return 1
+
+    print(message)
+    for line in _ensure_project_guidelines(root, name):
+        print(line)
+
+    if not mount:
+        return 0
+
+    cfg = load_config(root)
+    results = init_mounts(root, cfg, selected_projects={name})
     for line in results:
         print(line)
     return 0
@@ -217,9 +299,37 @@ def build_parser() -> argparse.ArgumentParser:
     scan = sub.add_parser("scan", help="Show mounted project status")
     scan.set_defaults(which="scan")
 
-    mounts = sub.add_parser("init-mounts", help="Create symlink mounts from a source root")
-    mounts.add_argument("--source-root", required=True, help="Path containing source projects")
+    mounts = sub.add_parser("init-mounts", help="Create symlink mounts from configured source paths")
+    mounts.add_argument("--project", default=None, help="Only mount one configured project")
     mounts.set_defaults(which="init-mounts")
+
+    project_cmd = sub.add_parser("project", help="Manage project entries in config/projects.json")
+    project_sub = project_cmd.add_subparsers(dest="project_command", required=True)
+
+    project_add = project_sub.add_parser("add", help="Add a project entry and optionally create its mount")
+    project_add.add_argument("name", help="Project name key")
+    project_add.add_argument(
+        "--stack",
+        required=True,
+        choices=SUPPORTED_STACKS,
+        help="Project stack identifier",
+    )
+    project_add.add_argument(
+        "--relative-path",
+        default=None,
+        help="Path under mounted-projects/ (defaults to project name)",
+    )
+    project_add.add_argument(
+        "--source-path",
+        required=True,
+        help="Absolute or repo-relative source project path",
+    )
+    project_add.add_argument(
+        "--no-mount",
+        action="store_true",
+        help="Only update config/projects.json; do not create mounted-projects symlink",
+    )
+    project_add.set_defaults(which="project-add")
 
     run = sub.add_parser("run", help="Run a configured task on selected projects")
     run.add_argument("task", help="Task key in project commands (e.g. test, dev, lint)")
@@ -312,7 +422,17 @@ def main() -> int:
     if args.which == "validate":
         return cmd_validate(cfg, root, args.projects)
     if args.which == "init-mounts":
-        return cmd_init_mounts(cfg, root, args.source_root)
+        return cmd_init_mounts(cfg, root, args.project)
+    if args.which == "project-add":
+        relative_path = args.relative_path or args.name
+        return cmd_project_add(
+            root,
+            name=args.name,
+            stack=args.stack,
+            relative_path=relative_path,
+            source_path=args.source_path,
+            mount=not args.no_mount,
+        )
     if args.which == "bootstrap":
         return cmd_bootstrap(cfg, root, args.project)
     if args.which == "sync-base":

@@ -2,6 +2,65 @@
 
 <!-- Entries are prepended (newest first). -->
 
+## 2026-06-12T05:02:01Z — Make README directory layout generic
+
+Replaced hard-coded per-project examples with a stable template layout and added a note that actual project names come from `config/projects.json`.
+
+- [x] Replace hard-coded project list in README directory layout with a stable template
+- [x] Keep examples clear while avoiding per-project churn
+- [x] Verify with the developer that the task is complete
+
+## 2026-06-12T05:02:01Z — Remove `init-mounts --source-root` fallback
+
+Removed the legacy shared-parent source-root path from mount logic and CLI so mount resolution is fully config-driven via required per-project `source_path`.
+
+- [x] Make mount resolution config-driven only via project `source_path`
+- [x] Remove `--source-root` from CLI and docs
+- [x] Update tests for config-driven init-mounts behavior
+- [x] Run framework test suite and fix regressions
+- [x] Verify with the developer that the task is complete
+
+## 2026-06-12T05:02:01Z — Require `source_path` in project config
+
+Added `source_path` for existing projects and enforced it as a required key in `config/projects.json` loading.
+
+- [x] Add `source_path` for all existing entries in `config/projects.json`
+- [x] Enforce `source_path` as required in config loading
+- [x] Update docs/tests for required `source_path`
+- [x] Run framework test suite and fix regressions
+- [x] Verify with the developer that the task is complete
+
+## 2026-06-12T05:02:01Z — Validate `project add --stack`
+
+Added stack validation for `project add` in argparse and command handling, with tests and docs updates.
+
+- [x] Enforce known stack values for `project add`
+- [x] Add tests for accepted/rejected stack values
+- [x] Update docs to list supported stack identifiers
+- [x] Run framework test suite and fix regressions
+- [x] Verify with the developer that the task is complete
+
+## 2026-06-12T05:02:01Z — Auto-create guidelines on project add
+
+Updated `project add` to create project guideline files by default (copying from base when available) without overwriting existing files.
+
+- [x] Update `project add` to create `guidelines/projects/<name>/` and required files when missing
+- [x] Ensure generated starter files do not overwrite existing project guidelines
+- [x] Update docs/tests for the new default behavior
+- [x] Run framework test suite and fix regressions
+- [x] Verify with the developer that the task is complete
+
+## 2026-06-12T05:02:01Z — Add per-project source paths and project-add CLI
+
+Implemented per-project mount source configuration, added project registration CLI support, and updated docs/tests for the new workflow.
+
+- [x] Extend config model/loading to support optional per-project source path
+- [x] Update mount logic/CLI to allow mounting from explicit project source path and single-project mount runs
+- [x] Add CLI command to add a project entry and optionally mount it immediately
+- [x] Update README quick-start/docs for new workflow
+- [x] Run framework test suite and fix regressions
+- [x] Verify with the developer that the task is complete
+
 ## 2026-06-10T01:29:31Z — Abandon merge model — flatten project files and add sync-base/diff-base
 
 Replaced the base+override merge model with self-contained per-project files. Added `sync-base` and `diff-base` CLI commands for two-hat propagation. Simplified `bootstrap` to no longer generate artifacts. Removed `*_MERGED.md` patterns from `.gitignore` and deleted all existing artifacts.

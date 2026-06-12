@@ -74,17 +74,36 @@ def scan_projects(repo_root: Path, config: FrameworkConfig) -> list[ProjectStatu
     return statuses
 
 
-def init_mounts(repo_root: Path, config: FrameworkConfig, source_root: Path) -> list[str]:
+def _resolve_project_source(repo_root: Path, project: ProjectConfig) -> Path | None:
+    if project.source_path:
+        configured = Path(project.source_path).expanduser()
+        return configured if configured.is_absolute() else (repo_root / configured)
+    return None
+
+
+def init_mounts(
+    repo_root: Path,
+    config: FrameworkConfig,
+    selected_projects: set[str] | None = None,
+) -> list[str]:
     target_root = repo_root / config.projects_root
     target_root.mkdir(parents=True, exist_ok=True)
 
     results: list[str] = []
     for project in config.projects:
-        src = source_root / project.relative_path
+        if selected_projects is not None and project.name not in selected_projects:
+            continue
+
+        src = _resolve_project_source(repo_root, project)
         dst = target_root / project.relative_path
         guidelines_dir = _project_guidelines_path(repo_root, project)
         dst.parent.mkdir(parents=True, exist_ok=True)
         messages: list[str] = []
+
+        if src is None:
+            results.append(f"skip {project.name}: source missing (set project.source_path)")
+            continue
+
         if dst.exists() or dst.is_symlink():
             messages.append("skip mount: already exists")
         elif not src.exists():
@@ -125,4 +144,3 @@ def run_task(status: ProjectStatus, task: str, dry_run: bool = False) -> tuple[i
 
     output = (proc.stdout or "") + (proc.stderr or "")
     return proc.returncode, output.strip()
-

@@ -7,8 +7,8 @@ This repository now provides a lightweight framework for coordinating developmen
 `config/projects.json` is the source of truth for configured mounted projects and
 stack-specific commands.
 
-- Each project is an abstract framework entry with `name`, `stack`, `relative_path`, and
-  `commands`.
+- Each project is an abstract framework entry with `name`, `stack`, `relative_path`,
+  `commands`, and required `source_path`.
 - If a project is mounted for the first time, add it to `config/projects.json` before
   running framework commands that target it.
 - The currently configured project names are listed in that file.
@@ -23,33 +23,14 @@ agents/
       AGENTS.md                 # Shared rules for all projects
       AGENT_PROMPT.md           # Shared startup prompt blocks for all projects
     projects/
-      deepblue-documents-kube/
-        AGENTS.md               # Project-specific overrides/additions
+      <project-name>/
+        AGENTS.md               # Project-specific rules (self-contained)
         AGENT_PROMPT.md         # Session startup prompt
-        AGENT_QUIZ.md           # Onboarding quiz
-        AGENT_QUIZ_ANSWERS.md   # Quiz answers
-        AGENT_TODO.md           # Active task list (flat, no per-ticket dirs)
-        AGENT_DONE.md           # Completed task archive
-      dor-depot/
-        AGENTS.md
-        AGENT_PROMPT.md / AGENT_QUIZ.md / AGENT_QUIZ_ANSWERS.md
-        tasks/                  # Per-ticket DOR-nnn/ task directories
-      dor-react-app/
-        AGENTS.md
-        AGENT_PROMPT.md / AGENT_QUIZ.md / AGENT_QUIZ_ANSWERS.md
-        tasks/
-      dspace-containerization/
-        AGENTS.md
-        AGENT_PROMPT.md / AGENT_QUIZ.md / AGENT_QUIZ_ANSWERS.md
-        TODO.md / DONE.md
-      findingaids-argocd/
-        AGENTS.md
-        AGENT_PROMPT.md / AGENT_QUIZ.md / AGENT_QUIZ_ANSWERS.md
-        AGENT_TODO.md / AGENT_DONE.md
-      umich-arclight/
-        AGENTS.md
-        AGENT_PROMPT.md / AGENT_QUIZ.md / AGENT_QUIZ_ANSWERS.md
-        tasks/
+        AGENT_QUIZ.md           # Optional onboarding quiz
+        AGENT_QUIZ_ANSWERS.md   # Optional quiz answers
+        AGENT_TODO.md           # Optional active task list
+        AGENT_DONE.md           # Optional completed task archive
+        tasks/                  # Optional per-ticket task directories
   mounted-projects/             # Symlinks to source repos are created here; each mount also gets `.agents`
   src/agents_framework/
     cli.py                      # CLI entry point
@@ -63,13 +44,29 @@ agents/
     smoke_run.sh               # Non-interactive smoke run
 ```
 
+Actual project names are defined in `config/projects.json`.
+
 ## Quick start
 
-Create mounts (symlinks) from the source root; each mounted project also gets a `.agents` link to `guidelines/projects/<name>`:
+Create mounts (symlinks) from each project's configured `source_path`; each mounted
+project also gets a `.agents` link to `guidelines/projects/<name>`:
 
 ```bash
-PYTHONPATH=src python3 -m agents_framework.cli init-mounts --source-root /path/to/source-root
+PYTHONPATH=src python3 -m agents_framework.cli init-mounts
 ```
+
+Add a new project and mount it immediately from any path:
+
+```bash
+PYTHONPATH=src python3 -m agents_framework.cli project add my-project --stack react-vite --source-path /absolute/path/to/my-project
+```
+
+`project add` also creates `guidelines/projects/<name>/AGENTS.md` and
+`guidelines/projects/<name>/AGENT_PROMPT.md` when missing (copied from
+`guidelines/base/` when available), so `.agents` is linked on first mount.
+
+Supported `--stack` values: `rails-arclight`, `k8s-gitops`, `java-spring`,
+`react-vite`, `dspace-docker`.
 
 Scan status and marker detection:
 
