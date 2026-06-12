@@ -1,4 +1,4 @@
-# Agent Onboarding Quiz — boxwalker
+# Agent Onboarding Quiz — boxrunner
 
 > 🚫 **DO NOT read `AGENT_QUIZ_ANSWERS.md`** until you have written out answers to all
 > questions below and the developer has told you to compare. Reading the answer file
@@ -27,7 +27,7 @@ the first step?
 
 ---
 
-**Q2.** You need to reorder two subtasks in `tasks/BW-nnn/TODO.md`. What tool must you use, and what
+**Q2.** You need to reorder two subtasks in `.agents/tasks/ARC-nnn/TODO.md`. What tool must you use, and what
 tool must you **never** use for this operation?
 
 *(Hint: `AGENTS.md` § Task Tracking)*
@@ -106,10 +106,10 @@ Rails server starts inside the container?
 
 ## Section 3 — Domain Concepts
 
-**Q13.** What is this application? Name the two primary Ruby gems that provide its
-discovery/search functionality.
+**Q13.** What is this application? Name the primary discovery/search gem in this app,
+and the upstream discovery framework it is built on.
 
-*(Hint: `Gemfile`; `README.md`)*
+*(Hint: `Gemfile`; ArcLight/Blacklight stack context in project docs and prompts)*
 
 ---
 
@@ -129,14 +129,14 @@ how is that URL passed to Rails?
 
 ## Section 4 — Active Work and Task Management
 
-**Q16.** Look at `tasks/README.md`. List every currently active ticket with its key and
+**Q16.** Look at `.agents/tasks/README.md`. List every currently active ticket with its key and
 a one-sentence summary of what it is working on.
 
-*(Hint: `tasks/README.md` and each active `tasks/BW-nnn/STATUS.md` in `AGENTS_ROOT`)*
+*(Hint: `.agents/tasks/README.md` and each active `.agents/tasks/ARC-nnn/STATUS.md`)*
 
 ---
 
-**Q17.** A task in `tasks/BW-nnn/TODO.md` has all subtasks checked off including the
+**Q17.** A task in `.agents/tasks/ARC-nnn/TODO.md` has all subtasks checked off including the
 developer-verification subtask. What are the steps required to archive it, and where
 does the task directory move to?
 
@@ -147,7 +147,7 @@ does the task directory move to?
 **Q18.** How do you fully start the local development environment from scratch?
 List every command in order, including the Solr initialisation step.
 
-*(Hint: `README.md`; `solr/dev-init.sh`)*
+*(Hint: `AGENTS.md` § Ruby on Rails Conventions; `solr/dev-init.sh`)*
 
 ---
 
@@ -157,7 +157,7 @@ Stop here. Do **not** open `AGENT_QUIZ_ANSWERS.md`.
 
 Tell the developer:
 
-> "I have answered all 18 quiz questions. Please open `AGENT_QUIZ_ANSWERS.md` to grade
+> "I have answered all quiz questions. Please open `AGENT_QUIZ_ANSWERS.md` to grade
 > my answers, or let me know when I may read it to self-grade."
 
 Wait for the developer's instruction before proceeding.

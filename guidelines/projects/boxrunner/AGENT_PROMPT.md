@@ -1,4 +1,4 @@
-# New Session Startup Prompt — boxwalker
+# New Session Startup Prompt — boxrunner
 
 ## Prompt Invocation
 
@@ -10,7 +10,7 @@ Read AGENT_PROMPT.md and follow the instructions there.
 
 ## Session Context
 
-You are starting a new session in the `boxwalker` repository, a Ruby on Rails 8
+You are starting a new session in the `boxrunner` repository, a Ruby on Rails 8
 application for archival finding-aid discovery built on ArcLight, Blacklight, and
 Solr 9 SolrCloud, using SQLite and Docker Compose for local development.
 
@@ -24,30 +24,30 @@ Use local `.agents` paths first.
 ## Startup Workflow
 
 After completing the base startup workflow, infer the active ticket from the branch
-name (for example `BW-42/my-feature`) and use it to locate ticket files under `tasks/`.
+name (for example `ARC-42/my-feature`) and use it to locate ticket files under `tasks/`.
 
 ## Task Files
 
 Read these files from `.agents/`:
 
 - `.agents/tasks/README.md` (task index)
-- `.agents/tasks/BW-nnn/STATUS.md` (active ticket state)
-- `.agents/tasks/BW-nnn/TODO.md` (active subtasks)
+- `.agents/tasks/ARC-nnn/STATUS.md` (active ticket state)
+- `.agents/tasks/ARC-nnn/TODO.md` (active subtasks)
 
 Fallback paths when `.agents/` is unavailable:
 
-- `AGENTS_ROOT/guidelines/projects/boxwalker/tasks/README.md`
-- `AGENTS_ROOT/guidelines/projects/boxwalker/tasks/BW-nnn/STATUS.md`
-- `AGENTS_ROOT/guidelines/projects/boxwalker/tasks/BW-nnn/TODO.md`
+- `AGENTS_ROOT/guidelines/projects/boxrunner/tasks/README.md`
+- `AGENTS_ROOT/guidelines/projects/boxrunner/tasks/ARC-nnn/STATUS.md`
+- `AGENTS_ROOT/guidelines/projects/boxrunner/tasks/ARC-nnn/TODO.md`
 
-Replace `BW-nnn` using the ticket from the current branch.
+Replace `ARC-nnn` using the ticket from the current branch.
 
 ## Quiz Gate
 
 Take the onboarding quiz from:
 
 - Primary: `.agents/AGENT_QUIZ.md`
-- Fallback: `AGENTS_ROOT/guidelines/projects/boxwalker/AGENT_QUIZ.md`
+- Fallback: `AGENTS_ROOT/guidelines/projects/boxrunner/AGENT_QUIZ.md`
 
 After answering all questions, stop and report exactly:
 

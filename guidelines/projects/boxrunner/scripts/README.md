@@ -1,6 +1,6 @@
-# .agents/scripts Conventions — boxwalker
+# .agents/scripts Conventions — boxrunner
 
-This directory is for project-local agent helper scripts when working in `mounted-projects/boxwalker`.
+This directory is for project-local agent helper scripts when working in `mounted-projects/boxrunner`.
 
 ## Purpose
 
@@ -15,7 +15,7 @@ This directory is for project-local agent helper scripts when working in `mounte
 
 ## Rules
 
-- Prefer `/tmp/run.py` for one-off scripts unless reuse is likely.
+- Prefer `.agents/tmp/run.py` for one-off scripts unless reuse is likely.
 - Promote useful one-off helpers into `scripts/shared/`.
 - Use non-interactive commands and append `| cat` for potentially paged output.
 - Add a short usage header comment at top of reusable scripts.
@@ -24,7 +24,7 @@ This directory is for project-local agent helper scripts when working in `mounte
 ## Examples
 
 ```shell
-python3 /tmp/run.py | cat
+python3 .agents/tmp/run.py | cat
 python3 .agents/scripts/shared/check_indexes.py | cat
 ```
 

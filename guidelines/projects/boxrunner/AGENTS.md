@@ -1,9 +1,10 @@
-# Agent Rules — boxwalker
+# Agent Rules — boxrunner
 
 ## File Access
 
 - Stay within the project directory. Outside file: read only the specific file requested — no browsing.
 - **Never read `AGENT_QUIZ_ANSWERS.md`** until all quiz answers written **and** developer explicitly grants permission.
+- Create temporary files in `.agents/tmp/` only (for example `.agents/tmp/run.py`, `.agents/tmp/commit-msg.txt`) — never system `/tmp`.
 
 ## Command-Line Tool Usage
 
@@ -13,7 +14,7 @@
 - Fix for both: write to file, run the file:
   ```shell
   python3 scripts/myscript.py | cat   # reusable
-  python3 /tmp/run.py | cat           # one-off
+  python3 .agents/tmp/run.py | cat    # one-off
   ```
 - If terminal stuck (no output / garbled): run the heredoc end-marker (`EOF`, `PYEOF`, etc.) as a standalone command to escape.
 
@@ -21,12 +22,12 @@
 
 - Check project utility-script dir first (`scripts/README.md` or `dotpy/README.md`) before writing ad-hoc helpers.
 - Save reusable scripts there; add shebang + Usage docstring + README entry.
-- No utility dir → write to `/tmp/run.py`.
+- No utility dir → write to `.agents/tmp/run.py`.
 
 ## Git Commits
 
 - Never amend. Never force-push. Never push to `main`.
-- **Never `git commit -m "..."` for multiline** — write to `/tmp/commit-msg.txt`, then `git commit -F /tmp/commit-msg.txt | cat`.
+- **Never `git commit -m "..."` for multiline** — write to `.agents/tmp/commit-msg.txt`, then `git commit -F .agents/tmp/commit-msg.txt | cat`.
 - If project has `scripts/commit.py` or `dotpy/commit.py`, use that instead.
 - Single-line exception: `git commit -m "chore: one line" | cat`.
 
@@ -43,9 +44,9 @@
 
 Data rows define required column width. Pad header and separator to match widest data cell.
 
-## Session State (`tasks/BW-nnn/STATUS.md`)
+## Session State (`tasks/ARC-nnn/STATUS.md`)
 
-At session start: (1) identify ticket from branch name (e.g. `BW-42/my-feature` → `BW-42`), (2) read `tasks/BW-nnn/STATUS.md` in full, (3) cross-check open subtasks against `TODO.md` — `TODO.md` is authoritative.
+At session start: (1) identify ticket from branch name (e.g. `ARC-42/my-feature` → `ARC-42`), (2) read `tasks/ARC-nnn/STATUS.md` in full, (3) cross-check open subtasks against `TODO.md` — `TODO.md` is authoritative.
 
 During session: update `STATUS.md` when a subtask completes, a plan changes, or a key decision is made.
 
@@ -56,23 +57,23 @@ End of session: update Last Updated, Recent Activity, Next Steps. Commit `STATUS
 | Last Updated    | ISO date + one-line session summary                                    |
 | Current Branch  | Active git branch name; brief note on other local branches if relevant |
 | Open Tasks      | Copy of unchecked subtasks from `TODO.md`; key files for each task     |
-| Open Plans      | Table of files in `tasks/BW-nnn/plans/` with purpose and status       |
+| Open Plans      | Table of files in `tasks/ARC-nnn/plans/` with purpose and status       |
 | Recent Activity | Bullet list of meaningful changes made in the most recent session      |
 | Key Context     | Decisions, design notes, or gotchas the next agent needs to understand |
 | Next Steps      | Ordered list of what to do next, specific enough to act on immediately |
 
-## Task Tracking (`tasks/BW-nnn/TODO.md` / `tasks/BW-nnn/DONE.md`)
+## Task Tracking (`tasks/ARC-nnn/TODO.md` / `tasks/ARC-nnn/DONE.md`)
 
-Primary location: `.agents/tasks/BW-nnn/` (TODO.md, DONE.md, STATUS.md, plans/).
+Primary location: `.agents/tasks/ARC-nnn/` (TODO.md, DONE.md, STATUS.md, plans/).
 
-Fallback location when `.agents` is unavailable: `AGENTS_ROOT/guidelines/projects/boxwalker/tasks/BW-nnn/`.
+Fallback location when `.agents` is unavailable: `AGENTS_ROOT/guidelines/projects/boxrunner/tasks/ARC-nnn/`.
 
-New ticket: `mkdir -p .agents/tasks/BW-nnn/plans` + create TODO.md + STATUS.md + row in `.agents/tasks/README.md`.
+New ticket: `mkdir -p .agents/tasks/ARC-nnn/plans` + create TODO.md + STATUS.md + row in `.agents/tasks/README.md`.
 
 - Record plan in `TODO.md` before executing. Check off (`- [x]`) as completed.
 - Every task ends with `- [ ] Verify with the developer that the task is complete`.
-- All done → create `tasks/BW-nnn/DONE.md` with timestamp + summary + checklist.
-- Complete ticket (after PR merges): `git mv .agents/tasks/BW-nnn .agents/archive/BW-nnn`
+- All done → create `tasks/ARC-nnn/DONE.md` with timestamp + summary + checklist.
+- Complete ticket (after PR merges): `git mv .agents/tasks/ARC-nnn .agents/archive/ARC-nnn`
 - Reorder subtasks with Python only — never string-replace.
 
 ## Ruby on Rails Conventions

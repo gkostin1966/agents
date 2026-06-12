@@ -13,7 +13,7 @@
 
 ## Section 1 — Ground Rules
 
-**A1.** Record the plan in `tasks/BW-nnn/TODO.md` before executing any step.
+**A1.** Record the plan in `.agents/tasks/ARC-nnn/TODO.md` before executing any step.
 *(Source: `AGENTS.md` § Task Tracking)*
 
 ---
@@ -31,7 +31,7 @@ text-editor find-and-replace) to reorder subtasks.
 
 **A4.** `python3 -c "..."` with multiline code in zsh triggers `dquote>` heredoc mode,
 silently corrupting the terminal session. Fix: write the snippet to a file (e.g.
-`/tmp/run.py`) and run `python3 /tmp/run.py | cat`.
+`.agents/tmp/run.py`) and run `python3 .agents/tmp/run.py | cat`.
 *(Source: `AGENTS.md` § Command-Line Tool Usage)*
 
 ---
@@ -101,9 +101,9 @@ docker compose exec app bundle exec rubocop | cat      # check
 
 ## Section 3 — Domain Concepts
 
-**A13.** `boxwalker` is an archival finding-aid discovery application. Primary gems:
-`arclight` and `blacklight-frontend`.
-*(Source: `Gemfile`; `README.md`)*
+**A13.** `boxrunner` is an archival finding-aid discovery application. Primary discovery/search
+stack: `arclight`, built on Blacklight.
+*(Source: `Gemfile`; `AGENT_PROMPT.md` session context)*
 
 ---
 
@@ -120,15 +120,15 @@ is passed via the `SOLR_URL` environment variable set in `compose.yml`.
 
 ## Section 4 — Active Work and Task Management
 
-**A16.** *(Agent must look this up live from `tasks/README.md` in `AGENTS_ROOT`.
+**A16.** *(Agent must look this up live from `.agents/tasks/README.md`.
 No tasks exist at project bootstrap — answer: "No active tickets.")*
 
 ---
 
-**A17.** Create `tasks/BW-nnn/DONE.md` with timestamp, summary, and completed checklist.
+**A17.** Create `.agents/tasks/ARC-nnn/DONE.md` with timestamp, summary, and completed checklist.
 Then, after the PR merges:
 ```shell
-git mv guidelines/projects/boxwalker/tasks/BW-nnn guidelines/projects/boxwalker/archive/BW-nnn
+git mv .agents/tasks/ARC-nnn .agents/archive/ARC-nnn
 ```
 *(Source: `AGENTS.md` § Task Tracking)*
 
@@ -136,9 +136,8 @@ git mv guidelines/projects/boxwalker/tasks/BW-nnn guidelines/projects/boxwalker/
 
 **A18.** Full startup from scratch:
 ```shell
-docker compose build
 docker compose up
 /bin/bash ./solr/dev-init.sh
 ```
-*(Source: `README.md`)*
+*(Source: `AGENTS.md` § Ruby on Rails Conventions; `solr/dev-init.sh`)*
 
