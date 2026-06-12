@@ -177,6 +177,14 @@ Print copy/paste startup text for a project session:
 PYTHONPATH=src python3 -m agents_framework.cli bootstrap dor-depot
 ```
 
+Or paste this directly in a mounted-project agent chat:
+
+```text
+Read .agents/AGENT_PROMPT.md and follow it.
+Then read .agents/AGENTS.md and follow those rules for all code changes.
+```
+
+
 No merge artifacts are generated. The agent reads `AGENTS.md` and `AGENT_PROMPT.md`
 directly from `.agents/` inside the project.
 
