@@ -46,11 +46,11 @@ Data rows define required column width. Pad header and separator to match widest
 
 ## Session State (`tasks/ARC-nnn/STATUS.md`)
 
-At session start: (1) identify ticket from branch name (e.g. `ARC-42/my-feature` → `ARC-42`), (2) read `tasks/ARC-nnn/STATUS.md` in full, (3) cross-check open subtasks against `TODO.md` — `TODO.md` is authoritative.
+At session start: (1) identify ticket from branch name (e.g. `ARC-42/my-feature` → `ARC-42`), (2) if `tasks/ARC-nnn/` does not exist yet, create `TODO.md`, `STATUS.md`, and `plans/` plus a row in `tasks/README.md`, (3) read `tasks/ARC-nnn/STATUS.md` in full, (4) cross-check open subtasks against `TODO.md` — `TODO.md` is authoritative.
 
 During session: update `STATUS.md` when a subtask completes, a plan changes, or a key decision is made.
 
-End of session: update Last Updated, Recent Activity, Next Steps. Commit `STATUS.md` in final commit.
+End of session: update Last Updated, Recent Activity, Next Steps. `.agents` files are maintained separately and should be edited in place; Git staging/commit/archival for `.agents` is handled manually by the developer unless explicitly requested.
 
 | Section         | Contents                                                               |
 |-----------------|------------------------------------------------------------------------|
@@ -73,7 +73,8 @@ New ticket: `mkdir -p .agents/tasks/ARC-nnn/plans` + create TODO.md + STATUS.md 
 - Record plan in `TODO.md` before executing. Check off (`- [x]`) as completed.
 - Every task ends with `- [ ] Verify with the developer that the task is complete`.
 - All done → create `tasks/ARC-nnn/DONE.md` with timestamp + summary + checklist.
-- Complete ticket (after PR merges): `git mv .agents/tasks/ARC-nnn .agents/archive/ARC-nnn`
+- After the related PR merges, archive with `git mv .agents/tasks/ARC-nnn .agents/archive/ARC-nnn` (create `.agents/archive/` if missing).
+- Ticket archival and any `.agents`-side Git operations are handled manually by the developer; the agent should not assume it needs to commit `.agents` changes.
 - Reorder subtasks with Python only — never string-replace.
 
 ## Ruby on Rails Conventions

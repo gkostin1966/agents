@@ -25,6 +25,8 @@ Use local `.agents` paths first.
 
 After completing the base startup workflow, infer the active ticket from the branch
 name (for example `ARC-42/my-feature`) and use it to locate ticket files under `tasks/`.
+If the ticket folder does not exist, create `.agents/tasks/ARC-nnn/{TODO.md,STATUS.md,plans/}`
+and add a row to `.agents/tasks/README.md` before proceeding.
 
 ## Task Files
 

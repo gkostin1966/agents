@@ -120,13 +120,14 @@ is passed via the `SOLR_URL` environment variable set in `compose.yml`.
 
 ## Section 4 — Active Work and Task Management
 
-**A16.** *(Agent must look this up live from `.agents/tasks/README.md`.
-No tasks exist at project bootstrap — answer: "No active tickets.")*
+**A16.** Must be answered from the current `.agents/tasks/README.md` contents at quiz time.
+List each active ticket key plus a one-sentence summary. If none are listed, answer:
+`No active tickets.`
 
 ---
 
 **A17.** Create `.agents/tasks/ARC-nnn/DONE.md` with timestamp, summary, and completed checklist.
-Then, after the PR merges:
+Then, after the PR merges (create `.agents/archive/` if needed):
 ```shell
 git mv .agents/tasks/ARC-nnn .agents/archive/ARC-nnn
 ```

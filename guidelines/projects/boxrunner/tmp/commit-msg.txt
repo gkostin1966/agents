@@ -1,0 +1,5 @@
+chore: add devcontainer setup
+
+Add a devcontainer that reuses the root compose setup and
+root Dockerfile to minimize drift, while adding a small
+devcontainer-specific compose override and workspace config.

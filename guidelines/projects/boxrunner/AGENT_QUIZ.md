@@ -130,15 +130,16 @@ how is that URL passed to Rails?
 ## Section 4 — Active Work and Task Management
 
 **Q16.** Look at `.agents/tasks/README.md`. List every currently active ticket with its key and
-a one-sentence summary of what it is working on.
+a one-sentence summary of what it is working on. If there are no active tickets,
+answer exactly: `No active tickets.`
 
 *(Hint: `.agents/tasks/README.md` and each active `.agents/tasks/ARC-nnn/STATUS.md`)*
 
 ---
 
 **Q17.** A task in `.agents/tasks/ARC-nnn/TODO.md` has all subtasks checked off including the
-developer-verification subtask. What are the steps required to archive it, and where
-does the task directory move to?
+developer-verification subtask. What are the required closeout steps, and after the
+PR merges where does the task directory move to?
 
 *(Hint: `AGENTS.md` § Task Tracking)*
 
