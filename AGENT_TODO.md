@@ -23,16 +23,4 @@ Loose files found at project root: `AGENTS.md`, `TODO.md`, `DONE.md`
 - [ ] Recommend action: remove root-level files, migrate unique content to `.agents/`, or keep as-is with rationale
 - [ ] Verify with the developer that the task is complete
 
-## Task: Audit umich-arclight agent files outside vs inside .agents/
-
-Loose files found at project root: `AGENTS.md`, `AGENT_PROMPT.md`, `AGENT_QUIZ.md`, `AGENT_QUIZ_ANSWERS.md`, `tasks/`
-
-- [ ] Read and compare `mounted-projects/umich-arclight/AGENTS.md` against `mounted-projects/umich-arclight/.agents/AGENTS.md` — note any content differences, additions, or staleness
-- [ ] Read and compare `mounted-projects/umich-arclight/AGENT_PROMPT.md` against `mounted-projects/umich-arclight/.agents/AGENT_PROMPT.md`
-- [ ] Read and compare `mounted-projects/umich-arclight/AGENT_QUIZ.md` against `mounted-projects/umich-arclight/.agents/AGENT_QUIZ.md`
-- [ ] Read and compare `mounted-projects/umich-arclight/AGENT_QUIZ_ANSWERS.md` against `mounted-projects/umich-arclight/.agents/AGENT_QUIZ_ANSWERS.md`
-- [ ] Inspect `mounted-projects/umich-arclight/tasks/` — determine if task files have equivalents under `.agents/tasks/` or are orphaned
-- [ ] Produce a written comparison summary: which files are stale copies, which have unique content, and whether any data would be lost by removing the root-level files
-- [ ] Recommend action: remove root-level files, migrate unique content to `.agents/`, or keep as-is with rationale
-- [ ] Verify with the developer that the task is complete
 

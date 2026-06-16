@@ -2,6 +2,55 @@
 
 <!-- Entries are prepended (newest first). -->
 
+## 2026-06-16T15:51:17Z — Audit umich-arclight agent files outside vs inside .agents/
+
+Compared root-level umich-arclight agent files against `.agents/` equivalents and identified migration requirements before root cleanup.
+
+- [x] Read and compare `mounted-projects/umich-arclight/AGENTS.md` against `mounted-projects/umich-arclight/.agents/AGENTS.md` — note any content differences, additions, or staleness
+- [x] Read and compare `mounted-projects/umich-arclight/AGENT_PROMPT.md` against `mounted-projects/umich-arclight/.agents/AGENT_PROMPT.md`
+- [x] Read and compare `mounted-projects/umich-arclight/AGENT_QUIZ.md` against `mounted-projects/umich-arclight/.agents/AGENT_QUIZ.md`
+- [x] Read and compare `mounted-projects/umich-arclight/AGENT_QUIZ_ANSWERS.md` against `mounted-projects/umich-arclight/.agents/AGENT_QUIZ_ANSWERS.md`
+- [x] Inspect `mounted-projects/umich-arclight/tasks/` — determine if task files have equivalents under `.agents/tasks/` or are orphaned
+- [x] Produce a written comparison summary: which files are stale copies, which have unique content, and whether any data would be lost by removing the root-level files
+- [x] Recommend action: remove root-level files, migrate unique content to `.agents/`, or keep as-is with rationale
+- [x] Verify with the developer that the task is complete
+
+## 2026-06-16T15:51:17Z — umich-arclight — migrate essential AGENTS behavior into .agents/AGENTS.md
+
+Merged essential root-level behaviors into framework-managed umich-arclight guidance before deleting root agent files.
+
+- [x] Merge unique root-level behaviors into `guidelines/projects/umich-arclight/AGENTS.md` (dotpy/email conventions, markdown tooling commands, richer command-line safety, detailed task/session workflow where still missing)
+- [x] Regenerate `PYTHONPATH=src python3 -m agents_framework.cli guidelines generate umich-arclight`
+- [x] Verify with the developer that the task is complete
+
+## 2026-06-16T15:51:17Z — umich-arclight — migrate root dotpy scripts and emails directory into .agents/
+
+Copied root utility script and email-draft scaffolding into framework-managed `.agents` locations and updated references.
+
+- [x] Create `guidelines/projects/umich-arclight/dotpy/` and copy root `dotpy/` scripts there, updating paths to `.agents/dotpy/` where needed
+- [x] Create `guidelines/projects/umich-arclight/emails/` with `.keep`
+- [x] Update `guidelines/projects/umich-arclight/AGENTS.md` to reference `.agents/dotpy/` and `.agents/emails/`
+- [x] Regenerate `PYTHONPATH=src python3 -m agents_framework.cli guidelines generate umich-arclight`
+- [x] Verify with the developer that the task is complete
+
+## 2026-06-16T15:51:17Z — umich-arclight — populate .agents/tasks/README.md from root tasks index
+
+Copied the root task index into framework-managed `.agents/tasks/README.md` so root task index removal is safe.
+
+- [x] Copy content from `mounted-projects/umich-arclight/tasks/README.md` into `guidelines/projects/umich-arclight/tasks/README.md` with framework-relative path wording
+- [x] Verify with the developer that the task is complete
+
+## 2026-06-16T15:51:17Z — umich-arclight — remove root-level agent infrastructure files from mounted project (developer action)
+
+Developer removed root-level umich-arclight agent infrastructure after migration to `.agents/`-backed framework files.
+
+- [x] Confirm all preceding umich-arclight migration tasks are developer-verified complete
+- [x] Developer removes `AGENT_QUIZ.md` and `AGENT_QUIZ_ANSWERS.md` from `umich-arclight/` root (safe immediately — identical to `.agents/`)
+- [x] Developer removes `AGENTS.md` and `AGENT_PROMPT.md` from `umich-arclight/` root (safe after migration)
+- [x] Developer removes `tasks/README.md` and root `tasks/` directory if no ticket files remain
+- [x] Developer removes root `dotpy/` and `emails/` directories after `.agents/` migration is complete
+- [x] Verify with the developer that the task is complete
+
 ## 2026-06-16T15:41:10Z — Audit dor-react-app agent files outside vs inside .agents/
 
 Compared root-level agent files against `.agents/` equivalents and identified migration gaps before cleanup.

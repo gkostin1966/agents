@@ -34,23 +34,24 @@
 - **Never shell heredocs** (`<< 'MARKER'`) — same corruption risk; previous unclosed `<<` swallows all subsequent commands.
 - Fix for both: write to file, run the file:
   ```shell
-  python3 scripts/myscript.py | cat   # reusable
+  python3 .agents/dotpy/myscript.py | cat   # reusable
   python3 .agents/tmp/run.py | cat    # one-off
   ```
 - If terminal stuck (no output / garbled): run the heredoc end-marker (`EOF`, `PYEOF`, etc.) as a standalone command to escape.
 
 ## Python Utility Scripts
 
-- Check project utility-script dir first (`scripts/README.md` or `dotpy/README.md`) before writing ad-hoc helpers.
-- Save reusable scripts there; add shebang + Usage docstring + README entry.
+- Check `.agents/dotpy/README.md` first before writing ad-hoc helpers.
+- Save reusable scripts to `.agents/dotpy/`; add shebang + Usage docstring + README entry.
 - No utility dir → write to `.agents/tmp/run.py`.
 
 ## Git Commits
 
 - `[when-committing]` Never amend. Never force-push. Never push to `main`.
 - `[when-committing]` Base commit suggestions on tracked/staged files only (`git status`, `git diff --staged`).
-- `[when-committing]` **Never `git commit -m "..."` for multiline** — write to `.agents/tmp/commit-msg.txt`, then `git commit -F .agents/tmp/commit-msg.txt | cat`.
-- `[when-committing]` If project has `scripts/commit.py` or `dotpy/commit.py`, use that instead.
+- `[when-committing]` **Never `git commit -m "..."` for multiline** — use `.agents/dotpy/commit.py`:
+  1. Write message to `.agents/dotpy/commit_msg.txt`.
+  2. Run `python3 .agents/dotpy/commit.py | cat`.
 - `[when-committing]` Single-line exception: `git commit -m "chore: one line" | cat`.
 
 ## Pull Request Summaries
@@ -59,12 +60,18 @@
 
 ## Email Drafts for Third Parties
 
-- Write drafts as `.md` files under `communications/<channel>-<topic>.md` (e.g. `communications/email-its-request.md`).
-- `communications/` is tracked in git. Do not gitignore individual draft files.
+- Write email drafts as `.rtf` files under `.agents/emails/<short-name>.rtf` (for example `.agents/emails/its-oidc-request.rtf`).
+- `.agents/emails/` is tracked in the framework repository. Do not ignore individual draft files.
+- Use `.agents/dotpy/_gen_rtf.py` as the worked example for generating RTF content from Python rather than shell-quoted output.
 
 ## Markdown Tables
 
 Data rows define required column width. Pad header and separator to match widest data cell.
+
+- `[when-committing]` After editing Markdown tables, run:
+  1. `python3 .agents/dotpy/format_table.py <file.md>`
+  2. `python3 .agents/dotpy/check_tables.py <file.md>`
+- To inspect target separator widths without rewriting the file: `python3 .agents/dotpy/calc_widths.py <file.md>`.
 
 ## Response Hygiene
 
