@@ -24,10 +24,8 @@
 - `validate.py` — required/recommended per-project file validation.
 
 **A4.** Catalog file: `config/projects.json`. Per project entry (current schema):
-- `name`
-- `stack`
-- `relative_path`
-- `commands`
+- Required: `name`, `stack`, `relative_path`, `source_path`
+- Optional: `commands` (defaults to `{}` when omitted)
 
 **A5.** `mounted-projects/` contains symlink mounts to external source repos.
 It is read-only from this framework perspective: do not create, edit, or delete mounted project source files there.
