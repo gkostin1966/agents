@@ -14,7 +14,15 @@
 ## Section 1 — Ground Rules
 
 **A1.** Record the plan in `.agents/tasks/ARC-nnn/TODO.md` before executing any step.
-*(Source: `AGENTS.md` § Task Tracking)*
+Also treat `.agents/` as shared long-term framework metadata: maintain the files in
+place whenever they are relevant to the current task, use them to get the work done
+here, and remember that any `.agents/` changes are committed in the separate
+agent-framework project outside this repository instead of as part of normal app-code
+commits here. Agents in this project never commit `.agents/` files, and developers
+will not request agents here to commit `.agents/` files. If task metadata drift is
+clear and non-destructive, fix it proactively and report the correction instead of
+asking for permission first.
+*(Source: `AGENTS.md` § File Access; `AGENTS.md` § Task Tracking; `AGENTS.md` § Git Commits)*
 
 ---
 
@@ -120,9 +128,14 @@ is passed via the `SOLR_URL` environment variable set in `compose.yml`.
 
 ## Section 4 — Active Work and Task Management
 
-**A16.** Must be answered from the current `.agents/tasks/README.md` contents at quiz time.
-List each active ticket key plus a one-sentence summary. If none are listed, answer:
-`No active tickets.`
+**A16.** First derive the focus ticket from the current branch name by extracting a
+key matching `ARC-\d+` (for example `ARC-42/my-feature` -> `ARC-42`). If the branch
+name does not contain an `ARC-\d+` key (for example `main`), list open tickets from
+`.agents/tasks/README.md` and ask the developer which ticket to focus on before
+proceeding. Also list each currently
+active ticket key plus a one-sentence summary from live task files. If none are
+listed, answer exactly: `No active tickets.`
+*(Source: `AGENTS.md` § Session State; `.agents/tasks/README.md`; active ticket `STATUS.md` files)*
 
 ---
 
@@ -131,6 +144,10 @@ Then, after the PR merges (create `.agents/archive/` if needed):
 ```shell
 git mv .agents/tasks/ARC-nnn .agents/archive/ARC-nnn
 ```
+If PR review comments require additional changes after completion, reopen the same
+ticket: add new unchecked follow-up subtasks in `.agents/tasks/ARC-nnn/TODO.md`,
+update `.agents/tasks/ARC-nnn/STATUS.md` (`Open Tasks`, `Recent Activity`, `Next Steps`),
+and re-verify with the developer before closeout.
 *(Source: `AGENTS.md` § Task Tracking)*
 
 ---
@@ -140,5 +157,7 @@ git mv .agents/tasks/ARC-nnn .agents/archive/ARC-nnn
 docker compose up
 /bin/bash ./solr/dev-init.sh
 ```
-*(Source: `AGENTS.md` § Ruby on Rails Conventions; `solr/dev-init.sh`)*
+If verification is blocked, `STATUS.md` must include: blocker, exact command
+attempted, observed output/error, and what remains unverified.
+*(Source: `AGENTS.md` § Ruby on Rails Conventions; `solr/dev-init.sh`; `AGENTS.md` § Session State)*
 

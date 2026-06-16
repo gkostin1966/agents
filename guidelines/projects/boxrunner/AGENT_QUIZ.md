@@ -21,9 +21,12 @@
 ## Section 1 — Ground Rules (AGENTS.md)
 
 **Q1.** You are about to start a multi-step task. What must you do *before* executing
-the first step?
+the first step, and how should you treat files under `.agents/` when they are relevant
+to the current task and their commits belong to the separate agent-framework project
+outside this repository? Include the rule about whether agents in this project ever
+commit `.agents/` files, and what to do when task metadata drift is clear and non-destructive.
 
-*(Hint: `AGENTS.md` § Task Tracking)*
+*(Hint: `AGENTS.md` § File Access; `AGENTS.md` § Task Tracking; `AGENTS.md` § Git Commits)*
 
 ---
 
@@ -129,26 +132,31 @@ how is that URL passed to Rails?
 
 ## Section 4 — Active Work and Task Management
 
-**Q16.** Look at `.agents/tasks/README.md`. List every currently active ticket with its key and
-a one-sentence summary of what it is working on. If there are no active tickets,
-answer exactly: `No active tickets.`
+**Q16.** At session start, how do you determine which ticket to focus on from the
+current branch name using the `ARC-\d+` key pattern, and what must you do if the
+branch name does not contain an `ARC-\d+` key (for example `main`)? Also list every currently active ticket with
+its key and a one-sentence summary. If there are no active tickets, answer exactly:
+`No active tickets.`
 
-*(Hint: `.agents/tasks/README.md` and each active `.agents/tasks/ARC-nnn/STATUS.md`)*
+*(Hint: `AGENTS.md` § Session State; `.agents/tasks/README.md`; each active `.agents/tasks/ARC-nnn/STATUS.md`)*
 
 ---
 
 **Q17.** A task in `.agents/tasks/ARC-nnn/TODO.md` has all subtasks checked off including the
 developer-verification subtask. What are the required closeout steps, and after the
-PR merges where does the task directory move to?
+PR merges where does the task directory move to? If PR review comments later require
+more work, how do you reopen and track that follow-up work?
 
 *(Hint: `AGENTS.md` § Task Tracking)*
 
 ---
 
 **Q18.** How do you fully start the local development environment from scratch?
-List every command in order, including the Solr initialisation step.
+List every command in order, including the Solr initialisation step. Also, if
+verification is blocked during task work, what exact details must be reported in
+`STATUS.md`?
 
-*(Hint: `AGENTS.md` § Ruby on Rails Conventions; `solr/dev-init.sh`)*
+*(Hint: `AGENTS.md` § Ruby on Rails Conventions; `solr/dev-init.sh`; `AGENTS.md` § Session State)*
 
 ---
 

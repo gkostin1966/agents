@@ -5,6 +5,8 @@
 - Stay within the project directory. Outside file: read only the specific file requested — no browsing.
 - **Never read `AGENT_QUIZ_ANSWERS.md`** until all quiz answers written **and** developer explicitly grants permission.
 - Create temporary files in `.agents/tmp/` only (for example `.agents/tmp/run.py`, `.agents/tmp/commit-msg.txt`) — never system `/tmp`.
+- Treat all files under `.agents/` as shared agent-framework metadata for future agents. Maintain them in place as part of normal task work when they are relevant to the current task; use them to get the work done here; and remember that any `.agents/` changes belong to the separate agent-framework project outside this repository, where they are committed instead of as part of normal app-code commits here.
+- Agents never commit files under `.agents/` in this repository, and developers will never request agents in this project to commit `.agents/` files.
 
 ## Command-Line Tool Usage
 
@@ -27,6 +29,8 @@
 ## Git Commits
 
 - Never amend. Never force-push. Never push to `main`.
+- When preparing or discussing commits in this repository, reason only from the current tracked/staged file set (`git status` / `git diff --staged`). Do not ask to commit `.agents/` files when they are not trackable/staged here.
+- Do not make speculative commit suggestions. Only suggest commit actions grounded in the current tracked/staged set.
 - **Never `git commit -m "..."` for multiline** — write to `.agents/tmp/commit-msg.txt`, then `git commit -F .agents/tmp/commit-msg.txt | cat`.
 - If project has `scripts/commit.py` or `dotpy/commit.py`, use that instead.
 - Single-line exception: `git commit -m "chore: one line" | cat`.
@@ -46,14 +50,20 @@ Data rows define required column width. Pad header and separator to match widest
 
 ## Session State (`tasks/ARC-nnn/STATUS.md`)
 
-At session start: (1) identify ticket from branch name (e.g. `ARC-42/my-feature` → `ARC-42`), (2) if `tasks/ARC-nnn/` does not exist yet, create `TODO.md`, `STATUS.md`, and `plans/` plus a row in `tasks/README.md`, (3) read `tasks/ARC-nnn/STATUS.md` in full, (4) cross-check open subtasks against `TODO.md` — `TODO.md` is authoritative.
+Apply this section whenever the current task needs `.agents/` bookkeeping; these files are long-term memory for future agents, not application code.
+
+At session start: (1) identify ticket from branch name by extracting a key matching `ARC-\d+` (e.g. `ARC-42/my-feature` -> `ARC-42`), (2) if the branch name does not contain an `ARC-\d+` key, list open tickets from `.agents/tasks/README.md` and ask the developer which ticket to focus on, (3) if `tasks/ARC-nnn/` does not exist yet for the selected ticket, create `TODO.md`, `STATUS.md`, and `plans/` plus a row in `tasks/README.md`, (4) read `tasks/ARC-nnn/STATUS.md` in full, (5) cross-check open subtasks against `TODO.md` — `TODO.md` is authoritative.
 
 During session: update `STATUS.md` when a subtask completes, a plan changes, or a key decision is made.
 
 End of session: update Last Updated, Recent Activity, Next Steps. `.agents` files are maintained separately and should be edited in place; Git staging/commit/archival for `.agents` is handled manually by the developer unless explicitly requested.
 
-| Section         | Contents                                                               |
-|-----------------|------------------------------------------------------------------------|
+- `Open Tasks` in `STATUS.md` must mirror unchecked subtasks in `TODO.md` exactly at session end.
+- Add a `Verification Evidence` subsection in `STATUS.md` with commands run, outcomes, and explicit blockers.
+- If verification is blocked, report: blocker, exact command attempted, observed output/error, and what remains unverified.
+
+| Section               | Contents                                                               |
+|-----------------------|------------------------------------------------------------------------|
 | Last Updated    | ISO date + one-line session summary                                    |
 | Current Branch  | Active git branch name; brief note on other local branches if relevant |
 | Open Tasks      | Copy of unchecked subtasks from `TODO.md`; key files for each task     |
@@ -61,8 +71,11 @@ End of session: update Last Updated, Recent Activity, Next Steps. `.agents` file
 | Recent Activity | Bullet list of meaningful changes made in the most recent session      |
 | Key Context     | Decisions, design notes, or gotchas the next agent needs to understand |
 | Next Steps      | Ordered list of what to do next, specific enough to act on immediately |
+| Verification Evidence | Commands run, key results, blockers, and unverified scope         |
 
 ## Task Tracking (`tasks/ARC-nnn/TODO.md` / `tasks/ARC-nnn/DONE.md`)
+
+Apply this section whenever the current task needs `.agents/` task bookkeeping; these files are long-term memory for future agents, not application code.
 
 Primary location: `.agents/tasks/ARC-nnn/` (TODO.md, DONE.md, STATUS.md, plans/).
 
@@ -72,10 +85,18 @@ New ticket: `mkdir -p .agents/tasks/ARC-nnn/plans` + create TODO.md + STATUS.md 
 
 - Record plan in `TODO.md` before executing. Check off (`- [x]`) as completed.
 - Every task ends with `- [ ] Verify with the developer that the task is complete`.
+- Task lifecycle: `In Progress` -> `Developer Verified` -> `Merged` -> `Archived`.
 - All done → create `tasks/ARC-nnn/DONE.md` with timestamp + summary + checklist.
+- If PR review requests follow-up after a task was marked complete, reopen the same ticket: add new unchecked subtasks to `TODO.md`, update `STATUS.md` (`Open Tasks`, `Recent Activity`, `Next Steps`), and keep the task under `.agents/tasks/ARC-nnn/` until it is re-verified.
 - After the related PR merges, archive with `git mv .agents/tasks/ARC-nnn .agents/archive/ARC-nnn` (create `.agents/archive/` if missing).
-- Ticket archival and any `.agents`-side Git operations are handled manually by the developer; the agent should not assume it needs to commit `.agents` changes.
+- Ticket archival and any `.agents`-side Git operations are handled outside normal app-code work in the separate agent-framework project; the agent should not assume it needs to manage `.agents` commits as part of the current project task here.
 - Reorder subtasks with Python only — never string-replace.
+
+## Response Hygiene
+
+- Distinguish verified facts from assumptions. If something is not verified, label it explicitly.
+- Do not suggest next steps that conflict with repository rules.
+- If task metadata is clearly stale or inconsistent (for example `tasks/README.md` summary/status drift, or `STATUS.md` not matching `TODO.md`), fix it proactively and report the change. Do not ask for permission first when the correction is clear and non-destructive.
 
 ## Ruby on Rails Conventions
 
