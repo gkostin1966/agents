@@ -29,7 +29,7 @@
 
 ## Command-Line Tool Usage
 
-- Paging: `git --no-pager <cmd>` or `| cat`. Never interactive input.
+- Disable interactive paging: `git --no-pager <cmd>` or append `| cat`. Never rely on interactive input.
 - **Never multiline code via `-c` flags** — zsh triggers `dquote>` heredoc mode, corrupts session silently.
 - **Never shell heredocs** (`<< 'MARKER'`) — same corruption risk; previous unclosed `<<` swallows all subsequent commands.
 - Fix for both: write to file, run the file:
@@ -41,8 +41,8 @@
 
 ## Python Utility Scripts
 
-- Check project utility-script dir first (`scripts/README.md` or `dotpy/README.md`) before writing ad-hoc helpers.
-- Save reusable scripts there; add shebang + Usage docstring + README entry.
+- Use existing scripts in `dotpy/` before writing ad-hoc helpers.
+- Save reusable scripts to `dotpy/` with shebang + Usage docstring + README entry.
 - No utility dir → write to `.agents/tmp/run.py`.
 
 ## Git Commits
@@ -66,6 +66,11 @@
 
 Data rows define required column width. Pad header and separator to match widest data cell.
 
+- After editing Markdown tables, run in order:
+  1. `python3 dotpy/format_table.py <file.md>`
+  2. `python3 dotpy/check_tables.py <file.md>`
+- For separator guidance without rewriting: `python3 dotpy/calc_widths.py <file.md>`.
+
 ## Response Hygiene
 
 - Distinguish verified facts from assumptions. If something is not verified, label it explicitly.
@@ -76,9 +81,11 @@ Data rows define required column width. Pad header and separator to match widest
 
 Files: `guidelines/projects/dspace-containerization/TODO.md` and `DONE.md`.
 
-- Record plan in `TODO.md` before executing. Check off (`- [x]`) as completed.
+- `TODO.md` is the active task list; organize work as tasks with subtasks and check off (`- [x]`) as completed.
 - Every task ends with `- [ ] Verify with the developer that the task is complete`.
-- All done → remove from `TODO.md`, prepend timestamped entry to `DONE.md`. Reorder with Python only.
+- Before executing any multi-step plan, record it in `TODO.md` first.
+- Only when all subtasks are done: remove task block from `TODO.md` and prepend timestamped entry to `DONE.md`.
+- Keep `DONE.md` reverse chronological (newest first).
 
 ## Docker / Make Conventions
 

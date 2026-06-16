@@ -2,6 +2,43 @@
 
 <!-- Entries are prepended (newest first). -->
 
+## 2026-06-16T15:56:51Z — Audit dspace-containerization agent files outside vs inside .agents/
+
+Audited root-level dspace agent/task files against `.agents` equivalents and identified migration requirements.
+
+- [x] Read and compare `mounted-projects/dspace-containerization/AGENTS.md` against `mounted-projects/dspace-containerization/.agents/AGENTS.md` — note any content differences, additions, or staleness
+- [x] Read and compare `mounted-projects/dspace-containerization/TODO.md` against equivalent task tracking files under `mounted-projects/dspace-containerization/.agents/` (if any exist)
+- [x] Read and compare `mounted-projects/dspace-containerization/DONE.md` against equivalent archive files under `mounted-projects/dspace-containerization/.agents/` (if any exist)
+- [x] Produce a written comparison summary: which files are stale copies, which have unique content, and whether any data would be lost by removing the root-level files
+- [x] Recommend action: remove root-level files, migrate unique content to `.agents/`, or keep as-is with rationale
+- [x] Verify with the developer that the task is complete
+
+## 2026-06-16T15:56:51Z — dspace-containerization — migrate essential AGENTS behavior into .agents/AGENTS.md
+
+Merged essential root AGENTS behavior into framework-managed dspace guidance.
+
+- [x] Merge unique root-level behaviors into `guidelines/projects/dspace-containerization/AGENTS.md` (detailed TODO/DONE lifecycle wording, dotpy markdown-tool commands, richer command-line safety where still missing)
+- [x] Regenerate `PYTHONPATH=src python3 -m agents_framework.cli guidelines generate dspace-containerization`
+- [x] Verify with the developer that the task is complete
+
+## 2026-06-16T15:56:51Z — dspace-containerization — add .agents task tracking files from root TODO/DONE
+
+Copied root TODO/DONE content into framework-managed `.agents` task tracking files for safe root-file removal.
+
+- [x] Copy root `mounted-projects/dspace-containerization/TODO.md` into `guidelines/projects/dspace-containerization/TODO.md`
+- [x] Copy root `mounted-projects/dspace-containerization/DONE.md` into `guidelines/projects/dspace-containerization/DONE.md`
+- [x] Ensure `.agents/AGENT_PROMPT.md` task-file references remain correct for TODO/DONE workflow
+- [x] Verify with the developer that the task is complete
+
+## 2026-06-16T15:56:51Z — dspace-containerization — remove root-level agent files from mounted project (developer action)
+
+Developer removed root agent/task tracking files after `.agents` migration was completed.
+
+- [x] Confirm preceding dspace migration tasks are developer-verified complete
+- [x] Developer removes root `AGENTS.md`
+- [x] Developer removes root `TODO.md` and `DONE.md`
+- [x] Verify with the developer that the task is complete
+
 ## 2026-06-16T15:51:17Z — Audit umich-arclight agent files outside vs inside .agents/
 
 Compared root-level umich-arclight agent files against `.agents/` equivalents and identified migration requirements before root cleanup.

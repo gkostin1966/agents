@@ -32,5 +32,3 @@ HTTP 500 on `/documents`.
 - [ ] Add a long-term fix: an `initContainer` or startup `readinessProbe` on the backend that waits for Solr to be ready before Spring Boot begins initializing
 - [ ] Verify the current state of the project achieves the task goal
 - [ ] Verify with the developer that the task is complete
-
-
