@@ -8,3 +8,5 @@ __pycache__/
 mounted-projects/
 pr-summary.md
 github-copilot-token-optimization/
+guidelines/projects/*/AGENTS_MERGED.md
+guidelines/projects/*/AGENT_PROMPT_MERGED.md
