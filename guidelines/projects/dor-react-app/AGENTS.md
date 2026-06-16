@@ -34,23 +34,25 @@
 - **Never shell heredocs** (`<< 'MARKER'`) — same corruption risk; previous unclosed `<<` swallows all subsequent commands.
 - Fix for both: write to file, run the file:
   ```shell
-  python3 scripts/myscript.py | cat   # reusable
-  python3 .agents/tmp/run.py | cat    # one-off
+  python3 .agents/dotpy/myscript.py | cat   # reusable
+  python3 .agents/tmp/run.py | cat          # one-off
   ```
 - If terminal stuck (no output / garbled): run the heredoc end-marker (`EOF`, `PYEOF`, etc.) as a standalone command to escape.
 
 ## Python Utility Scripts
 
-- Check project utility-script dir first (`scripts/README.md` or `dotpy/README.md`) before writing ad-hoc helpers.
-- Save reusable scripts there; add shebang + Usage docstring + README entry.
-- No utility dir → write to `.agents/tmp/run.py`.
+- Check `.agents/dotpy/README.md` for available helpers before writing ad-hoc scripts.
+- Save reusable scripts to `.agents/dotpy/`; add shebang + Usage docstring + README entry.
+- One-off scripts → write to `.agents/tmp/run.py`.
 
 ## Git Commits
 
 - `[when-committing]` Never amend. Never force-push. Never push to `main`.
 - `[when-committing]` Base commit suggestions on tracked/staged files only (`git status`, `git diff --staged`).
-- `[when-committing]` **Never `git commit -m "..."` for multiline** — write to `.agents/tmp/commit-msg.txt`, then `git commit -F .agents/tmp/commit-msg.txt | cat`.
-- `[when-committing]` If project has `scripts/commit.py` or `dotpy/commit.py`, use that instead.
+- `[when-committing]` **Never `git commit -m "..."` for multiline** — use `.agents/dotpy/commit.py` instead:
+  1. Write the commit message (subject + blank line + body) to `.agents/dotpy/commit_msg.txt`.
+  2. Run: `python3 .agents/dotpy/commit.py | cat`
+  `.agents/dotpy/commit_msg.txt` is never committed. The script calls `git commit -F`, bypassing all shell quoting.
 - `[when-committing]` Single-line exception: `git commit -m "chore: one line" | cat`.
 
 ## Pull Request Summaries
@@ -59,12 +61,27 @@
 
 ## Email Drafts for Third Parties
 
-- Write drafts as `.md` files under `communications/<channel>-<topic>.md` (e.g. `communications/email-its-request.md`).
-- `communications/` is tracked in git. Do not gitignore individual draft files.
+- When the developer asks you to compose an email to an external party, write it as a **Rich Text Format (`.rtf`) file** so the developer can open it in any mail client or word processor, fill in the recipient fields, and send without reformatting.
+- Save under **`.agents/emails/<short-descriptive-name>.rtf`**, e.g. `.agents/emails/its-oidc-request.rtf`.
+- `.agents/emails/` is tracked in the agents framework repo. Do not add individual draft filenames to `.gitignore`.
+- See `.agents/dotpy/_gen_rtf.py` as a worked example of generating RTF without shell quoting.
+- **RTF structure for an email draft:**
+  1. `\b Subject:\b0` line
+  2. `\b To:\b0` and `\b CC:\b0` lines with `[placeholder]` values the developer fills in
+  3. Blank line, then the greeting and body
+  4. Use `\b … \b0` for bold headings, `\f1 … \f0` (monospace/Courier) for technical values, and `- ` prefixed lines for bullet points
+  5. Use `\par` for paragraph breaks — do **not** use `\line`, `\emdash`, `\endash`, `\rquote`, or other Word-specific control words; they prevent macOS TextEdit from opening the file
+  6. A closing with `[Your name]` placeholder
+- Open the file after creating it so the developer can review it immediately.
 
 ## Markdown Tables
 
 Data rows define required column width. Pad header and separator to match widest data cell.
+
+- `[when-committing]` After editing any Markdown file with tables, run in order:
+  1. `python3 .agents/dotpy/format_table.py <file.md>` — auto-formats all tables (rewrites file in place).
+  2. `python3 .agents/dotpy/check_tables.py <file.md>` — validates alignment; exits `0` if clean.
+- To compute separator widths without editing: `python3 .agents/dotpy/calc_widths.py <file.md>` — prints max column widths and ready-to-paste separator for every table.
 
 ## Response Hygiene
 
@@ -118,5 +135,20 @@ Write tests before implementation. Order: Test → Implementation → Documentat
 
 - **Package manager**: `npm` only. Never `yarn` or `pnpm`.
 - **Lint before commit**: `npm run lint | cat`
-- Key deps (don't swap without reason): `antd` (UI), `@appbaseio/reactivesearch` (search), `dompurify` (sanitization), `react-router-dom` (routing).
+- **Development server**: `npm run dev` (typically `http://localhost:5173` — container-relative in devcontainer).
+- **Production build**: `npm run build` → output in `dist/`.
+- **Project structure**:
+  - `src/` — all source code
+  - `src/apps/` — application modules (e.g. `OsDorDcApp`, `RsDorDcApp`)
+  - `src/apps/*/components/` — React components specific to an app module
+  - `src/apps/*/services/` — API clients and data services
+  - `src/apps/*/utils/` — utility functions and constants
+  - `src/assets/` — static assets
+  - `public/` — public static files served at root
+- **Key dependencies** (don't swap without reason):
+  - `antd` — Ant Design UI component library
+  - `@appbaseio/reactivesearch` — Elasticsearch/OpenSearch search UI components
+  - `dompurify` — HTML sanitization (use when rendering user-generated or external HTML)
+  - `react-router-dom` — client-side routing
+  - `vite` — build tool and dev server
 
