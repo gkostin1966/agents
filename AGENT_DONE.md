@@ -2,6 +2,71 @@
 
 <!-- Entries are prepended (newest first). -->
 
+## 2026-06-16T15:41:10Z — Audit dor-react-app agent files outside vs inside .agents/
+
+Compared root-level agent files against `.agents/` equivalents and identified migration gaps before cleanup.
+
+- [x] Read and compare `mounted-projects/dor-react-app/AGENTS.md` against `mounted-projects/dor-react-app/.agents/AGENTS.md` — note any content differences, additions, or staleness
+- [x] Read and compare `mounted-projects/dor-react-app/AGENT_PROMPT.md` against `mounted-projects/dor-react-app/.agents/AGENT_PROMPT.md`
+- [x] Read and compare `mounted-projects/dor-react-app/AGENT_QUIZ.md` against `mounted-projects/dor-react-app/.agents/AGENT_QUIZ.md`
+- [x] Read and compare `mounted-projects/dor-react-app/AGENT_QUIZ_ANSWERS.md` against `mounted-projects/dor-react-app/.agents/AGENT_QUIZ_ANSWERS.md`
+- [x] Inspect `mounted-projects/dor-react-app/tasks/` — determine if task files have equivalents under `.agents/tasks/` or are orphaned
+- [x] Produce a written comparison summary: which files are stale copies, which have unique content, and whether any data would be lost by removing the root-level files
+- [x] Recommend action: remove root-level files, migrate unique content to `.agents/`, or keep as-is with rationale
+- [x] Verify with the developer that the task is complete
+
+## 2026-06-16T15:41:10Z — dor-react-app — fix Email Drafts convention in .agents/AGENTS.md
+
+Updated dor-react-app guidance to keep project-specific RTF email drafting behavior.
+
+- [x] Replace the `## Email Drafts for Third Parties` section in `guidelines/projects/dor-react-app/AGENTS.md` with the RTF/`emails/` convention from the root `AGENTS.md`
+- [x] Regenerate `PYTHONPATH=src python3 -m agents_framework.cli guidelines generate dor-react-app`
+- [x] Verify with the developer that the task is complete
+
+## 2026-06-16T15:41:10Z — dor-react-app — add Markdown table tools to .agents/AGENTS.md
+
+Added project-specific table utility command guidance under dor-react-app `.agents` rules.
+
+- [x] Expand the `## Markdown Tables` section in `guidelines/projects/dor-react-app/AGENTS.md` with the three `dotpy/` table commands and their usage
+- [x] Regenerate `PYTHONPATH=src python3 -m agents_framework.cli guidelines generate dor-react-app`
+- [x] Verify with the developer that the task is complete
+
+## 2026-06-16T15:41:10Z — dor-react-app — elevate dotpy/commit.py to primary multiline commit path in .agents/AGENTS.md
+
+Made the project-specific multiline commit workflow use the dotpy helper as the primary path.
+
+- [x] Update `## Git Commits` in `guidelines/projects/dor-react-app/AGENTS.md` to make `dotpy/commit.py` the required multiline path rather than a fallback
+- [x] Regenerate `PYTHONPATH=src python3 -m agents_framework.cli guidelines generate dor-react-app`
+- [x] Verify with the developer that the task is complete
+
+## 2026-06-16T15:41:10Z — dor-react-app — expand React conventions and Task Tracking in .agents/AGENTS.md
+
+Expanded dor-react-app framework guidance to preserve essential project-specific behavior before root-file cleanup.
+
+- [x] Expand `## React / Node.js / Vite Conventions` in `guidelines/projects/dor-react-app/AGENTS.md` with full project structure and key deps
+- [x] Strengthen `## Task Tracking` to include explicit developer-approval-before-implementing requirement (already present — confirmed)
+- [x] Regenerate `PYTHONPATH=src python3 -m agents_framework.cli guidelines generate dor-react-app`
+- [x] Verify with the developer that the task is complete
+
+## 2026-06-16T15:41:10Z — dor-react-app — populate .agents/tasks/README.md with archive index
+
+Copied task index/archive metadata into `.agents` so root task index can be safely removed.
+
+- [x] Copy content from root `tasks/README.md` into `guidelines/projects/dor-react-app/tasks/README.md`, updating any path references to be framework-relative
+- [x] Verify with the developer that the task is complete
+
+## 2026-06-16T15:41:10Z — dor-react-app — remove root-level agent files from mounted project (developer action)
+
+Developer removed redundant root-level agent infrastructure from dor-react-app after migration to `.agents/`.
+
+- [x] Confirm all preceding dor-react-app migration tasks are developer-verified complete
+- [x] Developer removes `AGENT_QUIZ.md` from `dor-react-app/` root (safe immediately — identical to `.agents/`)
+- [x] Developer removes `AGENT_QUIZ_ANSWERS.md` from `dor-react-app/` root (safe immediately — identical to `.agents/`)
+- [x] Developer removes `AGENTS.md` from `dor-react-app/` root (safe after migration tasks complete)
+- [x] Developer removes `AGENT_PROMPT.md` from `dor-react-app/` root (safe after migration tasks complete)
+- [x] Developer removes `tasks/README.md` from `dor-react-app/` root and the empty `tasks/` directory if no ticket dirs remain (safe after tasks/README.md populated in `.agents/`)
+- [x] Verify with the developer that the task is complete
+
 ## 2026-06-16T15:03:46Z — Implement guideline usability improvements from critique
 
 Added shared usability structure and scanning aids to base guidance files.
