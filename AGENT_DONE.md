@@ -2,6 +2,69 @@
 
 <!-- Entries are prepended (newest first). -->
 
+## 2026-06-16T15:03:46Z — Implement guideline usability improvements from critique
+
+Added shared usability structure and scanning aids to base guidance files.
+
+- [x] Add a concise `Quick Session Checklist` section to `guidelines/base/AGENTS.md` for fast startup scanning
+- [x] Add context tagging guidance (`always`, `when-bookkeeping`, `when-committing`) in `guidelines/base/AGENTS.md`
+- [x] Add a canonical `.agents` policy section in `guidelines/base/AGENTS.md` and reduce duplication where practical
+- [x] Add a compact startup checklist to `guidelines/base/AGENT_PROMPT.md`
+- [x] Update `guidelines/projects/boxrunner/AGENTS.md` to align with the improved structure while preserving project-specific rules
+- [x] Regenerate merged outputs after edits (`guidelines generate all`, `prompt generate all`)
+- [x] Verify with the developer that the task is complete
+
+## 2026-06-16T15:03:46Z — Propagate guideline usability improvements to all projects
+
+Applied and harmonized new shared sections and tag conventions across configured projects.
+
+- [x] Run `PYTHONPATH=src python3 -m agents_framework.cli diff-base <project> --file AGENTS.md` across configured projects to map drift
+- [x] Apply non-force `sync-base` for `AGENTS.md` across all projects to insert new shared sections
+- [x] Apply non-force `sync-base` for `AGENT_PROMPT.md` across all projects to insert any new shared sections
+- [x] Manually patch project files where customized sections require explicit adoption of new structure/tags
+- [x] Re-run `PYTHONPATH=src python3 -m agents_framework.cli guidelines generate all`
+- [x] Re-run `PYTHONPATH=src python3 -m agents_framework.cli prompt generate all`
+- [x] Validate with `PYTHONPATH=src python3 -m agents_framework.cli validate --projects all`
+- [x] Verify with the developer that the task is complete
+
+## 2026-06-16T15:03:46Z — Propagate boxrunner guideline overhaul to boxwalker
+
+Ported boxrunner improvements into boxwalker project guidance and validated merged outputs.
+
+- [x] Diff `guidelines/projects/boxrunner/AGENTS.md` against `guidelines/projects/boxwalker/AGENTS.md` to isolate candidate changes
+- [x] Port boxrunner improvements that are boxwalker-compatible into `guidelines/projects/boxwalker/AGENTS.md`
+- [x] If startup flow changes are implicated, port matching updates from `guidelines/projects/boxrunner/AGENT_PROMPT.md` to `guidelines/projects/boxwalker/AGENT_PROMPT.md`
+- [x] Run `PYTHONPATH=src python3 -m agents_framework.cli guidelines generate boxwalker`
+- [x] If prompt was edited, run `PYTHONPATH=src python3 -m agents_framework.cli prompt generate boxwalker`
+- [x] Review resulting `guidelines/projects/boxwalker/AGENTS_MERGED.md` (and prompt merged file if generated) for correctness
+- [x] Verify with the developer that the task is complete
+
+## 2026-06-16T15:03:46Z — Extract shared rules from boxrunner into base guidelines
+
+Moved cross-project-safe rules to base guidelines while retaining boxrunner-specific guidance in project files.
+
+- [x] Review finalized boxrunner guideline changes and classify each rule as shared vs project-specific
+- [x] Move shared rules into `guidelines/base/AGENTS.md` without pulling in boxrunner-only constraints
+- [x] Keep project-specific rules in `guidelines/projects/boxrunner/AGENTS.md`
+- [x] If shared startup/prompt guidance also changed, update `guidelines/base/AGENT_PROMPT.md`
+- [x] Run `PYTHONPATH=src python3 -m agents_framework.cli guidelines generate all`
+- [x] If base prompt changed, run `PYTHONPATH=src python3 -m agents_framework.cli prompt generate all`
+- [x] Spot-check merged outputs for at least `boxrunner` and `boxwalker` for replacement semantics correctness
+- [x] Verify with the developer that the task is complete
+
+## 2026-06-16T15:03:46Z — Propagate updated base guidance across all project guideline files
+
+Used `diff-base`/`sync-base` flow to apply base updates safely across all configured projects and revalidated.
+
+- [x] Run `PYTHONPATH=src python3 -m agents_framework.cli diff-base boxrunner --file AGENTS.md` and capture baseline drift pattern
+- [x] For each configured project, run `diff-base` for `AGENTS.md` to identify SAME/CUSTOMIZED/MISSING sections
+- [x] Apply `sync-base` project-by-project for `AGENTS.md` (non-force first; force only where explicitly approved)
+- [x] If base prompt changed, repeat diff/sync workflow for `AGENT_PROMPT.md`
+- [x] Re-run `PYTHONPATH=src python3 -m agents_framework.cli guidelines generate all`
+- [x] If prompt changes were applied, re-run `PYTHONPATH=src python3 -m agents_framework.cli prompt generate all`
+- [x] Validate framework state with `PYTHONPATH=src python3 -m agents_framework.cli validate --projects all`
+- [x] Verify with the developer that the task is complete
+
 ## 2026-06-12T05:02:01Z — Make README directory layout generic
 
 Replaced hard-coded per-project examples with a stable template layout and added a note that actual project names come from `config/projects.json`.

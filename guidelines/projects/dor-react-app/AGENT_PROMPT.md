@@ -20,6 +20,15 @@ Use local `.agents` paths first.
 - Primary: read guidance from `.agents/` in the project root.
 - Fallback only if `.agents/` is missing or unreadable: ask for absolute `AGENTS_ROOT`.
 
+## Quick Startup Checklist
+
+- Run git orientation commands.
+- Stop and ask developer if branch/state is unexpected.
+- Read local project `AGENTS.md`.
+- Identify active ticket key from branch naming convention.
+- Read task index and active task files before implementation.
+- Ask whether to take onboarding quiz and obey the result.
+
 ## Startup Workflow
 
 After completing the base startup workflow, infer the active Jira ticket from the branch

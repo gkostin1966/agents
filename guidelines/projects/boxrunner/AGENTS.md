@@ -1,12 +1,32 @@
 # Agent Rules — boxrunner
 
+## Quick Session Checklist
+
+- `[always]` Run startup orientation commands and stop for unexpected branch/working state.
+- `[always]` Read local project `AGENTS.md` and follow project-specific overrides.
+- `[always]` Identify the active ticket key from branch naming rules.
+- `[when-bookkeeping]` Read/update task state files before and after substantive work.
+- `[when-committing]` Base commit guidance on tracked/staged files only.
+
+## Rule Tags
+
+- `[always]` Applies to every session/task.
+- `[when-bookkeeping]` Applies when maintaining `.agents` task/status metadata.
+- `[when-committing]` Applies when preparing, suggesting, or executing commit actions.
+
+## `.agents` Policy (Canonical)
+
+- `[always]` Treat `.agents/` as shared agent-framework metadata and long-term memory.
+- `[always]` Maintain relevant `.agents/` files in place when required for the active task.
+- `[always]` Do not treat `.agents/` updates as normal app-code commit content in mounted repositories.
+- `[always]` Agents do not commit `.agents/` files in mounted repositories unless the developer explicitly directs otherwise.
+
 ## File Access
 
-- Stay within the project directory. Outside file: read only the specific file requested — no browsing.
-- **Never read `AGENT_QUIZ_ANSWERS.md`** until all quiz answers written **and** developer explicitly grants permission.
-- Create temporary files in `.agents/tmp/` only (for example `.agents/tmp/run.py`, `.agents/tmp/commit-msg.txt`) — never system `/tmp`.
-- Treat all files under `.agents/` as shared agent-framework metadata for future agents. Maintain them in place as part of normal task work when they are relevant to the current task; use them to get the work done here; and remember that any `.agents/` changes belong to the separate agent-framework project outside this repository, where they are committed instead of as part of normal app-code commits here.
-- Agents never commit files under `.agents/` in this repository, and developers will never request agents in this project to commit `.agents/` files.
+- `[always]` Stay within the project directory. Outside file: read only the specific file requested — no browsing.
+- `[always]` **Never read `AGENT_QUIZ_ANSWERS.md`** until all quiz answers written **and** developer explicitly grants permission.
+- `[always]` Create temporary files in `.agents/tmp/` only (for example `.agents/tmp/run.py`, `.agents/tmp/commit-msg.txt`) — never system `/tmp`.
+- `[always]` Follow `## .agents Policy (Canonical)` for ownership and commit-boundary rules.
 
 ## Command-Line Tool Usage
 
@@ -28,12 +48,12 @@
 
 ## Git Commits
 
-- Never amend. Never force-push. Never push to `main`.
-- When preparing or discussing commits in this repository, reason only from the current tracked/staged file set (`git status` / `git diff --staged`). Do not ask to commit `.agents/` files when they are not trackable/staged here.
-- Do not make speculative commit suggestions. Only suggest commit actions grounded in the current tracked/staged set.
-- **Never `git commit -m "..."` for multiline** — write to `.agents/tmp/commit-msg.txt`, then `git commit -F .agents/tmp/commit-msg.txt | cat`.
-- If project has `scripts/commit.py` or `dotpy/commit.py`, use that instead.
-- Single-line exception: `git commit -m "chore: one line" | cat`.
+- `[when-committing]` Never amend. Never force-push. Never push to `main`.
+- `[when-committing]` When preparing or discussing commits in this repository, reason only from the current tracked/staged file set (`git status` / `git diff --staged`). Do not ask to commit `.agents/` files when they are not trackable/staged here.
+- `[when-committing]` Do not make speculative commit suggestions. Only suggest commit actions grounded in the current tracked/staged set.
+- `[when-committing]` **Never `git commit -m "..."` for multiline** — write to `.agents/tmp/commit-msg.txt`, then `git commit -F .agents/tmp/commit-msg.txt | cat`.
+- `[when-committing]` If project has `scripts/commit.py` or `dotpy/commit.py`, use that instead.
+- `[when-committing]` Single-line exception: `git commit -m "chore: one line" | cat`.
 
 ## Pull Request Summaries
 
@@ -47,6 +67,12 @@
 ## Markdown Tables
 
 Data rows define required column width. Pad header and separator to match widest data cell.
+
+## Response Hygiene
+
+- Distinguish verified facts from assumptions. If something is not verified, label it explicitly.
+- Do not suggest next steps that conflict with repository rules.
+- If task metadata is clearly stale or inconsistent (for example `tasks/README.md` summary/status drift, or `STATUS.md` not matching `TODO.md`), fix it proactively and report the change. Do not ask for permission first when the correction is clear and non-destructive.
 
 ## Session State (`tasks/ARC-nnn/STATUS.md`)
 
@@ -91,12 +117,6 @@ New ticket: `mkdir -p .agents/tasks/ARC-nnn/plans` + create TODO.md + STATUS.md 
 - After the related PR merges, archive with `git mv .agents/tasks/ARC-nnn .agents/archive/ARC-nnn` (create `.agents/archive/` if missing).
 - Ticket archival and any `.agents`-side Git operations are handled outside normal app-code work in the separate agent-framework project; the agent should not assume it needs to manage `.agents` commits as part of the current project task here.
 - Reorder subtasks with Python only — never string-replace.
-
-## Response Hygiene
-
-- Distinguish verified facts from assumptions. If something is not verified, label it explicitly.
-- Do not suggest next steps that conflict with repository rules.
-- If task metadata is clearly stale or inconsistent (for example `tasks/README.md` summary/status drift, or `STATUS.md` not matching `TODO.md`), fix it proactively and report the change. Do not ask for permission first when the correction is clear and non-destructive.
 
 ## Ruby on Rails Conventions
 

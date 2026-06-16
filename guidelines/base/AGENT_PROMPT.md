@@ -25,9 +25,31 @@ repository root on this machine. Record it as `AGENTS_ROOT` for this session.
 
 Do not hardcode machine-specific paths.
 
+Treat `.agents/` inside mounted projects as shared agent-framework metadata and
+long-term memory for future agents. Maintain relevant `.agents/` files in place
+as part of task execution, but do not treat `.agents/` updates as normal app-code
+commit content in the mounted repository.
+
+## Quick Startup Checklist
+
+- Run git orientation commands.
+- Stop and ask developer if branch/state is unexpected.
+- Read local project `AGENTS.md`.
+- Identify active ticket key from branch naming convention.
+- Read task index and active task files before implementation.
+- Ask whether to take onboarding quiz and obey the result.
+
 ## Startup Workflow
 
 Before doing anything else, follow these steps in order:
+
+Session defaults for every new run:
+
+- Detect the current git branch and identify the focus ticket key if present.
+- Read task index/state files for the selected ticket before implementation.
+- State the selected focus ticket in the first substantive reply.
+- State workflow context in that reply: application-code work, `.agents` bookkeeping work, or both.
+- If you find clear, non-destructive drift between task files, correct it proactively and report it.
 
 1. **Orient yourself** — run:
    ```shell

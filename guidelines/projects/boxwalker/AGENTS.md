@@ -1,9 +1,32 @@
 # Agent Rules — boxwalker
 
+## Quick Session Checklist
+
+- `[always]` Run startup orientation commands and stop for unexpected branch/working state.
+- `[always]` Read local project `AGENTS.md` and follow project-specific overrides.
+- `[always]` Identify the active ticket key from branch naming rules.
+- `[when-bookkeeping]` Read/update task state files before and after substantive work.
+- `[when-committing]` Base commit guidance on tracked/staged files only.
+
+## Rule Tags
+
+- `[always]` Applies to every session/task.
+- `[when-bookkeeping]` Applies when maintaining `.agents` task/status metadata.
+- `[when-committing]` Applies when preparing, suggesting, or executing commit actions.
+
+## `.agents` Policy (Canonical)
+
+- `[always]` Treat `.agents/` as shared agent-framework metadata and long-term memory.
+- `[always]` Maintain relevant `.agents/` files in place when required for the active task.
+- `[always]` Do not treat `.agents/` updates as normal app-code commit content in mounted repositories.
+- `[always]` Agents do not commit `.agents/` files in mounted repositories unless the developer explicitly directs otherwise.
+
 ## File Access
 
-- Stay within the project directory. Outside file: read only the specific file requested — no browsing.
-- **Never read `AGENT_QUIZ_ANSWERS.md`** until all quiz answers written **and** developer explicitly grants permission.
+- `[always]` Stay within the project directory. Outside file: read only the specific file requested — no browsing.
+- `[always]` **Never read `AGENT_QUIZ_ANSWERS.md`** until all quiz answers written **and** developer explicitly grants permission.
+- `[always]` Create temporary files in `.agents/tmp/` only (for example `.agents/tmp/run.py`, `.agents/tmp/commit-msg.txt`) — never system `/tmp`.
+- `[always]` Follow `## .agents Policy (Canonical)` for ownership and commit-boundary rules.
 
 ## Command-Line Tool Usage
 
@@ -13,7 +36,7 @@
 - Fix for both: write to file, run the file:
   ```shell
   python3 scripts/myscript.py | cat   # reusable
-  python3 /tmp/run.py | cat           # one-off
+  python3 .agents/tmp/run.py | cat    # one-off
   ```
 - If terminal stuck (no output / garbled): run the heredoc end-marker (`EOF`, `PYEOF`, etc.) as a standalone command to escape.
 
@@ -21,14 +44,16 @@
 
 - Check project utility-script dir first (`scripts/README.md` or `dotpy/README.md`) before writing ad-hoc helpers.
 - Save reusable scripts there; add shebang + Usage docstring + README entry.
-- No utility dir → write to `/tmp/run.py`.
+- No utility dir → write to `.agents/tmp/run.py`.
 
 ## Git Commits
 
-- Never amend. Never force-push. Never push to `main`.
-- **Never `git commit -m "..."` for multiline** — write to `/tmp/commit-msg.txt`, then `git commit -F /tmp/commit-msg.txt | cat`.
-- If project has `scripts/commit.py` or `dotpy/commit.py`, use that instead.
-- Single-line exception: `git commit -m "chore: one line" | cat`.
+- `[when-committing]` Never amend. Never force-push. Never push to `main`.
+- `[when-committing]` When preparing or discussing commits in this repository, reason only from the current tracked/staged file set (`git status` / `git diff --staged`). Do not ask to commit `.agents/` files when they are not trackable/staged here.
+- `[when-committing]` Do not make speculative commit suggestions. Only suggest commit actions grounded in the current tracked/staged set.
+- `[when-committing]` **Never `git commit -m "..."` for multiline** — write to `.agents/tmp/commit-msg.txt`, then `git commit -F .agents/tmp/commit-msg.txt | cat`.
+- `[when-committing]` If project has `scripts/commit.py` or `dotpy/commit.py`, use that instead.
+- `[when-committing]` Single-line exception: `git commit -m "chore: one line" | cat`.
 
 ## Pull Request Summaries
 
@@ -43,13 +68,25 @@
 
 Data rows define required column width. Pad header and separator to match widest data cell.
 
+## Response Hygiene
+
+- Distinguish verified facts from assumptions. If something is not verified, label it explicitly.
+- Do not suggest next steps that conflict with repository rules.
+- If task metadata is clearly stale or inconsistent (for example `tasks/README.md` summary/status drift, or `STATUS.md` not matching `TODO.md`), fix it proactively and report the change. Do not ask for permission first when the correction is clear and non-destructive.
+
 ## Session State (`tasks/BW-nnn/STATUS.md`)
 
-At session start: (1) identify ticket from branch name (e.g. `BW-42/my-feature` → `BW-42`), (2) read `tasks/BW-nnn/STATUS.md` in full, (3) cross-check open subtasks against `TODO.md` — `TODO.md` is authoritative.
+Apply this section whenever the current task needs `.agents/` bookkeeping; these files are long-term memory for future agents, not application code.
+
+At session start: (1) identify ticket from branch name by extracting a key matching `BW-\d+` (e.g. `BW-42/my-feature` -> `BW-42`), (2) if the branch name does not contain a `BW-\d+` key, list open tickets from `.agents/tasks/README.md` and ask the developer which ticket to focus on, (3) if `tasks/BW-nnn/` does not exist yet for the selected ticket, create `TODO.md`, `STATUS.md`, and `plans/` plus a row in `tasks/README.md`, (4) read `tasks/BW-nnn/STATUS.md` in full, (5) cross-check open subtasks against `TODO.md` — `TODO.md` is authoritative.
 
 During session: update `STATUS.md` when a subtask completes, a plan changes, or a key decision is made.
 
-End of session: update Last Updated, Recent Activity, Next Steps. Commit `STATUS.md` in final commit.
+End of session: update Last Updated, Recent Activity, Next Steps. `.agents` files are maintained separately and should be edited in place; Git staging/commit/archival for `.agents` is handled manually by the developer unless explicitly requested.
+
+- `Open Tasks` in `STATUS.md` must mirror unchecked subtasks in `TODO.md` exactly at session end.
+- Add a `Verification Evidence` subsection in `STATUS.md` with commands run, outcomes, and explicit blockers.
+- If verification is blocked, report: blocker, exact command attempted, observed output/error, and what remains unverified.
 
 | Section         | Contents                                                               |
 |-----------------|------------------------------------------------------------------------|
@@ -60,8 +97,11 @@ End of session: update Last Updated, Recent Activity, Next Steps. Commit `STATUS
 | Recent Activity | Bullet list of meaningful changes made in the most recent session      |
 | Key Context     | Decisions, design notes, or gotchas the next agent needs to understand |
 | Next Steps      | Ordered list of what to do next, specific enough to act on immediately |
+| Verification Evidence | Commands run, key results, blockers, and unverified scope         |
 
 ## Task Tracking (`tasks/BW-nnn/TODO.md` / `tasks/BW-nnn/DONE.md`)
+
+Apply this section whenever the current task needs `.agents/` task bookkeeping; these files are long-term memory for future agents, not application code.
 
 Primary location: `.agents/tasks/BW-nnn/` (TODO.md, DONE.md, STATUS.md, plans/).
 
@@ -71,8 +111,11 @@ New ticket: `mkdir -p .agents/tasks/BW-nnn/plans` + create TODO.md + STATUS.md +
 
 - Record plan in `TODO.md` before executing. Check off (`- [x]`) as completed.
 - Every task ends with `- [ ] Verify with the developer that the task is complete`.
+- Task lifecycle: `In Progress` -> `Developer Verified` -> `Merged` -> `Archived`.
 - All done → create `tasks/BW-nnn/DONE.md` with timestamp + summary + checklist.
-- Complete ticket (after PR merges): `git mv .agents/tasks/BW-nnn .agents/archive/BW-nnn`
+- If PR review requests follow-up after a task was marked complete, reopen the same ticket: add new unchecked subtasks to `TODO.md`, update `STATUS.md` (`Open Tasks`, `Recent Activity`, `Next Steps`), and keep the task under `.agents/tasks/BW-nnn/` until it is re-verified.
+- After the related PR merges, archive with `git mv .agents/tasks/BW-nnn .agents/archive/BW-nnn` (create `.agents/archive/` if missing).
+- Ticket archival and any `.agents`-side Git operations are handled outside normal app-code work in the separate agent-framework project; the agent should not assume it needs to manage `.agents` commits as part of the current project task here.
 - Reorder subtasks with Python only — never string-replace.
 
 ## Ruby on Rails Conventions
