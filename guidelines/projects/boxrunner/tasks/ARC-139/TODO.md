@@ -1,4 +1,4 @@
-# ARC-139 — Harden agent onboarding docs
+# ARC-139 — Harden onboarding docs and refactor jobs into services
 ## Plan
 - [x] Review `.agents/AGENT_QUIZ.md`, `.agents/AGENT_QUIZ_ANSWERS.md`, and `.agents/AGENTS.md` for ambiguity and drift
 - [x] Update quiz and answer key wording so live task state and archive behavior are unambiguous
@@ -23,5 +23,16 @@
 - [x] Verify the sync workflow YAML is valid and follows existing repo conventions
 - [x] Configure devcontainer Bundler settings to install gems in a user-writable project path
 - [x] Validate `.devcontainer/compose.yml` and `.devcontainer/devcontainer.json` syntax after Bundler configuration changes
-- [ ] Verify with the developer that the follow-up CSS warning reduction change is complete
+- [x] Verify with the developer that the follow-up CSS warning reduction change is complete
+- [x] Define formal job-to-service refactor scope for all classes under `app/jobs/`
+- [x] Extract business logic from `BuildSuggestJob` into `app/services/solr/build_suggest.rb`
+- [x] Extract business logic from `DeleteFindingAidJob` into `app/services/finding_aids/delete_from_index.rb`
+- [x] Extract business logic from `IndexFindingAidJob` into `app/services/finding_aids/index_from_ead.rb`
+- [x] Extract business logic from `IngestFindingAidJob` into `app/services/finding_aids/ingest_record.rb`
+- [x] Extract business logic from `PackageFindingAidJob` into `app/services/finding_aids/package_artifact.rb`
+- [x] Extract event-dispatch logic from `IngestAutomationJob` into `app/services/ingest_automation/dispatch.rb`
+- [x] Keep each job in `app/jobs/` focused on workflow/orchestration and delegating to services
+- [x] Add or update job specs to validate queueing and service delegation for all job classes in `app/jobs/`
+- [x] Run targeted job and service specs and confirm they pass
+- [x] Verify with the developer that the jobs-to-services refactor task is complete
 

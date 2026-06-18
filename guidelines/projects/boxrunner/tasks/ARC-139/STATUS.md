@@ -1,13 +1,13 @@
 # ARC-139 — STATUS
 
 ## Last Updated
-2026-06-18 — Updated quiz, answer key, and AGENTS.md to reflect all six Docker Compose services.
+2026-06-18 — Developer verified jobs-to-services refactor completion; ARC-139 moved to Developer Verified.
 
 ## Current Branch
 ARC-139-IngestAutomationJob
 
 ## Open Tasks
-- [ ] Verify with the developer that the follow-up CSS warning reduction change is complete
+- None (all TODO subtasks are checked)
 
 ## Open Plans
 | File       | Purpose                      | Status      |
@@ -15,6 +15,26 @@ ARC-139-IngestAutomationJob
 | (none yet) | Document changes are in TODO | Completed   |
 
 ## Recent Activity
+- Developer confirmed the jobs-to-services refactor task is complete.
+- Marked final verification subtask complete in `.agents/tasks/ARC-139/TODO.md` and set `ARC-139` status to `Developer Verified` in `.agents/tasks/README.md`.
+- Moved `lib/box/traject/ead2_config.rb` to `config/traject/ead2_config.rb` and removed the legacy lib copy to avoid Zeitwerk constant autoload mismatch.
+- Updated `app/services/finding_aids/index_from_ead.rb` to load traject config from `config/traject/ead2_config.rb`.
+- Rebuilt the app image and verified Rails boots in-container (`rails runner "puts :boot_ok"` -> `boot_ok`).
+- Ran targeted specs in test mode and resolved service spec harness issues; final run passed with `28 examples, 0 failures`.
+- Updated ARC-139 summary/title metadata in `.agents/tasks/README.md` and `.agents/tasks/ARC-139/TODO.md` so task descriptors match the expanded refactor scope.
+- Added formal ARC-139 refactor checklist and completed extraction of business logic from all jobs into new service objects under `app/services/`.
+- Updated all job classes in `app/jobs/` to keep orchestration in `perform` and delegate to service objects.
+- Updated all job specs in `spec/jobs/` to validate queueing and service delegation.
+- Added focused service specs under `spec/services/` for `Solr::BuildSuggest`, `FindingAids::DeleteFromIndex`, `FindingAids::IndexFromEad`, `FindingAids::IngestRecord`, `FindingAids::PackageArtifact`, and `IngestAutomation::Dispatch`.
+- Attempted in-container spec execution via `docker compose exec` and `docker compose run --rm`; runs are blocked by existing app boot errors (`Zeitwerk::NameError` for `lib/box/traject/ead2_config.rb` and follow-on `FrozenError` during Rails initialization).
+- Replaced the prior loose follow-up list with a formal multi-step jobs-to-services refactor checklist in `.agents/tasks/ARC-139/TODO.md`.
+- Developer requested follow-up work before PR and asked to add job specs for all `app/jobs/` classes.
+- Reopened ARC-139 by adding new unchecked subtasks to `.agents/tasks/ARC-139/TODO.md` for job-spec implementation, validation, and developer verification.
+- Set `.agents/tasks/README.md` ticket status for `ARC-139` back to `Open` for the reopened work.
+- Developer confirmed the follow-up CSS warning reduction task is complete.
+- Marked final verification subtask complete in `.agents/tasks/ARC-139/TODO.md`.
+- Updated `.agents/tasks/README.md` status for `ARC-139` to `Developer Verified`.
+- Refreshed `.agents/tasks/ARC-139/DONE.md` with full completion checklist and files-updated list.
 - Updated `AGENT_QUIZ.md` Q8: replaced "three services" premise with "list every service" to match current `compose.yml`.
 - Updated `AGENT_QUIZ_ANSWERS.md` A8: expanded table from 3 rows (app/solr/zookeeper) to all 6 services with correct ports (app:3000, redis:6379, resque:none, resque-web:5678, solr:8983, zookeeper:2181).
 - Updated `AGENTS.md` § Ruby on Rails Conventions "Start stack" line to list all six services instead of the outdated three.
@@ -50,7 +70,19 @@ ARC-139-IngestAutomationJob
 - The quiz should grade against current repository state, not bootstrap assumptions.
 - Archive guidance must be explicitly present in `AGENTS.md` if the answer key requires it.
 
+## Verification Evidence
+- Command: `git --no-pager branch --show-current && git --no-pager status` -> confirmed branch `ARC-139-IngestAutomationJob` with clean working tree before closeout updates.
+- Command: `read_file` on `.agents/tasks/ARC-139/TODO.md` and `.agents/tasks/ARC-139/STATUS.md` -> verified only one remaining unchecked subtask before developer confirmation.
+- Developer confirmation: received explicit confirmation in session chat that the warning reduction change is complete.
+- Command: `docker compose exec app bundle exec rspec spec/jobs spec/services | cat` -> failed with `service "app" is not running`.
+- Command: `docker compose up -d | cat` and `docker compose build app | cat` -> stack/app image started/rebuilt successfully.
+- Command: `docker compose run --rm app bundle exec rspec spec/jobs/*_spec.rb spec/services/**/*_spec.rb | cat` -> failed during Rails boot with `Zeitwerk::NameError` (`expected file /rails/lib/box/traject/ead2_config.rb to define constant Box::Traject::Ead2Config`) and follow-on `FrozenError` in Rails initialization.
+- Command: `docker compose run --rm app ruby -c app/jobs/*.rb app/services/**/*.rb | cat` -> `Syntax OK` for refactored job files and new service files.
+- Command: `docker compose run --rm app bundle exec rails runner "puts :boot_ok" | cat` -> `boot_ok` after moving traject config and rebuilding.
+- Command: `docker compose run --rm -e RAILS_ENV=test app bundle exec rspec spec/jobs/*_spec.rb spec/services/**/*_spec.rb | cat` -> `28 examples, 0 failures`.
+- Developer confirmation: explicit in-session approval to close out ARC-139.
+- Remaining unverified scope: post-merge archive step.
+
 ## Next Steps
-1. Confirm with the developer that the CSS warning-noise reduction change is complete.
-2. After the related PR merges, archive with `git mv .agents/tasks/ARC-139 .agents/archive/ARC-139`.
+1. After the related PR merges, archive with `git mv .agents/tasks/ARC-139 .agents/archive/ARC-139`.
 
