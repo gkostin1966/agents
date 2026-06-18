@@ -73,10 +73,10 @@ widths in the table?
 
 ---
 
-**Q8.** What three Docker Compose services make up the local development stack, and
-what localhost port is exposed for each?
+**Q8.** List every Docker Compose service defined in `compose.yml`, and state what
+localhost port is exposed for each (write "none" if no port is published).
 
-*(Hint: `compose.yml`)*
+*(Hint: `compose.yml` — `services:` and `ports:` entries)*
 
 ---
 

@@ -121,7 +121,7 @@ New ticket: `mkdir -p .agents/tasks/ARC-nnn/plans` + create TODO.md + STATUS.md 
 ## Ruby on Rails Conventions
 
 - **All application commands run inside the Docker container.** Never against system Ruby/Node.
-- Start stack: `docker compose up` (starts `app`, `solr`, `zookeeper`).
+- Start stack: `docker compose up` (starts all services: `app`, `redis`, `resque`, `resque-web`, `solr`, `zookeeper`).
 - After first `docker compose up`, initialize Solr collection: `/bin/bash ./solr/dev-init.sh`
 - **RuboCop before committing Ruby files**:
   - Auto-fix: `docker compose exec app bundle exec rubocop -a | cat`

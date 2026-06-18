@@ -1,7 +1,7 @@
 # ARC-139 — STATUS
 
 ## Last Updated
-2026-06-16 — Added devcontainer Bundler configuration so gem installs avoid system write-permission errors.
+2026-06-18 — Updated quiz, answer key, and AGENTS.md to reflect all six Docker Compose services.
 
 ## Current Branch
 ARC-139-IngestAutomationJob
@@ -15,6 +15,9 @@ ARC-139-IngestAutomationJob
 | (none yet) | Document changes are in TODO | Completed   |
 
 ## Recent Activity
+- Updated `AGENT_QUIZ.md` Q8: replaced "three services" premise with "list every service" to match current `compose.yml`.
+- Updated `AGENT_QUIZ_ANSWERS.md` A8: expanded table from 3 rows (app/solr/zookeeper) to all 6 services with correct ports (app:3000, redis:6379, resque:none, resque-web:5678, solr:8983, zookeeper:2181).
+- Updated `AGENTS.md` § Ruby on Rails Conventions "Start stack" line to list all six services instead of the outdated three.
 - Created task directory `.agents/tasks/ARC-139/` with `TODO.md`, `STATUS.md`, and `plans/`.
 - Confirmed quiz mismatch points from prior self-grade (`Q16`, `Q17`).
 - Updated `.agents/AGENTS.md` to define missing-ticket bootstrap behavior and explicit archive move command.

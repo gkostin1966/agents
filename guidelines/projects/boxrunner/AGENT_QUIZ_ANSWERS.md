@@ -64,11 +64,14 @@ match the widest data cell.
 
 **A8.**
 
-| Service   | Localhost port |
-|-----------|---------------|
-| app       | 3000          |
-| solr      | 8983          |
-| zookeeper | 2181          |
+| Service     | Localhost port |
+|-------------|----------------|
+| app         | 3000           |
+| redis       | 6379           |
+| resque      | none           |
+| resque-web  | 5678           |
+| solr        | 8983           |
+| zookeeper   | 2181           |
 
 *(Source: `compose.yml` `ports:` entries)*
 
