@@ -15,11 +15,11 @@
 
 | File                                                            | Purpose                                                                                    |
 |-----------------------------------------------------------------|--------------------------------------------------------------------------------------------|
-| `dotpy/check_dspace_rt2.py`                                     | Verify DSpace REST API, OAI-PMH, auth, and deposit access before configuring Elements      |
+| `.agents/scripts/shared/check_dspace_rt2.py`                    | Verify DSpace REST API, OAI-PMH, auth, and deposit access before configuring Elements      |
 | `plans/PLAN466DEMO.md`                                          | Step-by-step plan with demo-specific URLs and UUIDs                                        |
-| `dotpy/patch_harvest_crosswalk.py`                              | Step 2 first pass: replaces `select-using="xpath"` → `"jsonpath"` in field-source elements |
-| `dotpy/fix_harvest_crosswalk_dspace7.py`                        | Step 2 second pass: fixes JSONPath expressions, conditions, repository-status mapping      |
-| `dotpy/patch_deposit_crosswalk.py`                              | Step 3: adds collection UUID `id=` attributes to deposit crosswalk                         |
+| `.agents/scripts/shared/patch_harvest_crosswalk.py`             | Step 2 first pass: replaces `select-using="xpath"` → `"jsonpath"` in field-source elements |
+| `.agents/scripts/shared/fix_harvest_crosswalk_dspace7.py`       | Step 2 second pass: fixes JSONPath expressions, conditions, repository-status mapping      |
+| `.agents/scripts/shared/patch_deposit_crosswalk.py`             | Step 3: adds collection UUID `id=` attributes to deposit crosswalk                         |
 | `environments/deepblue-documents/demo/backend-cm.jsonnet`       | Demo ConfigMap — contains PR collection UUID and all env-specific overrides                |
 
 **Findings from Step 1 (completed 2026-04-22):**
@@ -62,89 +62,6 @@
 
 ---
 
-## Demo Login Failure — All Local Accounts Unable to Log In
-Multiple users are unable to log in to the demo environment using local DSpace accounts
-(demo does not use SSO — accounts are set up individually). Reported 2026-04-27 by Rachel
-Woodbrook and Peter Cerda; affected account confirmed: Duey Smith `tildon@umich.edu`.
-Two draft items are also throwing an issue when accessed in embargoed state:
-- "Exploring Digital Privacy Risks, Protective Practices, and Barriers to Protection Among
-  Young Adults: A Cross-Regional Study of the US and China"
-- "An Exploratory Study of Deepfake Fraud Encounters"
-
-The problem has been present since at least the week before 2026-04-27.
-
-**Team architectural decision (2026-04-29):**
-Demo should use **OIDC at the gate** (oauth2-proxy, same pattern as workshop) to require
-U-M WebLogin before reaching the application, plus **DSpace username/password** at the
-application level for the generic shared accounts (reader, depositor, admin, etc.).
-DSpace's own internal OIDC is not needed for demo/workshop — password login is sufficient.
-
-**Root cause analysis (2026-04-28, complete):**
-
-**Issue 1 — Missing account for `tildon@umich.edu`:**
-`tildon@umich.edu` (Duey Smith) had no account in the demo DSpace database.
-→ **FIXED 2026-04-28**: account created (UUID `72991d42-7601-4f1a-b074-df000f80c158`);
-  login confirmed working (HTTP 200). Temporary password set — developer must communicate
-  `BlueDemo2026t` to Duey Smith and ask them to change it on first login.
-
-**Issue 2 — OIDC client broken at Shibboleth:**
-The demo OIDC client `5-ulib-deepblue-wkshp-auth-arotuj4xgffe5ucs9saofg` returns
-**HTTP 500** from `shibboleth.umich.edu/idp/profile/oidc/authorize`. This affects:
-- The workshop oauth2-proxy gate (already deployed, currently not functional)
-- The planned demo oauth2-proxy gate (infra deployed in 2026-04-29 commit;
-  auth annotations on demo frontend ingress are withheld until this is fixed)
-→ **Action required**: contact ITS to:
-  1. Fix the OIDC client `5-ulib-deepblue-wkshp-auth-arotuj4xgffe5ucs9saofg`
-  2. Add `https://demo.deepblue-documents.lib.umich.edu/oauth2/callback` to the
-     client's allowed redirect URIs (so demo can share the same client as workshop)
-
-**Issue 3 — `pacerda@umich.edu` (Peter Cerda) may not have a local password:**
-Account exists with `netid=pacerda@umich.edu` (OIDC-linked). If the account was
-created exclusively via OIDC, no local password was ever set, and password login will
-always return 401. OIDC login is currently broken (see Issue 2).
-→ **Action required (developer)**: reset via TTY: `kubectl config use-context
-  deepblue-documents-workshop && kubectl -n demo exec -it deploy/backend --
-  /dspace/bin/dspace user --modify --email pacerda@umich.edu -w`
-  (the `-w` flag prompts for new password — requires a real terminal; cannot be done
-  non-interactively because `System.console()` is null without a TTY).
-
-**Issue 4 — Rachel Woodbrook has no account in demo:**
-`rwoodbr@umich.edu` or any Rachel Woodbrook email is absent from the demo EPerson list.
-→ **Action required**: confirm Rachel's umich.edu email with the team, then create:
-  `kubectl -n demo exec deploy/backend -- /dspace/bin/dspace user --add --email
-  <email> --givenname Rachel --surname Woodbrook --password <temp>`
-
-**Issue 5 — Two "embargoed draft" items not found:**
-Neither item exists in the demo or production DSpace databases (item table, workspaceitem,
-cwf_workflowitem, resourcepolicy, or public search).  The titles `"Exploring Digital Privacy
-Risks…"` and `"An Exploratory Study of Deepfake Fraud Encounters"` match nothing in either
-environment.
-→ **Question for developer**: what collection/environment are these items in? Provide a
-  UUID, handle, or direct URL so they can be investigated.
-
-**Password auth confirmed working end-to-end:**
-Test account created → REST login → HTTP 200; Same for `tildon@umich.edu` after creation.
-The Angular password form is functional for all accounts that have a local DSpace password.
-
-- [x] Check the demo backend pod logs for authentication errors
-- [x] Attempt to reproduce: `tildon@umich.edu` had no account — that was the failure
-- [x] Inspect the DSpace user account for `tildon@umich.edu`; account did NOT exist
-- [x] Check demo frontend pod logs for any 4xx/5xx errors at login time
-- [x] Compare current demo `backend-environment` ConfigMap auth-related keys
-- [x] Locate the two embargo-issue draft items — not found in demo or production DB
-- [x] Identify root cause of the login failure (missing account + broken OIDC client)
-- [x] Apply fix: created `tildon@umich.edu` account; password auth confirmed working
-- [x] Team architectural decision recorded: OIDC at gate (oauth2-proxy) + DSpace password login
-- [x] Add oauth2-proxy infrastructure to `demo/main.jsonnet` (Ingress, Secret, Deployment, Service for `/oauth2` path; auth annotations on frontend ingress withheld pending OIDC fix)
-- [ ] Developer: communicate temp password `BlueDemo2026t` to Duey Smith; ask them to change it
-- [x] Developer: contact ITS to fix OIDC client `5-ulib-deepblue-wkshp-auth-arotuj4xgffe5ucs9saofg` AND add `https://demo.deepblue-documents.lib.umich.edu/oauth2/callback` to its allowed redirect URIs — **sent to Architecture and Engineering 2026-04-29**
-- [ ] Developer: reset password for `pacerda@umich.edu` via TTY (`kubectl -n demo exec -it deploy/backend -- /dspace/bin/dspace user --modify --email pacerda@umich.edu -w`)
-- [ ] Developer: confirm Rachel Woodbrook's email and create her account if needed
-- [ ] Developer: provide UUID or URL for the two "embargoed draft" items so they can be investigated
-- [x] Once OIDC client confirmed working: add auth annotations to demo frontend ingress (`nginx.ingress.kubernetes.io/auth-url` and `auth-signin` pointing to `demo.deepblue-documents.lib.umich.edu/oauth2/...`) and commit — **OIDC confirmed working 2026-04-29; annotations added**
-- [x] **BLOCKER RESOLVED** — Fix `log-in.component.html` in `mlibrary/dspace-angular`: implemented as config-driven `showPasswordLogin` flag (exclusive toggle) on branch `show-password-login`, commit `54c6b93c4`. Demo frontend ConfigMap updated with `DSPACE_AUTH_SHOWPASSWORDLOGIN=true` in `demo/frontend-cm.jsonnet`. Full plan: [`plans/PLAN_DSPACE_ANGULAR_PASSWORD_LOGIN.md`](plans/PLAN_DSPACE_ANGULAR_PASSWORD_LOGIN.md)
-- [ ] Verify login works for `tildon@umich.edu` (and Peter Cerda after password reset) on demo
-- [ ] Verify with the developer that the task is complete
 
 ## Verify `handle.prefix` in Demo and Workshop
 Production sets `handle__P__prefix: '2027.42'` in `backend-cm.jsonnet`. Demo and workshop
@@ -182,6 +99,21 @@ the same time.
 ## DEEPBLUE-466 DEMO — Execute RT2 Reconnection Plan in Demo Environment
 Run every step in `plans/PLAN466DEMO.md` against `environments/deepblue-documents/demo`
 and verify the integration works before proceeding to production.
+
+**Findings from MITS follow-up (2026-06-24):**
+- MITS granted Greg access to Elements DEV at `https://dev.umich.elements.symplectic.org/` using Level 1 login.
+- Current observed behavior in Elements DEV is deposit failure with HTTP 403.
+- Enabling "Automated Metadata Updates" changed the error to HTTP 401.
+- Disabling that feature reverted behavior back to HTTP 403.
+- MITS requested additional configuration/permission guidance and offered a live troubleshooting call.
+
+**Next investigation checklist (DEV, before production changes):**
+- [ ] Use runbook `/.agents/DEEPBLUE-466-DEV-LIVE-TROUBLESHOOTING.md` during the next live Elements DEV troubleshooting session.
+- [ ] Reproduce the DEV deposit workflow with the new account access and capture exact timestamp, user, and item used.
+- [ ] Confirm the Elements data source `DSpace 7.0+` setting and API/OAI URLs still match the current demo backend endpoints.
+- [ ] Verify which REST account is configured in Elements DEV (`deepblue@umich.edu` expected for demo service account) and whether it differs from prior `dbrrds@umich.edu` testing.
+- [ ] Verify the configured REST account has required DSpace permissions for deposit target collection access in demo.
+- [ ] Request MITS-side error details tied to the failing deposit attempt (status code + endpoint + response body or stack trace).
 
 - [x] Step 1 — Verify demo prerequisites: REST API (`https://backend.demo.deepblue-documents.lib.umich.edu/server/api`) ✓ DSpace 7.6; OAI-PMH (`https://backend.demo.deepblue-documents.lib.umich.edu/server/oai/request`) ✓ HTTP 200; ⚠️ OAI path corrected from `/oai/request` to `/server/oai/request` in `plans/PLAN466DEMO.md` — Elements version, data source status, and admin credentials require manual verification
 - [x] Step 2 — Update harvest crosswalk: downloaded → saved to `crosswalks/harvest-demo.xml` → ran `patch_harvest_crosswalk.py` (5 field-source xpath→jsonpath) → ran `fix_harvest_crosswalk_dspace7.py` (fixed expressions, simplified authors/funding, converted 26 object-type-selector conditions to JSONPath, added "Private (in review)" value-map) → `harvest-demo-patched.xml` ready to upload

@@ -182,8 +182,8 @@ actually need `/dspace/data` — they communicate with Solr and PostgreSQL over 
 ---
 
 **A19.**
-1. `python3 dotpy/format_table.py <file.md>` — rewrites the file with all tables correctly padded
-2. `python3 dotpy/check_tables.py <file.md>` — exits 0 if all tables are consistent, 1 with errors
+1. `python3 .agents/scripts/shared/format_table.py <file.md> | cat` — rewrites the file with all tables correctly padded
+2. `python3 .agents/scripts/shared/check_tables.py <file.md> | cat` — exits 0 if all tables are consistent, 1 with errors
 
 *(Source: `AGENTS.md` § Markdown Formatting)*
 
@@ -329,13 +329,13 @@ contains inner quotes. zsh treats the unclosed double-quote as the start of a he
 
 **The universal fix — write to a file, run the file:**
 1. Use `insert_edit_into_file` or `create_file` to write the code to a file:
-   - Reusable script → `dotpy/myscript.py`
+   - Reusable script → `.agents/scripts/shared/myscript.py`
    - Truly one-off → `/tmp/run.py`
-2. Run it: `python3 dotpy/myscript.py | cat`
+2. Run it: `python3 .agents/scripts/shared/myscript.py | cat`
 
 The same rule applies to generating structured file content (RTF, XML, YAML, etc.) —
 never build it by echoing strings through the shell; write a Python script that calls
-`open(...).write(...)` instead (`dotpy/_gen_rtf.py` is the worked example).
+`open(...).write(...)` instead (for example `.agents/scripts/shared/_gen_rtf.py`).
 
 **The single-line `-c` form is safe only when:**
 - The entire command fits on one line, **and**

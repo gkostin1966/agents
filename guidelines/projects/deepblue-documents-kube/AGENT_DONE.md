@@ -1,5 +1,17 @@
 # AGENT_DONE
 
+## 2026-06-25T13:17:32Z — Demo Login Failure task closed (developer-confirmed fixed)
+
+Closed `Demo Login Failure — All Local Accounts Unable to Log In` and removed it from
+`AGENT_TODO.md` per developer confirmation that the issue is fixed.
+
+Key outcome state at closure:
+- Root cause analysis and infra/application fixes were already completed (OIDC gate +
+  password-login path for demo, account/flow fixes tracked in prior notes).
+- Remaining checklist items were operational follow-ups, and the developer confirmed the
+  incident is resolved and should be closed.
+- `README.md § Active Work` was synchronized to remove this task from current priorities.
+
 ## 2026-05-14T00:00:00 — Refactor coding-agent support files (PR #13)
 
 Renamed `TODO.md` → `AGENT_TODO.md` and `DONE.md` → `AGENT_DONE.md`. Introduced

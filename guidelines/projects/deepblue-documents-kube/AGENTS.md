@@ -34,14 +34,14 @@
 - **Never shell heredocs** (`<< 'MARKER'`) — same corruption risk; previous unclosed `<<` swallows all subsequent commands.
 - Fix for both: write to file, run the file:
   ```shell
-  python3 scripts/myscript.py | cat   # reusable
+  python3 .agents/scripts/shared/myscript.py | cat   # reusable
   python3 .agents/tmp/run.py | cat    # one-off
   ```
 - If terminal stuck (no output / garbled): run the heredoc end-marker (`EOF`, `PYEOF`, etc.) as a standalone command to escape.
 
 ## Python Utility Scripts
 
-- Check project utility-script dir first (`scripts/README.md` or `dotpy/README.md`) before writing ad-hoc helpers.
+- Check project utility-script dir first (`.agents/scripts/README.md`) before writing ad-hoc helpers.
 - Save reusable scripts there; add shebang + Usage docstring + README entry.
 - No utility dir → write to `.agents/tmp/run.py`.
 
@@ -51,9 +51,9 @@
 - `[when-committing]` Never amend. Never force-push. **Never `git push`** — developer pushes.
 - `[when-committing]` Base commit suggestions on tracked/staged files only (`git status`, `git diff --staged`).
 
-- `[when-committing]` **Never `git commit -m "..."` for multiline.** Use `dotpy/commit.py`:
-  1. Write message to `dotpy/commit-msg.txt`.
-  2. `python3 dotpy/commit.py | cat`
+- `[when-committing]` **Never `git commit -m "..."` for multiline.** Use `.agents/scripts/shared/commit.py`:
+  1. Write message to `.agents/scripts/shared/commit-msg.txt`.
+  2. `python3 .agents/scripts/shared/commit.py | cat`
 
 - `[when-committing]` Single-line exception: `git commit -m "chore: one line" | cat`
 
@@ -100,7 +100,7 @@ Files: `guidelines/projects/deepblue-documents-kube/AGENT_TODO.md` and `AGENT_DO
 ## Keeping `README.md` in Sync
 
 `README.md § Active Work` is a status table synced with `AGENT_TODO.md`. Update on task changes.
-After editing `README.md`, always run: `python3 dotpy/check_tables.py README.md`
+After editing `README.md`, always run: `python3 .agents/scripts/shared/check_tables.py README.md | cat`
 
 ## Kubernetes Cluster Topology
 
@@ -154,7 +154,7 @@ After editing `.jsonnet`/`.libsonnet`: `tk show environments/deepblue-documents/
 - `__D__` = `-` (hyphen)
 - `_` = literal underscore
 
-After adding/modifying any `__P__`/`__D__` key in `backend-cm.jsonnet`: `python3 dotpy/validate_cm_keys.py`
+After adding/modifying any `__P__`/`__D__` key in `backend-cm.jsonnet`: `python3 .agents/scripts/shared/validate_cm_keys.py | cat`
 
 ERRORS = encoding bug (fix before commit). WARNINGS = potentially custom key — verify intent from current repo files and task context.
 
