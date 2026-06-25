@@ -1,0 +1,5 @@
+# Write your commit message here.
+#
+# First line: short summary (e.g., chore: update agent scripts)
+# Optional blank line, then details.
+

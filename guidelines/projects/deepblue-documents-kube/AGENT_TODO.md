@@ -109,6 +109,7 @@ and verify the integration works before proceeding to production.
 
 **Next investigation checklist (DEV, before production changes):**
 - [ ] Use runbook `/.agents/DEEPBLUE-466-DEV-LIVE-TROUBLESHOOTING.md` during the next live Elements DEV troubleshooting session.
+- [ ] Use one-page in-call checklist `/.agents/DEEPBLUE-466-DEV-CALL-CHECKLIST.md` during the live session.
 - [ ] Reproduce the DEV deposit workflow with the new account access and capture exact timestamp, user, and item used.
 - [ ] Confirm the Elements data source `DSpace 7.0+` setting and API/OAI URLs still match the current demo backend endpoints.
 - [ ] Verify which REST account is configured in Elements DEV (`deepblue@umich.edu` expected for demo service account) and whether it differs from prior `dbrrds@umich.edu` testing.

@@ -21,6 +21,7 @@
 - `guidelines.py` — guidelines merge and merged-file generation.
 - `merge.py` — shared heading-based Markdown merge primitives.
 - `prompts.py` — prompt merge and merged-file generation.
+- `sync_base.py` — base-to-project section diff/sync helpers for AGENTS and prompts.
 - `validate.py` — required/recommended per-project file validation.
 
 **A4.** Catalog file: `config/projects.json`. Per project entry (current schema):

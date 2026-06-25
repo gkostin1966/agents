@@ -168,6 +168,6 @@
 
 **Q28.** Looking at current git history, what is the most recent commit message?
 
-- `intense reworking of guidelines for the boxrunner project`
+- `chore: commit modified deepblue guideline files`
 
 
