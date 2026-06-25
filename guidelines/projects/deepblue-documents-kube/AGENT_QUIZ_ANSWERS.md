@@ -56,25 +56,20 @@ patterns brittle and prone to corrupting the file.
 ---
 
 **A5.** (lowest priority first):
-1. **Layer 1** — `dspace.cfg` baked into the Docker image (upstream defaults, unmodified)
-2. **Layer 3a** — `backend-environment` ConfigMap env vars (all UM non-secret overrides, Bucket A + B)
-3. **Layer 3b** — `dspace-secrets` Secret env vars (credentials, Bucket C)
+1. Base image defaults (`dspace.cfg` in the image)
+2. `envFrom` overrides from `backend-environment` ConfigMap and `dspace-secrets` Secret
+3. Explicit `env` entries in the container spec (for example `DB_PORT`) which override conflicting auto-injected vars
 
-Layer 2 (`local.cfg` / `local-cfg` Secret) was retired — DSpace 7's kernel does not load it.
-
-There is also **Layer 3c** — the `oidc-cfg` Kubernetes Secret, whose `authentication-oidc.cfg`
-file is copied to `/dspace/config/modules/authentication-oidc.cfg` at pod startup. This injects
-per-environment OIDC client credentials and Shibboleth endpoints. It is a file-injection
-mechanism, not an env-var override, and is NOT covered by `_audit_coverage.py` or
-`validate_cm_keys.py`. See `CLASSIFY.md § Layer 3c`.
-*(Source: `environments/deepblue-documents/configuration/README.md` § Configuration Layers)*
+Related file-injection path: `oidc-cfg` Secret is mounted and copied into
+`/dspace/config/modules/authentication-oidc.cfg` at startup.
+*(Source: `AGENTS.md` § DSpace Configuration — Current Model; `lib/deepblue-documents.libsonnet` backend container spec)*
 
 ---
 
 **A6.** Edit **`lib/deepblue-backend-cm.jsonnet`** (it is a Bucket A — common UM non-secret override,
 same in all 3 envs). Commit and push to `main`; ArgoCD applies it automatically.
 The wrong answer (now retired): editing the `dspace-cfg` Secret.
-*(Source: `lib/deepblue-backend-cm.jsonnet` lines ~21–23; `configuration/README.md` § Decision guide)*
+*(Source: `lib/deepblue-backend-cm.jsonnet`; `AGENTS.md` § DSpace Configuration — Current Model)*
 
 ---
 
@@ -88,15 +83,15 @@ The wrong answer (now retired): editing the `dspace-cfg` Secret.
 **A8.** DSpace 7's kernel does not load `local.cfg` at all. Verified by running
 `dsprop -p mail.admin` after mounting and copying `local.cfg` into place — it returned
 the vanilla default, not the UM value. Retired **2026-04-27** alongside the `dspace-cfg` Secret.
-*(Source: `environments/deepblue-documents/configuration/README.md` § Working with `local.cfg`)*
+*(Source: `AGENT_DONE.md` 2026-04-27 entries documenting retirement of `local-cfg` / `dspace-cfg`)*
 
 ---
 
 **A9.** **Demo**: No `handle__P__prefix` in `demo/backend-cm.jsonnet`.
 **Production**: Yes — `handle__P__prefix: '2027.42'` in `production/backend-cm.jsonnet`.
 **Workshop**: No `handle__P__prefix` in `workshop/backend-cm.jsonnet`.
-Upstream default: `123456789` (a placeholder; demo and workshop fall through to this).
-*(Source: the three `backend-cm.jsonnet` files; `CLASSIFY.md` Bucket E)*
+Upstream default referenced in active task context: `123456789` (a placeholder; demo and workshop fall through to this).
+*(Source: the three `backend-cm.jsonnet` files; `AGENT_TODO.md` task "Verify `handle.prefix` in Demo and Workshop")*
 
 ---
 
@@ -126,19 +121,18 @@ in the `index-discovery` and `index-oai` commands across all three `cronjobs.jso
 2. `crosswalks/deposit-demo-patched.xml` — patched deposit crosswalk for demo (collection UUIDs added)
 3. `crosswalks/license.txt` — Deep Blue Documents Terms of Deposit (for the Deposit License section)
 
-All in `environments/deepblue-documents/configuration/crosswalks/`.
-*(Source: `AGENT_TODO.md` DEEPBLUE-466 DEMO steps 4a, 2, 3; `plans/PLAN466DEMO.md`)*
+Historically tracked in the DEEPBLUE-466 demo task notes.
+*(Source: `AGENT_TODO.md` DEEPBLUE-466 DEMO steps 4a, 2, 3)*
 
 ---
 
 **A13.** `deepblue-elements@umich.edu` (UUID `57f90d39-…`, name "For Deposit, Symplectic").
-Documented in `plans/PLAN466.md` Step 1 status note and in
-`environments/deepblue-documents/configuration/DSPACE_ADMIN.md`.
-*(Source: `plans/PLAN466.md` Step 1 status note)*
+Documented in DEEPBLUE-466 production status notes.
+*(Source: `AGENT_TODO.md` DEEPBLUE-466 production task notes)*
 
 ---
 
-**A14.** `9dcc2058d206c82b1cf1bf426f0f44e79862e2ec`
+**A14.** `d0ccc284d0092705d5233e008f3e4aee6d03acf3`
 *(Source: `lib/deepblue-documents.libsonnet` line 27)*
 
 ---
@@ -174,8 +168,7 @@ pending ITS fixing the OIDC client and adding the demo callback URL.
 
 **A17.** Demo runs on the **workshop cluster**
 (`https://workshop.cluster.deepblue-documents.lib.umich.edu`) in the **`demo`** namespace.
-*(Source: `environments/deepblue-documents/configuration/README.md` § Environment Reference;
-`environments/deepblue-documents/demo/spec.json`)*
+*(Source: `environments/deepblue-documents/demo/spec.json`)*
 
 ---
 
@@ -281,26 +274,21 @@ bitstream files but cannot write to them. This allows workshop (which uses the p
 `filestorage.dir`) to serve real production files for testing. However, **workshop has its
 own independent PostgreSQL database** — it does not share production's database.
 *(Source: `environments/deepblue-documents/workshop/backend-cm.jsonnet`;
-`environments/deepblue-documents/configuration/README.md` § Environment Reference note)*
+`environments/deepblue-documents/workshop/main.jsonnet` assetstore mounts)*
 
 ---
 
-**A27.** Any two of the following (from `CLASSIFY.md` § Open Questions):
+**A27.** Any two unresolved follow-ups from current `AGENT_TODO.md`, for example:
 
-1. **`nodoi.email` in production** is `depositsarefun@acm.org` — a placeholder. Affects
-   where DataCite "no-DOI" notification emails are sent; wrong value means important
-   production notifications are silently dropped.
-2. **`identifier.doi.password_working`** — production-only Secret key; purpose undocumented.
-   Must be confirmed before any DataCite credential rotation to avoid breaking DOI registration.
-3. **`cc.license.jurisdiction = us`** — active in demo, absent in production/workshop.
-   Affects CC license generation; unclear whether the omission in production is intentional.
-4. **`core.authorization.collection-admin.submitters`** — `false` in demo, `true` in
-   production/workshop. May be intentional demo isolation; should be confirmed to avoid
-   unexpected access-control differences.
-5. **`dspace.url` in demo** — `dspace.cfg` has stale value `http://deepblue.lib.umich.edu`;
-   ConfigMap overrides with `http://localhost`. The mismatch is confusing and should be
-   cleaned up.
-*(Source: `environments/deepblue-documents/configuration/CLASSIFY.md` § Open Questions)*
+1. **`nodoi.email` placeholders** (`depositsarefun@acm.org` in production and `abcblancoj@umich.edu`
+   in workshop/demo) — wrong values can misroute operational notifications.
+2. **`handle.prefix` for demo/workshop** — currently unset in env files; team must confirm
+   whether placeholder/default behavior is intentional.
+3. **`core.authorization.collection-admin.submitters` differs by env** — `false` in demo,
+   `true` in production/workshop; requires confirmation to avoid unexpected access-control drift.
+4. **APTrust replicate-bagit Jose placeholders** — production contact metadata must be replaced
+   before APTrust CronJobs are re-enabled.
+*(Source: `AGENT_TODO.md` tasks for `handle.prefix`, `nodoi.email`, and CronJob Phase 2b)*
 
 ---
 
@@ -326,22 +314,11 @@ Then confirm with `kubectl config current-context | cat` before proceeding.
 
 ---
 
-**A29.** Use **Rich Text Format (`.rtf`)**.
+**A29.** Use Markdown (`.md`) and save drafts under
+`communications/<channel>-<topic>.md` (example: `communications/email-its-request.md`).
+`communications/` is tracked in git; do not gitignore individual draft files.
 
-Save the file as **`emails/<short-descriptive-name>.rtf`** inside the `emails/` directory
-at the project root (e.g., `emails/its-oidc-request.rtf`). The `emails/` directory is
-**tracked in git** — do not add individual filenames to `.gitignore`. Files remain in the
-repo until the developer explicitly removes them.
-
-Required structural elements:
-1. **`\b Subject:\b0`** line at the top
-2. **`\b To:\b0`** and **`\b CC:\b0`** lines with `[placeholder]` values for the developer to fill in
-3. Greeting and body, with `\b … \b0` for bold headings
-4. `\f1 … \f0` (monospace/Courier) for technical values — client IDs, URLs, shell commands
-5. `\bullet` for bullet lists
-6. A closing with a `[Your name]` placeholder
-
-Open the file immediately after creating it so the developer can review it.
+Current rules specify location and format only; no additional mandatory template sections are defined.
 *(Source: `AGENTS.md` § Email Drafts for Third Parties)*
 
 ---
@@ -376,5 +353,5 @@ Example of a safe one-liner: `python3 -c "print(42)" | cat`
 |------------|-----------------------------------------------------------------------------------------|
 | 30 / 30    | ✅ Ready to work — agent understands the current project state                           |
 | 26–29 / 30 | ⚠️ Review the missed questions before starting work                                     |
-| < 26 / 30  | 🛑 Re-read `AGENTS.md`, `AGENT_TODO.md`, and `configuration/README.md` before proceeding |
+| < 26 / 30  | 🛑 Re-read `AGENTS.md` and `AGENT_TODO.md` before proceeding |
 

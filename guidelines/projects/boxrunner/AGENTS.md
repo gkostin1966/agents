@@ -120,14 +120,15 @@ New ticket: `mkdir -p .agents/tasks/ARC-nnn/plans` + create TODO.md + STATUS.md 
 
 ## Ruby on Rails Conventions
 
-- **All application commands run inside the Docker container.** Never against system Ruby/Node.
-- Start stack: `docker compose up` (starts all services: `app`, `redis`, `resque`, `resque-web`, `solr`, `zookeeper`).
-- After first `docker compose up`, initialize Solr collection: `/bin/bash ./solr/dev-init.sh`
+- **Local development uses Docker for infrastructure services only.** Do not start or use the Docker `app` service.
+- **Run Ruby/Rails commands locally via project binstubs** (`bin/rails`, `bin/rubocop`) instead of `bundle exec ...`.
+- Start infrastructure services: `docker compose up -d` (default services: `redis`, `resque`, `resque-web`, `solr`, `zookeeper`).
+- After first infrastructure startup, initialize Solr collection: `/bin/bash ./solr/dev-init.sh`
 - **RuboCop before committing Ruby files**:
-  - Auto-fix: `docker compose exec app bundle exec rubocop -a | cat`
-  - Check: `docker compose exec app bundle exec rubocop | cat`
-- **Tests**: `docker compose exec app bundle exec rails test | cat`
-- **Rails console**: `docker compose exec app bundle exec rails console`
+  - Auto-fix: `bin/rubocop -a | cat`
+  - Check: `bin/rubocop | cat`
+- **Tests**: `bin/rails test | cat`
+- **Rails console**: `bin/rails console`
 - **Ruby version**: 3.4.9 (see `.ruby-version` and `Dockerfile ARG RUBY_VERSION`).
 - **Rails version**: ~> 8.1.3 (see `Gemfile`).
 - **Database**: SQLite 3 (see `Gemfile`; `db:prepare` runs automatically in `docker-entrypoint`).

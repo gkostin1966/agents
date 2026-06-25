@@ -95,7 +95,7 @@ runs `./bin/rails db:prepare` automatically when the Rails server starts.
 
 **A11.**
 ```shell
-docker compose exec app bundle exec rails test | cat
+bin/rails test | cat
 ```
 *(Source: `AGENTS.md` § Ruby on Rails Conventions)*
 
@@ -103,8 +103,8 @@ docker compose exec app bundle exec rails test | cat
 
 **A12.**
 ```shell
-docker compose exec app bundle exec rubocop -a | cat   # auto-fix
-docker compose exec app bundle exec rubocop | cat      # check
+bin/rubocop -a | cat   # auto-fix
+bin/rubocop | cat      # check
 ```
 *(Source: `AGENTS.md` § Ruby on Rails Conventions)*
 
@@ -157,7 +157,7 @@ and re-verify with the developer before closeout.
 
 **A18.** Full startup from scratch:
 ```shell
-docker compose up
+docker compose up -d
 /bin/bash ./solr/dev-init.sh
 ```
 If verification is blocked, `STATUS.md` must include: blocker, exact command

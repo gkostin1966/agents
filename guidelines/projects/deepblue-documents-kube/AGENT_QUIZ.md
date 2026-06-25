@@ -60,17 +60,17 @@ and what must you never do regarding `git push`?
 environments, in priority order (lowest to highest). Include any special-purpose
 file-injection mechanisms that operate outside the env-var override chain.
 
-*(Hint: `environments/deepblue-documents/configuration/README.md` § Configuration Layers
-and § Current Deployment State; `CLASSIFY.md` § Layer 3c)*
+*(Hint: `AGENTS.md` § DSpace Configuration — Current Model;
+`lib/deepblue-documents.libsonnet` backend `envFrom`/`env` and `oidc-cfg` volume mount)*
 
 ---
 
 **Q6.** A developer asks you to change `mail.from.address`. Which file should you
 edit, and which now-retired mechanism would have been the *wrong* answer before April 2026?
 
-*(Hint: `environments/deepblue-documents/configuration/README.md` § Decision guide;
-`lib/deepblue-backend-cm.jsonnet` — note that Bucket A properties common to all environments
-live in the shared lib, not in each environment's `backend-cm.jsonnet`)*
+*(Hint: `AGENTS.md` § DSpace Configuration — Current Model;
+`lib/deepblue-backend-cm.jsonnet` — shared non-secret overrides live in the shared lib,
+not in each environment's `backend-cm.jsonnet`)*
 
 ---
 
@@ -84,7 +84,7 @@ Name the Jsonnet field and the file that defines it.
 **Q8.** The `local-cfg` Secret was retired. What investigation finding caused this retirement,
 and when did it happen?
 
-*(Hint: `environments/deepblue-documents/configuration/README.md` § Working with `local.cfg`)*
+*(Hint: `AGENT_DONE.md` entries for 2026-04-27 Phase 5 retirement notes)*
 
 ---
 
@@ -93,7 +93,7 @@ Does **production**? What is the upstream DSpace default for this property?
 
 *(Hint: `environments/deepblue-documents/demo/backend-cm.jsonnet`;
 `environments/deepblue-documents/production/backend-cm.jsonnet`;
-`environments/deepblue-documents/configuration/CLASSIFY.md` Bucket E)*
+`AGENT_TODO.md` task "Verify `handle.prefix` in Demo and Workshop")*
 
 ---
 
@@ -118,14 +118,14 @@ Describe the exact change in one sentence.
 **Q12.** For the DEEPBLUE-466 DEMO task, three files are ready to hand off to HITS.
 Name all three and where they live.
 
-*(Hint: `AGENT_TODO.md` DEEPBLUE-466 DEMO task; `environments/deepblue-documents/configuration/crosswalks/`)*
+*(Hint: `AGENT_TODO.md` DEEPBLUE-466 DEMO task)*
 
 ---
 
 **Q13.** What is the production Elements service account email used for the RT2 connection,
 and where is this documented?
 
-*(Hint: `plans/PLAN466.md` Step 1 status note; `environments/deepblue-documents/configuration/DSPACE_ADMIN.md`)*
+*(Hint: `AGENT_TODO.md` "Production pre-work" and DEEPBLUE-466 production step notes)*
 
 ---
 
@@ -159,8 +159,7 @@ Does demo have them?
 
 **Q17.** What cluster does the demo environment run on, and what namespace does it use?
 
-*(Hint: `environments/deepblue-documents/demo/spec.json` or
-`environments/deepblue-documents/configuration/README.md` § Environment Reference)*
+*(Hint: `environments/deepblue-documents/demo/spec.json`)*
 
 ---
 
@@ -236,14 +235,15 @@ What does this mean architecturally — what data does workshop read from there,
 access mode is it mounted, and is workshop's database independent of production's?
 
 *(Hint: `environments/deepblue-documents/workshop/backend-cm.jsonnet`;
-`environments/deepblue-documents/configuration/README.md` § Environment Reference note)*
+`environments/deepblue-documents/workshop/main.jsonnet` assetstore mounts)*
 
 ---
 
-**Q27.** `CLASSIFY.md` ends with a list of open questions about production configuration.
-Name at least **two** unresolved open questions and explain why each matters operationally.
+**Q27.** `AGENT_TODO.md` includes unresolved configuration follow-ups.
+Name at least **two** unresolved follow-ups and explain why each matters operationally.
 
-*(Hint: `environments/deepblue-documents/configuration/CLASSIFY.md` § Open Questions)*
+*(Hint: `AGENT_TODO.md` tasks "Verify `handle.prefix` in Demo and Workshop",
+"Production Config — Confirm Correct `nodoi.email` Address", and CronJob Phase 2b developer action)*
 
 ---
 
@@ -257,8 +257,7 @@ a production investigation and a workshop/demo investigation?
 ---
 
 **Q29.** When the developer asks you to compose an email to an external party (e.g., ITS
-or HITS), what file format do you use, where do you save it, is it tracked in git, and
-what structural elements must the draft include?
+or HITS), what file format do you use, where do you save it, and is it tracked in git?
 
 *(Hint: `AGENTS.md` § Email Drafts for Third Parties)*
 

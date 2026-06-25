@@ -1,0 +1,130 @@
+--progress is a global compose flag, better use `docker compose --progress xx build ...
+ Image boxrunner-resque Building 
+#1 [internal] load local bake definitions
+#1 reading from stdin 536B done
+#1 DONE 0.0s
+
+#2 [internal] load build definition from Dockerfile
+#2 transferring dockerfile: 3.39kB done
+#2 DONE 0.0s
+
+#3 resolve image config for docker-image://docker.io/docker/dockerfile:1
+#3 DONE 0.3s
+
+#4 docker-image://docker.io/docker/dockerfile:1@sha256:87999aa3d42bdc6bea60565083ee17e86d1f3339802f543c0d03998580f9cb89
+#4 resolve docker.io/docker/dockerfile:1@sha256:87999aa3d42bdc6bea60565083ee17e86d1f3339802f543c0d03998580f9cb89 0.0s done
+#4 CACHED
+
+#5 [internal] load metadata for docker.io/library/ruby:3.4.9-slim
+#5 DONE 0.2s
+
+#6 [internal] load .dockerignore
+#6 transferring context: 916B done
+#6 DONE 0.0s
+
+#7 [base 1/3] FROM docker.io/library/ruby:3.4.9-slim@sha256:bfb50db4c26dcfd43a31d25f8809b7c81a438ead6931e2825f2fe384d2391a42
+#7 resolve docker.io/library/ruby:3.4.9-slim@sha256:bfb50db4c26dcfd43a31d25f8809b7c81a438ead6931e2825f2fe384d2391a42 0.0s done
+#7 DONE 0.0s
+
+#8 [base 2/3] WORKDIR /rails
+#8 CACHED
+
+#9 [base 3/3] RUN apt-get update -qq &&     apt-get install --no-install-recommends -y curl libjemalloc2 libvips sqlite3 &&     ln -s /usr/lib/$(uname -m)-linux-gnu/libjemalloc.so.2 /usr/local/lib/libjemalloc.so &&     rm -rf /var/lib/apt/lists /var/cache/apt/archives
+#9 CACHED
+
+#10 [stage-2 1/3] RUN groupadd --system --gid 1000 rails &&     useradd rails --uid 1000 --gid 1000 --create-home --shell /bin/bash
+#10 CACHED
+
+#11 [internal] load build context
+#11 transferring context: 1.85MB 0.6s done
+#11 DONE 0.7s
+
+#12 [build  5/11] RUN bundle install &&     rm -rf ~/.bundle/ "/usr/local/bundle"/ruby/*/cache "/usr/local/bundle"/ruby/*/bundler/gems/*/.git &&     bundle exec bootsnap precompile -j 1 --gemfile
+#12 CACHED
+
+#13 [build  8/11] COPY . .
+#13 CACHED
+
+#14 [build  1/11] RUN apt-get update -qq &&     apt-get install --no-install-recommends -y build-essential git libvips libyaml-dev node-gyp pkg-config python-is-python3 &&     rm -rf /var/lib/apt/lists /var/cache/apt/archives
+#14 CACHED
+
+#15 [build  7/11] RUN yarn install --immutable
+#15 CACHED
+
+#16 [build  2/11] RUN curl -sL https://github.com/nodenv/node-build/archive/master.tar.gz | tar xz -C /tmp/ &&     /tmp/node-build-master/bin/node-build "26.0.0" /usr/local/node &&     npm install -g yarn@1.22.22 &&     rm -rf /tmp/node-build-master
+#16 CACHED
+
+#17 [build  3/11] COPY vendor/* ./vendor/
+#17 CACHED
+
+#18 [build  6/11] COPY package.json yarn.lock ./
+#18 CACHED
+
+#19 [build  4/11] COPY Gemfile Gemfile.lock ./
+#19 CACHED
+
+#20 [build  9/11] RUN bundle exec bootsnap precompile -j 1 app/ lib/
+#20 CACHED
+
+#21 [build 10/11] RUN SECRET_KEY_BASE_DUMMY=1 ./bin/rails assets:precompile
+#21 0.730 /usr/local/bundle/ruby/3.4.0/gems/arclight-1.6.2/lib/tasks/index.rake:4: warning: /usr/local/lib/ruby/3.4.0/benchmark.rb was loaded from the standard library, but will no longer be part of the default gems starting from Ruby 4.0.0.
+#21 0.730 You can add benchmark to your Gemfile or gemspec to silence this warning.
+#21 0.730 Also please contact the author of arclight-1.6.2 to request adding benchmark into its gemspec.
+#21 0.731 bin/rails aborted!
+#21 0.731 Errno::ENOENT: No such file or directory @ rb_sysopen - ./config/d.yml (Errno::ENOENT)
+#21 0.731 /rails/lib/tasks/ingest.rake:7:in 'IO.read'
+#21 0.731 /rails/lib/tasks/ingest.rake:7:in '<compiled>'
+#21 0.731 /usr/local/bundle/ruby/3.4.0/gems/railties-8.1.3/lib/rails/engine.rb:686:in 'Kernel#load'
+#21 0.731 /usr/local/bundle/ruby/3.4.0/gems/railties-8.1.3/lib/rails/engine.rb:686:in 'block in Rails::Engine#run_tasks_blocks'
+#21 0.731 /usr/local/bundle/ruby/3.4.0/gems/railties-8.1.3/lib/rails/engine.rb:686:in 'Array#each'
+#21 0.731 /usr/local/bundle/ruby/3.4.0/gems/railties-8.1.3/lib/rails/engine.rb:686:in 'Rails::Engine#run_tasks_blocks'
+#21 0.731 /usr/local/bundle/ruby/3.4.0/gems/railties-8.1.3/lib/rails/application.rb:564:in 'Rails::Application#run_tasks_blocks'
+#21 0.731 /usr/local/bundle/ruby/3.4.0/gems/railties-8.1.3/lib/rails/engine.rb:469:in 'Rails::Engine#load_tasks'
+#21 0.731 /rails/Rakefile:8:in '<compiled>'
+#21 0.731 /usr/local/bundle/ruby/3.4.0/gems/railties-8.1.3/lib/rails/commands/rake/rake_command.rb:43:in 'block in Rails::Command::RakeCommand.with_rake'
+#21 0.731 /usr/local/bundle/ruby/3.4.0/gems/railties-8.1.3/lib/rails/commands/rake/rake_command.rb:41:in 'Rails::Command::RakeCommand.with_rake'
+#21 0.731 /usr/local/bundle/ruby/3.4.0/gems/railties-8.1.3/lib/rails/commands/rake/rake_command.rb:20:in 'Rails::Command::RakeCommand.perform'
+#21 0.731 /usr/local/bundle/ruby/3.4.0/gems/railties-8.1.3/lib/rails/command.rb:150:in 'Rails::Command.invoke_rake'
+#21 0.731 /usr/local/bundle/ruby/3.4.0/gems/railties-8.1.3/lib/rails/command.rb:67:in 'block in Rails::Command.invoke'
+#21 0.731 /usr/local/bundle/ruby/3.4.0/gems/railties-8.1.3/lib/rails/command.rb:143:in 'Rails::Command.with_argv'
+#21 0.731 /usr/local/bundle/ruby/3.4.0/gems/railties-8.1.3/lib/rails/command.rb:63:in 'Rails::Command.invoke'
+#21 0.731 /usr/local/bundle/ruby/3.4.0/gems/railties-8.1.3/lib/rails/commands.rb:18:in '<compiled>'
+#21 0.731 /usr/local/bundle/ruby/3.4.0/gems/bootsnap-1.24.6/lib/bootsnap/load_path_cache/core_ext/kernel_require.rb:33:in 'Kernel#require'
+#21 0.731 ./bin/rails:4:in '<main>'
+#21 0.731 (See full trace by running task with --trace)
+#21 ERROR: process "/bin/sh -c SECRET_KEY_BASE_DUMMY=1 ./bin/rails assets:precompile" did not complete successfully: exit code: 1
+------
+ > [build 10/11] RUN SECRET_KEY_BASE_DUMMY=1 ./bin/rails assets:precompile:
+0.731 /usr/local/bundle/ruby/3.4.0/gems/railties-8.1.3/lib/rails/commands/rake/rake_command.rb:41:in 'Rails::Command::RakeCommand.with_rake'
+0.731 /usr/local/bundle/ruby/3.4.0/gems/railties-8.1.3/lib/rails/commands/rake/rake_command.rb:20:in 'Rails::Command::RakeCommand.perform'
+0.731 /usr/local/bundle/ruby/3.4.0/gems/railties-8.1.3/lib/rails/command.rb:150:in 'Rails::Command.invoke_rake'
+0.731 /usr/local/bundle/ruby/3.4.0/gems/railties-8.1.3/lib/rails/command.rb:67:in 'block in Rails::Command.invoke'
+0.731 /usr/local/bundle/ruby/3.4.0/gems/railties-8.1.3/lib/rails/command.rb:143:in 'Rails::Command.with_argv'
+0.731 /usr/local/bundle/ruby/3.4.0/gems/railties-8.1.3/lib/rails/command.rb:63:in 'Rails::Command.invoke'
+0.731 /usr/local/bundle/ruby/3.4.0/gems/railties-8.1.3/lib/rails/commands.rb:18:in '<compiled>'
+0.731 /usr/local/bundle/ruby/3.4.0/gems/bootsnap-1.24.6/lib/bootsnap/load_path_cache/core_ext/kernel_require.rb:33:in 'Kernel#require'
+0.731 ./bin/rails:4:in '<main>'
+0.731 (See full trace by running task with --trace)
+------
+Dockerfile:68
+
+--------------------
+
+  66 |     
+
+  67 |     # Precompiling assets for production without requiring secret RAILS_MASTER_KEY
+
+  68 | >>> RUN SECRET_KEY_BASE_DUMMY=1 ./bin/rails assets:precompile
+
+  69 |     
+
+  70 |     
+
+--------------------
+
+failed to solve: process "/bin/sh -c SECRET_KEY_BASE_DUMMY=1 ./bin/rails assets:precompile" did not complete successfully: exit code: 1
+
+
+
+View build details: docker-desktop://dashboard/build/default/default/yl2ony7wcu5qjulciidptpz8a
+

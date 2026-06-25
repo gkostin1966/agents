@@ -1,5 +1,17 @@
 # DONE
 
+## 2026-06-24T00:00:00 — Add Perl Module Text::CSV to Backend Images
+Added `libtext-csv-perl` to both backend Docker image variants so `Text::CSV`
+is present for backend Perl scripts in local/CI and deployment image paths.
+The branch was merged to `main` via PR. `make build` succeeded; smoke tests
+were attempted but blocked locally by host port `8983` already in use.
+
+- [x] Create a feature branch (e.g. `add-text-csv-perl`)
+- [x] Add `libtext-csv-perl` to the `apt-get install` list in `backend.dockerfile` and `dspace/backend.dockerfile` (Step 3, alongside the other `lib*-perl` packages)
+- [x] Run `make build` and `bash tests/smoke.sh` to verify the image builds and passes smoke tests
+- [x] Commit and open a PR
+- [x] Verify with the developer that the task is complete
+
 ## 2026-04-27T00:00:00 — Update Markdown Files for local.cfg Removal
 Updated all markdown files to reflect the env-var-based configuration approach.
 `dspace/README.md` NOTE corrected from "Kubernetes Secrets mounted as files" to

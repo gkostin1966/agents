@@ -134,15 +134,15 @@ Safe (read-only, no approval needed): `kubectl get/describe/logs`, `tk show/diff
 - Blocked on unpushed commits → ask developer to push. Before asking, check if any pending commit touches production resources — if so, warn explicitly about automatic ArgoCD sync and pod restarts.
 - After push, verify sync: `kubectl -n argocd get application <app-name> -o jsonpath='{.status.sync.status}' | cat`
 
-## DSpace Configuration — Three-Layer Model
+## DSpace Configuration — Current Model
 
-**Before editing any DSpace property**, look it up in `environments/deepblue-documents/configuration/CLASSIFY.md`.
+The legacy `environments/deepblue-documents/configuration/` directory has been removed.
+Do not recreate it or reference retired docs from that path.
 
-- **Bucket A** (shared non-secret): edit `lib/deepblue-backend-cm.jsonnet`. Do **not** duplicate in per-env files.
-- **Bucket B** (env-specific non-secret): edit `environments/deepblue-documents/<env>/backend-cm.jsonnet`.
-- **Bucket C** (credentials): `kubectl -n <NS> create secret generic dspace-secrets ...`. Never commit.
-- **Layer 3c** (`oidc-cfg` Secret): `kubectl` only. See `CLASSIFY.md § Layer 3c`.
-- **Layers 1 & 2** are retired (2026-04-27). Do not reference or recreate.
+- **Shared non-secret overrides:** edit `lib/deepblue-backend-cm.jsonnet`.
+- **Env-specific non-secret overrides:** edit `environments/deepblue-documents/<env>/backend-cm.jsonnet`.
+- **Credentials:** manage via Kubernetes Secrets (for example `dspace-secrets`) using `kubectl`; never commit secret values.
+- **OIDC module config (`oidc-cfg` Secret):** `kubectl` only.
 
 After editing `.jsonnet`/`.libsonnet`: `tk show environments/deepblue-documents/<env>` then `tk diff`.
 
@@ -156,9 +156,7 @@ After editing `.jsonnet`/`.libsonnet`: `tk show environments/deepblue-documents/
 
 After adding/modifying any `__P__`/`__D__` key in `backend-cm.jsonnet`: `python3 dotpy/validate_cm_keys.py`
 
-ERRORS = encoding bug (fix before commit). WARNINGS = key not in upstream (check CLASSIFY.md).
-
-If `upstream.dspace.cfg` missing (gitignored): `docker run --rm ghcr.io/mlibrary/dspace-containerization/dspace-source:umich cat /dspace/config/dspace.cfg > environments/deepblue-documents/configuration/upstream.dspace.cfg`
+ERRORS = encoding bug (fix before commit). WARNINGS = potentially custom key — verify intent from current repo files and task context.
 
 | DSpace property                              | Correct ConfigMap key                                        |
 |----------------------------------------------|--------------------------------------------------------------|

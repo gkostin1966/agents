@@ -94,14 +94,14 @@ Rails server starts inside the container?
 
 ---
 
-**Q11.** What command runs the full Rails test suite inside the container?
+**Q11.** What command runs the full Rails test suite in local development (with infrastructure services in Docker and no Docker `app` service)?
 
 *(Hint: `AGENTS.md` § Ruby on Rails Conventions)*
 
 ---
 
 **Q12.** Before committing Ruby source files, what two RuboCop commands should you run
-(auto-fix then check), written as full `docker compose exec` invocations?
+(auto-fix then check), using local project binstubs and not the Docker `app` service?
 
 *(Hint: `AGENTS.md` § Ruby on Rails Conventions)*
 
@@ -151,8 +151,9 @@ more work, how do you reopen and track that follow-up work?
 
 ---
 
-**Q18.** How do you fully start the local development environment from scratch?
-List every command in order, including the Solr initialisation step. Also, if
+**Q18.** How do you fully start the local development environment from scratch,
+given that Docker is used only for infrastructure services and the `app` service
+must not be used? List every command in order, including the Solr initialisation step. Also, if
 verification is blocked during task work, what exact details must be reported in
 `STATUS.md`?
 

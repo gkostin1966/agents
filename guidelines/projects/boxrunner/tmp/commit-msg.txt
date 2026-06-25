@@ -1,5 +1,5 @@
-chore: add devcontainer setup
+style: enforce frozen string literal comments across Ruby sources
 
-Add a devcontainer that reuses the root compose setup and
-root Dockerfile to minimize drift, while adding a small
-devcontainer-specific compose override and workspace config.
+- enable Style/FrozenStringLiteralComment with always_true in .rubocop.yml
+- auto-correct Ruby files to add # frozen_string_literal: true where missing
+- align app, config, tasks, specs, and tests with the enforced style rule

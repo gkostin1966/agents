@@ -1,0 +1,207 @@
+--progress is a global compose flag, better use `docker compose --progress xx build ...
+ Image boxrunner-resque Building 
+#1 [internal] load local bake definitions
+#1 reading from stdin 536B done
+#1 DONE 0.0s
+
+#2 [internal] load build definition from Dockerfile
+#2 transferring dockerfile: 3.39kB done
+#2 DONE 0.0s
+
+#3 [auth] docker/dockerfile:pull token for registry-1.docker.io
+#3 DONE 0.0s
+
+#4 resolve image config for docker-image://docker.io/docker/dockerfile:1
+#4 DONE 0.3s
+
+#5 docker-image://docker.io/docker/dockerfile:1@sha256:87999aa3d42bdc6bea60565083ee17e86d1f3339802f543c0d03998580f9cb89
+#5 resolve docker.io/docker/dockerfile:1@sha256:87999aa3d42bdc6bea60565083ee17e86d1f3339802f543c0d03998580f9cb89 0.0s done
+#5 CACHED
+
+#6 [auth] library/ruby:pull token for registry-1.docker.io
+#6 DONE 0.0s
+
+#7 [internal] load metadata for docker.io/library/ruby:3.4.9-slim
+#7 DONE 0.1s
+
+#8 [internal] load .dockerignore
+#8 transferring context: 916B done
+#8 DONE 0.0s
+
+#9 [base 1/3] FROM docker.io/library/ruby:3.4.9-slim@sha256:bfb50db4c26dcfd43a31d25f8809b7c81a438ead6931e2825f2fe384d2391a42
+#9 resolve docker.io/library/ruby:3.4.9-slim@sha256:bfb50db4c26dcfd43a31d25f8809b7c81a438ead6931e2825f2fe384d2391a42 done
+#9 DONE 0.0s
+
+#10 [base 2/3] WORKDIR /rails
+#10 CACHED
+
+#11 [base 3/3] RUN apt-get update -qq &&     apt-get install --no-install-recommends -y curl libjemalloc2 libvips sqlite3 &&     ln -s /usr/lib/$(uname -m)-linux-gnu/libjemalloc.so.2 /usr/local/lib/libjemalloc.so &&     rm -rf /var/lib/apt/lists /var/cache/apt/archives
+#11 CACHED
+
+#12 [stage-2 1/3] RUN groupadd --system --gid 1000 rails &&     useradd rails --uid 1000 --gid 1000 --create-home --shell /bin/bash
+#12 CACHED
+
+#13 [internal] load build context
+#13 transferring context: 1.85MB 0.6s done
+#13 DONE 0.7s
+
+#14 [build  1/11] RUN apt-get update -qq &&     apt-get install --no-install-recommends -y build-essential git libvips libyaml-dev node-gyp pkg-config python-is-python3 &&     rm -rf /var/lib/apt/lists /var/cache/apt/archives
+#14 CACHED
+
+#15 [build  2/11] RUN curl -sL https://github.com/nodenv/node-build/archive/master.tar.gz | tar xz -C /tmp/ &&     /tmp/node-build-master/bin/node-build "26.0.0" /usr/local/node &&     npm install -g yarn@1.22.22 &&     rm -rf /tmp/node-build-master
+#15 CACHED
+
+#16 [build  3/11] COPY vendor/* ./vendor/
+#16 CACHED
+
+#17 [build  4/11] COPY Gemfile Gemfile.lock ./
+#17 CACHED
+
+#18 [build  5/11] RUN bundle install &&     rm -rf ~/.bundle/ "/usr/local/bundle"/ruby/*/cache "/usr/local/bundle"/ruby/*/bundler/gems/*/.git &&     bundle exec bootsnap precompile -j 1 --gemfile
+#18 CACHED
+
+#19 [build  6/11] COPY package.json yarn.lock ./
+#19 CACHED
+
+#20 [build  7/11] RUN yarn install --immutable
+#20 CACHED
+
+#21 [build  8/11] COPY . .
+#21 DONE 1.2s
+
+#22 [build  9/11] RUN bundle exec bootsnap precompile -j 1 app/ lib/
+#22 DONE 0.4s
+
+#23 [build 10/11] RUN SECRET_KEY_BASE_DUMMY=1 ./bin/rails assets:precompile
+#23 0.745 /usr/local/bundle/ruby/3.4.0/gems/arclight-1.6.2/lib/tasks/index.rake:4: warning: /usr/local/lib/ruby/3.4.0/benchmark.rb was loaded from the standard library, but will no longer be part of the default gems starting from Ruby 4.0.0.
+#23 0.745 You can add benchmark to your Gemfile or gemspec to silence this warning.
+#23 0.745 Also please contact the author of arclight-1.6.2 to request adding benchmark into its gemspec.
+#23 1.114 yarn install v1.22.22
+#23 1.146 [1/4] Resolving packages...
+#23 1.172 success Already up-to-date.
+#23 1.176 Done in 0.06s.
+#23 1.279 yarn run v1.22.22
+#23 1.302 $ yarn build:css:compile && yarn build:css:prefix
+#23 1.416 $ sass ./app/assets/stylesheets/application.bootstrap.scss:./app/assets/builds/application.css --no-source-map --load-path=node_modules --quiet-deps --silence-deprecation=import
+#23 2.574 $ postcss ./app/assets/builds/application.css --use=autoprefixer --output=./app/assets/builds/application.css
+#23 2.946 Done in 1.67s.
+#23 3.393 I, [2026-06-24T15:17:29.330494 #7]  INFO -- : Writing /rails/public/assets/manifest-dad05bf766af0fe3d79dd746db3c1361c0583026cdf35d6a2921bccaea835331.js
+#23 3.394 I, [2026-06-24T15:17:29.331759 #7]  INFO -- : Writing /rails/public/assets/manifest-dad05bf766af0fe3d79dd746db3c1361c0583026cdf35d6a2921bccaea835331.js.gz
+#23 3.394 I, [2026-06-24T15:17:29.332070 #7]  INFO -- : Writing /rails/public/assets/application-c14cfb62089abf59155e91b72eb284a3439bca376c686d1bdd5c35620b8540a8.css
+#23 3.394 I, [2026-06-24T15:17:29.332287 #7]  INFO -- : Writing /rails/public/assets/application-c14cfb62089abf59155e91b72eb284a3439bca376c686d1bdd5c35620b8540a8.css.gz
+#23 3.395 I, [2026-06-24T15:17:29.332604 #7]  INFO -- : Writing /rails/public/assets/fonts/bootstrap-icons-d58dbdc0232480708b000373bb9f5be99101ea5a95df6a9ef080912f10588790.woff2
+#23 3.395 I, [2026-06-24T15:17:29.332896 #7]  INFO -- : Writing /rails/public/assets/fonts/bootstrap-icons-a4b4c37fb90f2582f099ab3c34870aa3badb59098220f722c971fd5744bbdb87.woff
+#23 3.395 I, [2026-06-24T15:17:29.333170 #7]  INFO -- : Writing /rails/public/assets/blacklight/logo-650a77e54d19e9576d80005d9f05fdaeb3bbe1161c000f7f3c829190e01710de.png
+#23 3.396 I, [2026-06-24T15:17:29.333784 #7]  INFO -- : Writing /rails/public/assets/application-ffaaee7e1593e312d7355a892d31c3cb5785bf0580f17b6cd3d7945ec618f1d8.js
+#23 3.396 I, [2026-06-24T15:17:29.333841 #7]  INFO -- : Writing /rails/public/assets/application-ffaaee7e1593e312d7355a892d31c3cb5785bf0580f17b6cd3d7945ec618f1d8.js.gz
+#23 3.396 I, [2026-06-24T15:17:29.334094 #7]  INFO -- : Writing /rails/public/assets/controllers/application-368d98631bccbf2349e0d4f8269afb3fe9625118341966de054759d96ea86c7e.js
+#23 3.396 I, [2026-06-24T15:17:29.334197 #7]  INFO -- : Writing /rails/public/assets/controllers/application-368d98631bccbf2349e0d4f8269afb3fe9625118341966de054759d96ea86c7e.js.gz
+#23 3.396 I, [2026-06-24T15:17:29.334252 #7]  INFO -- : Writing /rails/public/assets/controllers/hello_controller-549135e8e7c683a538c3d6d517339ba470fcfb79d62f738a0a089ba41851a554.js
+#23 3.396 I, [2026-06-24T15:17:29.334283 #7]  INFO -- : Writing /rails/public/assets/controllers/hello_controller-549135e8e7c683a538c3d6d517339ba470fcfb79d62f738a0a089ba41851a554.js.gz
+#23 3.397 I, [2026-06-24T15:17:29.334471 #7]  INFO -- : Writing /rails/public/assets/controllers/index-31a9bee606cbc5cdb1593881f388bbf4c345bf693ea24e124f84b6d5c98ab648.js
+#23 3.397 I, [2026-06-24T15:17:29.334495 #7]  INFO -- : Writing /rails/public/assets/controllers/index-31a9bee606cbc5cdb1593881f388bbf4c345bf693ea24e124f84b6d5c98ab648.js.gz
+#23 3.397 I, [2026-06-24T15:17:29.334526 #7]  INFO -- : Writing /rails/public/assets/turbo-ddc44468c3f2a177272c2635e622ef6a909e2fa74c250a9f98a31a94a87d1d29.js
+#23 3.397 I, [2026-06-24T15:17:29.334562 #7]  INFO -- : Writing /rails/public/assets/turbo-ddc44468c3f2a177272c2635e622ef6a909e2fa74c250a9f98a31a94a87d1d29.js.gz
+#23 3.397 I, [2026-06-24T15:17:29.334605 #7]  INFO -- : Writing /rails/public/assets/turbo.min-b86d83036ff04169e5bf3ebbc82e0ad528456259e47091b448f41a3cadabdb40.js
+#23 3.397 I, [2026-06-24T15:17:29.334643 #7]  INFO -- : Writing /rails/public/assets/turbo.min-b86d83036ff04169e5bf3ebbc82e0ad528456259e47091b448f41a3cadabdb40.js.gz
+#23 3.397 I, [2026-06-24T15:17:29.334683 #7]  INFO -- : Writing /rails/public/assets/turbo.min.js-c6732dc7c1683ff78fbfb710f7dda227e58db136b253b8d07628207a5ccdb6b7.map
+#23 3.397 I, [2026-06-24T15:17:29.334714 #7]  INFO -- : Writing /rails/public/assets/turbo.min.js-c6732dc7c1683ff78fbfb710f7dda227e58db136b253b8d07628207a5ccdb6b7.map.gz
+#23 3.397 I, [2026-06-24T15:17:29.334810 #7]  INFO -- : Writing /rails/public/assets/bootstrap.bundle.min-f3cc8238657f087eba0db1273738d11ad255ce42c3b73ac7a4071f477c4e37a9.js
+#23 3.397 I, [2026-06-24T15:17:29.334839 #7]  INFO -- : Writing /rails/public/assets/bootstrap.bundle.min-f3cc8238657f087eba0db1273738d11ad255ce42c3b73ac7a4071f477c4e37a9.js.gz
+#23 3.397 I, [2026-06-24T15:17:29.334869 #7]  INFO -- : Writing /rails/public/assets/blacklight/bookmark_toggle-97b6e8357b4b80f49f7978d752d5b6e7e7f728fe9415742ab71b74418d689fad.js
+#23 3.397 I, [2026-06-24T15:17:29.334893 #7]  INFO -- : Writing /rails/public/assets/blacklight/bookmark_toggle-97b6e8357b4b80f49f7978d752d5b6e7e7f728fe9415742ab71b74418d689fad.js.gz
+#23 3.397 I, [2026-06-24T15:17:29.334931 #7]  INFO -- : Writing /rails/public/assets/blacklight/button_focus-9e15a08a7a1886d78f54ed5d25655a8a07a535dcdd4de584da5c6c6d47e4188c.js
+#23 3.397 I, [2026-06-24T15:17:29.334952 #7]  INFO -- : Writing /rails/public/assets/blacklight/button_focus-9e15a08a7a1886d78f54ed5d25655a8a07a535dcdd4de584da5c6c6d47e4188c.js.gz
+#23 3.397 I, [2026-06-24T15:17:29.334981 #7]  INFO -- : Writing /rails/public/assets/blacklight/checkbox_submit-9ebcfa4e973e594a41674f2cc3b507dc5475ca17b0014abd4279c75f754cb9fe.js
+#23 3.397 I, [2026-06-24T15:17:29.335003 #7]  INFO -- : Writing /rails/public/assets/blacklight/checkbox_submit-9ebcfa4e973e594a41674f2cc3b507dc5475ca17b0014abd4279c75f754cb9fe.js.gz
+#23 3.397 I, [2026-06-24T15:17:29.335034 #7]  INFO -- : Writing /rails/public/assets/blacklight/core-9a0b4447c74a8b80416ff14a7b5e9ec78c884b95b5ed0155cae0eb01c83af0dc.js
+#23 3.397 I, [2026-06-24T15:17:29.335052 #7]  INFO -- : Writing /rails/public/assets/blacklight/core-9a0b4447c74a8b80416ff14a7b5e9ec78c884b95b5ed0155cae0eb01c83af0dc.js.gz
+#23 3.397 I, [2026-06-24T15:17:29.335082 #7]  INFO -- : Writing /rails/public/assets/blacklight/debounce-26300ecbf3b3807dbc7844415c7f5f87c5684c12038334ab29efbd9cddce3cdc.js
+#23 3.397 I, [2026-06-24T15:17:29.335104 #7]  INFO -- : Writing /rails/public/assets/blacklight/debounce-26300ecbf3b3807dbc7844415c7f5f87c5684c12038334ab29efbd9cddce3cdc.js.gz
+#23 3.397 I, [2026-06-24T15:17:29.335276 #7]  INFO -- : Writing /rails/public/assets/blacklight/facet_suggest-45dc1bb7a93afb37a798297ed4611712e9c20a45595d9b1c390ec7619d40ba8d.js
+#23 3.397 I, [2026-06-24T15:17:29.335308 #7]  INFO -- : Writing /rails/public/assets/blacklight/facet_suggest-45dc1bb7a93afb37a798297ed4611712e9c20a45595d9b1c390ec7619d40ba8d.js.gz
+#23 3.397 I, [2026-06-24T15:17:29.335338 #7]  INFO -- : Writing /rails/public/assets/blacklight/index-97d2fe204ffb9ab17af882d9e8fe00df2e832cb0b5be33ec5864437416216e65.js
+#23 3.397 I, [2026-06-24T15:17:29.335369 #7]  INFO -- : Writing /rails/public/assets/blacklight/index-97d2fe204ffb9ab17af882d9e8fe00df2e832cb0b5be33ec5864437416216e65.js.gz
+#23 3.398 I, [2026-06-24T15:17:29.335578 #7]  INFO -- : Writing /rails/public/assets/blacklight/modal-332dbdcf5e3deaf76514e32d74b77977f9f7185a8d9e1a8b4c919cf53043170d.js
+#23 3.398 I, [2026-06-24T15:17:29.335643 #7]  INFO -- : Writing /rails/public/assets/blacklight/modal-332dbdcf5e3deaf76514e32d74b77977f9f7185a8d9e1a8b4c919cf53043170d.js.gz
+#23 3.398 I, [2026-06-24T15:17:29.335713 #7]  INFO -- : Writing /rails/public/assets/blacklight/modalForm-02d8c117d37bf34110a491a76d0889980cb960ebfe1c1c2445e9de64e8637fee.js
+#23 3.398 I, [2026-06-24T15:17:29.335794 #7]  INFO -- : Writing /rails/public/assets/blacklight/modalForm-02d8c117d37bf34110a491a76d0889980cb960ebfe1c1c2445e9de64e8637fee.js.gz
+#23 3.398 I, [2026-06-24T15:17:29.335865 #7]  INFO -- : Writing /rails/public/assets/blacklight/search_context-e9b0ae43b9625d63735f2e9439b237bb34f45243066f906ad4bdbae823a7f46f.js
+#23 3.398 I, [2026-06-24T15:17:29.335961 #7]  INFO -- : Writing /rails/public/assets/blacklight/search_context-e9b0ae43b9625d63735f2e9439b237bb34f45243066f906ad4bdbae823a7f46f.js.gz
+#23 3.398 I, [2026-06-24T15:17:29.336007 #7]  INFO -- : Writing /rails/public/assets/trix-d240b6c804f99e29f5ba3efaf14373ab0cc97860e3e1110b6fdc925d8ff9d277.js
+#23 3.398 I, [2026-06-24T15:17:29.336032 #7]  INFO -- : Writing /rails/public/assets/trix-d240b6c804f99e29f5ba3efaf14373ab0cc97860e3e1110b6fdc925d8ff9d277.js.gz
+#23 3.398 I, [2026-06-24T15:17:29.336068 #7]  INFO -- : Writing /rails/public/assets/trix-27b67936197943926cb14d19903e2a81f4ed2cb745aec0e8f198e70ddf292774.css
+#23 3.398 I, [2026-06-24T15:17:29.336104 #7]  INFO -- : Writing /rails/public/assets/trix-27b67936197943926cb14d19903e2a81f4ed2cb745aec0e8f198e70ddf292774.css.gz
+#23 3.398 I, [2026-06-24T15:17:29.336150 #7]  INFO -- : Writing /rails/public/assets/actiontext-14f40b9238ba2b8b39374d5420b2f318b15f15a51f9e8efc65caf3eb3b7b9c75.js
+#23 3.398 I, [2026-06-24T15:17:29.336180 #7]  INFO -- : Writing /rails/public/assets/actiontext-14f40b9238ba2b8b39374d5420b2f318b15f15a51f9e8efc65caf3eb3b7b9c75.js.gz
+#23 3.398 I, [2026-06-24T15:17:29.336224 #7]  INFO -- : Writing /rails/public/assets/actiontext.esm-20b79cd0284fd0b78d86554fa51994f05c5e3db02fd65f7dcd2c62085c0fb46e.js
+#23 3.398 I, [2026-06-24T15:17:29.336261 #7]  INFO -- : Writing /rails/public/assets/actiontext.esm-20b79cd0284fd0b78d86554fa51994f05c5e3db02fd65f7dcd2c62085c0fb46e.js.gz
+#23 3.398 I, [2026-06-24T15:17:29.336303 #7]  INFO -- : Writing /rails/public/assets/favicon-b9324049b274f9f814afe4a06df128846ecfa709bd338b438215caf6ad1d16e0.ico
+#23 3.399 I, [2026-06-24T15:17:29.337376 #7]  INFO -- : Writing /rails/public/assets/favicon-b9324049b274f9f814afe4a06df128846ecfa709bd338b438215caf6ad1d16e0.ico.gz
+#23 3.399 I, [2026-06-24T15:17:29.337482 #7]  INFO -- : Writing /rails/public/assets/blacklight/blacklight-f349df215cbb24000fa3d8261ed60ab132710817b5ceaff75de2e9d1608381f3.js
+#23 3.400 I, [2026-06-24T15:17:29.337518 #7]  INFO -- : Writing /rails/public/assets/blacklight/blacklight-f349df215cbb24000fa3d8261ed60ab132710817b5ceaff75de2e9d1608381f3.js.gz
+#23 3.400 I, [2026-06-24T15:17:29.337565 #7]  INFO -- : Writing /rails/public/assets/blacklight/blacklight.js-081731773cadc936ec9f40728ee9dcf0451816745718edf68c82539b0065bb26.map
+#23 3.400 I, [2026-06-24T15:17:29.337596 #7]  INFO -- : Writing /rails/public/assets/blacklight/blacklight.js-081731773cadc936ec9f40728ee9dcf0451816745718edf68c82539b0065bb26.map.gz
+#23 3.400 I, [2026-06-24T15:17:29.337638 #7]  INFO -- : Writing /rails/public/assets/blacklight/blacklight.esm-98f546a68ace8273c12e5de89696c12d8421c839cb5b1114821dae0fb7362f42.js
+#23 3.400 I, [2026-06-24T15:17:29.337671 #7]  INFO -- : Writing /rails/public/assets/blacklight/blacklight.esm-98f546a68ace8273c12e5de89696c12d8421c839cb5b1114821dae0fb7362f42.js.gz
+#23 3.400 I, [2026-06-24T15:17:29.337708 #7]  INFO -- : Writing /rails/public/assets/blacklight/blacklight.esm.js-7c0dfc71a7acdd30112c91ab6fa252882e363b37f33f234cc4b1b0b5670af219.map
+#23 3.400 I, [2026-06-24T15:17:29.337891 #7]  INFO -- : Writing /rails/public/assets/blacklight/blacklight.esm.js-7c0dfc71a7acdd30112c91ab6fa252882e363b37f33f234cc4b1b0b5670af219.map.gz
+#23 3.400 I, [2026-06-24T15:17:29.338184 #7]  INFO -- : Writing /rails/public/assets/arclight/arclight-5ab382d47357bb603250a735d667a3d450882fa90304c650b2a65f71d6551015.js
+#23 3.400 I, [2026-06-24T15:17:29.338221 #7]  INFO -- : Writing /rails/public/assets/arclight/arclight-5ab382d47357bb603250a735d667a3d450882fa90304c650b2a65f71d6551015.js.gz
+#23 3.400 I, [2026-06-24T15:17:29.338264 #7]  INFO -- : Writing /rails/public/assets/arclight/oembed_controller-3754c1de2d5e5e9dac39b04f8e7427737b2a522e644ffafc0215854fc942961b.js
+#23 3.400 I, [2026-06-24T15:17:29.338293 #7]  INFO -- : Writing /rails/public/assets/arclight/oembed_controller-3754c1de2d5e5e9dac39b04f8e7427737b2a522e644ffafc0215854fc942961b.js.gz
+#23 3.400 I, [2026-06-24T15:17:29.338325 #7]  INFO -- : Writing /rails/public/assets/arclight/truncate_controller-7c4ca7ce02d69de45340c089f98a9b0c58a65b1af5ed1cdfea9cd6171d21fafe.js
+#23 3.400 I, [2026-06-24T15:17:29.338358 #7]  INFO -- : Writing /rails/public/assets/arclight/truncate_controller-7c4ca7ce02d69de45340c089f98a9b0c58a65b1af5ed1cdfea9cd6171d21fafe.js.gz
+#23 3.400 I, [2026-06-24T15:17:29.338394 #7]  INFO -- : Writing /rails/public/assets/stimulus-f75215805563870a61ee9dc5a207ce46d4675c7e667558a54344fd1e7baa697f.js
+#23 3.400 I, [2026-06-24T15:17:29.338414 #7]  INFO -- : Writing /rails/public/assets/stimulus-f75215805563870a61ee9dc5a207ce46d4675c7e667558a54344fd1e7baa697f.js.gz
+#23 3.400 I, [2026-06-24T15:17:29.338456 #7]  INFO -- : Writing /rails/public/assets/stimulus-autoloader-c584942b568ba74879da31c7c3d51366737bacaf6fbae659383c0a5653685693.js
+#23 3.400 I, [2026-06-24T15:17:29.338491 #7]  INFO -- : Writing /rails/public/assets/stimulus-autoloader-c584942b568ba74879da31c7c3d51366737bacaf6fbae659383c0a5653685693.js.gz
+#23 3.401 I, [2026-06-24T15:17:29.338527 #7]  INFO -- : Writing /rails/public/assets/stimulus-importmap-autoloader-db2076c783bf2dbee1226e2add52fef290b5d31b5bcd1edd999ac8a6dd31c44a.js
+#23 3.401 I, [2026-06-24T15:17:29.338611 #7]  INFO -- : Writing /rails/public/assets/stimulus-importmap-autoloader-db2076c783bf2dbee1226e2add52fef290b5d31b5bcd1edd999ac8a6dd31c44a.js.gz
+#23 3.401 I, [2026-06-24T15:17:29.338670 #7]  INFO -- : Writing /rails/public/assets/stimulus-loading-3576ce92b149ad5d6959438c6f291e2426c86df3b874c525b30faad51b0d96b3.js
+#23 3.401 I, [2026-06-24T15:17:29.338711 #7]  INFO -- : Writing /rails/public/assets/stimulus-loading-3576ce92b149ad5d6959438c6f291e2426c86df3b874c525b30faad51b0d96b3.js.gz
+#23 3.401 I, [2026-06-24T15:17:29.338753 #7]  INFO -- : Writing /rails/public/assets/stimulus.min-dd364f16ec9504dfb72672295637a1c8838773b01c0b441bd41008124c407894.js
+#23 3.401 I, [2026-06-24T15:17:29.338793 #7]  INFO -- : Writing /rails/public/assets/stimulus.min-dd364f16ec9504dfb72672295637a1c8838773b01c0b441bd41008124c407894.js.gz
+#23 3.401 I, [2026-06-24T15:17:29.338833 #7]  INFO -- : Writing /rails/public/assets/stimulus-autoloader-c584942b568ba74879da31c7c3d51366737bacaf6fbae659383c0a5653685693.js
+#23 3.401 I, [2026-06-24T15:17:29.338864 #7]  INFO -- : Writing /rails/public/assets/stimulus-autoloader-c584942b568ba74879da31c7c3d51366737bacaf6fbae659383c0a5653685693.js.gz
+#23 3.401 I, [2026-06-24T15:17:29.338897 #7]  INFO -- : Writing /rails/public/assets/stimulus-importmap-autoloader-db2076c783bf2dbee1226e2add52fef290b5d31b5bcd1edd999ac8a6dd31c44a.js
+#23 3.401 I, [2026-06-24T15:17:29.338969 #7]  INFO -- : Writing /rails/public/assets/stimulus-importmap-autoloader-db2076c783bf2dbee1226e2add52fef290b5d31b5bcd1edd999ac8a6dd31c44a.js.gz
+#23 3.401 I, [2026-06-24T15:17:29.339007 #7]  INFO -- : Writing /rails/public/assets/stimulus-loading-3576ce92b149ad5d6959438c6f291e2426c86df3b874c525b30faad51b0d96b3.js
+#23 3.401 I, [2026-06-24T15:17:29.339155 #7]  INFO -- : Writing /rails/public/assets/stimulus-loading-3576ce92b149ad5d6959438c6f291e2426c86df3b874c525b30faad51b0d96b3.js.gz
+#23 3.402 I, [2026-06-24T15:17:29.340313 #7]  INFO -- : Writing /rails/public/assets/stimulus.min.js-2cc63625fa177963b45da974806e7aee846cbf1d4930815733d0fdf3fb232325.map
+#23 3.403 I, [2026-06-24T15:17:29.340747 #7]  INFO -- : Writing /rails/public/assets/stimulus.min.js-2cc63625fa177963b45da974806e7aee846cbf1d4930815733d0fdf3fb232325.map.gz
+#23 3.403 I, [2026-06-24T15:17:29.340800 #7]  INFO -- : Writing /rails/public/assets/activestorage-540a3fb0ba30935e8ef6a0c69d58dec4561a97dcfd297908db089c4d725bb22a.js
+#23 3.406 I, [2026-06-24T15:17:29.343784 #7]  INFO -- : Writing /rails/public/assets/activestorage-540a3fb0ba30935e8ef6a0c69d58dec4561a97dcfd297908db089c4d725bb22a.js.gz
+#23 3.407 I, [2026-06-24T15:17:29.345324 #7]  INFO -- : Writing /rails/public/assets/activestorage.esm-3f2e9c040e7870f701a98bbbb1c77c979bbbdab80af967b59174f14d9388a0c1.js
+#23 3.408 I, [2026-06-24T15:17:29.345943 #7]  INFO -- : Writing /rails/public/assets/activestorage.esm-3f2e9c040e7870f701a98bbbb1c77c979bbbdab80af967b59174f14d9388a0c1.js.gz
+#23 3.409 I, [2026-06-24T15:17:29.346651 #7]  INFO -- : Writing /rails/public/assets/actioncable-323d156a10054ee2c94ba8a17c20458f542a17234f934ea53d16e0e1899fda5e.js
+#23 3.409 I, [2026-06-24T15:17:29.347130 #7]  INFO -- : Writing /rails/public/assets/actioncable-323d156a10054ee2c94ba8a17c20458f542a17234f934ea53d16e0e1899fda5e.js.gz
+#23 3.410 I, [2026-06-24T15:17:29.348209 #7]  INFO -- : Writing /rails/public/assets/actioncable.esm-b66d83871f0a453b10ba8b4c147c2bafa655caaa5d13fa34e9bf361c1c2aedb7.js
+#23 3.411 I, [2026-06-24T15:17:29.348750 #7]  INFO -- : Writing /rails/public/assets/actioncable.esm-b66d83871f0a453b10ba8b4c147c2bafa655caaa5d13fa34e9bf361c1c2aedb7.js.gz
+#23 DONE 3.5s
+
+#24 [build 11/11] RUN rm -rf node_modules
+#24 DONE 0.4s
+
+#25 [stage-2 2/3] COPY --chown=rails:rails --from=build /usr/local/bundle /usr/local/bundle
+#25 DONE 1.0s
+
+#26 [stage-2 3/3] COPY --chown=rails:rails --from=build /rails /rails
+#26 DONE 2.9s
+
+#27 exporting to image
+#27 exporting layers
+#27 exporting layers 15.3s done
+#27 exporting manifest sha256:a4b705cf81c65e31e13ed1ee9f59a351736497a28fdd9f6c43dc1dbeea48c706
+#27 exporting manifest sha256:a4b705cf81c65e31e13ed1ee9f59a351736497a28fdd9f6c43dc1dbeea48c706 0.0s done
+#27 exporting config sha256:eeb7409f09431ac09d1a97c5b10ac2289a38db2bf81853a3e5412dd3e72ea8c8 0.0s done
+#27 exporting attestation manifest sha256:663d3d51dcceb18b2aa5c1639644a8682bba2dd37a0725d3059971b2a45ca568 0.0s done
+#27 exporting manifest list sha256:e4c27c456db1d1961990eda7d0f1f96d5c36108bb8d2d17ade1b7246ede7d558 done
+#27 naming to docker.io/library/boxrunner-resque:latest done
+#27 unpacking to docker.io/library/boxrunner-resque:latest
+#27 unpacking to docker.io/library/boxrunner-resque:latest 6.3s done
+#27 DONE 21.7s
+
+#28 resolving provenance for metadata file
+#28 DONE 0.0s
+ Image boxrunner-resque Built 

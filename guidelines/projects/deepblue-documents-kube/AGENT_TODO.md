@@ -10,15 +10,16 @@
 
 ### Key supporting files — DEEPBLUE-466 DEMO (Steps 4b–10, blocked on HITS)
 
+> Legacy note: `environments/deepblue-documents/configuration/` has been removed from this repository.
+> Any references to that path below are historical context only and should not be treated as active file locations.
+
 | File                                                            | Purpose                                                                                    |
 |-----------------------------------------------------------------|--------------------------------------------------------------------------------------------|
 | `dotpy/check_dspace_rt2.py`                                     | Verify DSpace REST API, OAI-PMH, auth, and deposit access before configuring Elements      |
-| `environments/deepblue-documents/configuration/DSPACE_ADMIN.md` | How to look up/reset the DSpace admin credentials needed for checks 3–5                    |
 | `plans/PLAN466DEMO.md`                                          | Step-by-step plan with demo-specific URLs and UUIDs                                        |
 | `dotpy/patch_harvest_crosswalk.py`                              | Step 2 first pass: replaces `select-using="xpath"` → `"jsonpath"` in field-source elements |
 | `dotpy/fix_harvest_crosswalk_dspace7.py`                        | Step 2 second pass: fixes JSONPath expressions, conditions, repository-status mapping      |
 | `dotpy/patch_deposit_crosswalk.py`                              | Step 3: adds collection UUID `id=` attributes to deposit crosswalk                         |
-| `environments/deepblue-documents/configuration/crosswalks/`     | Drop downloaded crosswalk XML files here; also contains `license.txt` ready for upload     |
 | `environments/deepblue-documents/demo/backend-cm.jsonnet`       | Demo ConfigMap — contains PR collection UUID and all env-specific overrides                |
 
 **Findings from Step 1 (completed 2026-04-22):**
@@ -44,7 +45,7 @@
 - Substituted with 'pacerda Testing ground' (`80ca6e1d-fcc4-407f-9484-d3c64a420c73`) — comment in XML flags this for production restore
 
 **Findings from Step 3b — DSpace readiness check (completed 2026-04-23):**
-- `dbrrds@umich.edu` password was unknown; reset via `dspace user --modify` (see `configuration/DSPACE_ADMIN.md`)
+- `dbrrds@umich.edu` password was unknown; reset via `dspace user --modify` (legacy note referenced `configuration/DSPACE_ADMIN.md`, now removed)
 - All 5 `check_dspace_rt2.py` checks PASS: REST API ✓, OAI-PMH ✓, auth ✓, collection ✓, deposit ✓
 - Fixed CSRF rotation bug in `check_dspace_rt2.py`: DSpace 7 issues a new CSRF token after login and after each POST; script now captures token from response headers at each step
 
@@ -202,7 +203,7 @@ Elements 7.0 upgrade (March 5–6, 2026) and the earlier DSpace 7.6.0 upgrade
 (November 2025). Full plan in `plans/PLAN466.md`.
 
 - [x] Step 1a — Verify production prerequisites (REST API, OAI-PMH): REST API (`https://backend.production.deepblue-documents.lib.umich.edu/server/api`) ✓ DSpace 7.6; OAI-PMH (`https://backend.production.deepblue-documents.lib.umich.edu/server/oai/request`) ✓ HTTP 200 — Elements version and data source status require manual verification with HITS
-- [x] Step 1b — Locate production DSpace admin credentials: **`deepblue-elements@umich.edu`** (UUID `57f90d39-…`, name "For Deposit, Symplectic") — dedicated production service account for Elements RT2. Password not in repo; reset via `kubectl -n production exec ... dspace user --modify` if needed. See `configuration/DSPACE_ADMIN.md`.
+- [x] Step 1b — Locate production DSpace admin credentials: **`deepblue-elements@umich.edu`** (UUID `57f90d39-…`, name "For Deposit, Symplectic") — dedicated production service account for Elements RT2. Password not in repo; reset via `kubectl -n production exec ... dspace user --modify` if needed. (Legacy note referenced `configuration/DSPACE_ADMIN.md`, now removed.)
 - [x] Step 2a — Production harvest crosswalk already downloaded: `crosswalks/dspace-Harvest-XwalkIn-map.xml` (original in repo). Ran both patch scripts → `harvest-production-patched.xml` ready: 0 remaining `select-using="xpath"`, 26 JSONPath conditions, authors/funding/public-url/repository-status all fixed
 - [x] Step 3a — Production deposit crosswalk already downloaded: `crosswalks/dspace-Deposit-XwalkOut-map.xml` (DEEPBLUE-497-fixed canonical version; pre-fix original saved as `PRE-DEEPBLUE-497_dspace-Deposit-XwalkOut-map.xml`). Deposit target 'Michigan Research Experts Deposits' **exists** in production (UUID `ee9d8886-9a8f-47d9-99d0-923d687fe381`, confirmed from REST API). Ran patch script → `deposit-production-patched.xml` ready
 - [x] Step 4a — `license.txt` already prepared from demo pod (same license text applies to production); file at `crosswalks/license.txt`

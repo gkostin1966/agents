@@ -1,13 +1,13 @@
 # ARC-139 — STATUS
 
 ## Last Updated
-2026-06-18 — Developer verified jobs-to-services refactor completion; ARC-139 moved to Developer Verified.
+2026-06-23 — Reopened ARC-139 for no-Docker-app-service command-guidance updates in `.agents` docs.
 
 ## Current Branch
 ARC-139-IngestAutomationJob
 
 ## Open Tasks
-- None (all TODO subtasks are checked)
+- Verify with the developer that the binstub and no-Docker-app-service guidance updates are complete
 
 ## Open Plans
 | File       | Purpose                      | Status      |
@@ -15,6 +15,20 @@ ARC-139-IngestAutomationJob
 | (none yet) | Document changes are in TODO | Completed   |
 
 ## Recent Activity
+- Updated `.agents/AGENTS.md` Ruby conventions to prohibit Docker `app` service usage during local development and use local binstubs for Rails/RuboCop commands.
+- Updated `.agents/AGENT_QUIZ.md` and `.agents/AGENT_QUIZ_ANSWERS.md` questions/answers so startup, test, and lint commands no longer rely on Docker `app` service.
+- Verified no remaining `.agents` command examples use `docker compose exec app`, `docker compose run --rm app`, or `docker compose up -d app`.
+- Reopened ARC-139 for `.agents` follow-up and set `.agents/tasks/README.md` status back to `Open`.
+- Updated `.agents/AGENTS.md` to prefer Bundler binstubs (`bin/rails`, `bin/rubocop`) for local development commands run in Docker.
+- Updated `.agents/AGENT_QUIZ.md` Q12 wording and `.agents/AGENT_QUIZ_ANSWERS.md` A11/A12 commands to match binstub guidance.
+- Verified no remaining `.agents` references to `bundle exec` via text search.
+- Developer confirmed the compose default-services and onboarding-doc updates are complete.
+- Marked final verification subtask complete in `.agents/tasks/ARC-139/TODO.md` and set `ARC-139` status back to `Developer Verified` in `.agents/tasks/README.md`.
+- Reopened ARC-139 for follow-up local-development workflow changes and set `.agents/tasks/README.md` status back to `Open`.
+- Updated `compose.yml` to make `app` opt-in via `profiles: [app]`, so default `docker compose up -d` starts supporting services only.
+- Verified compose behavior live: default startup excludes `app`; explicit `docker compose up -d app` starts `app`.
+- Added local startup instructions to `README.md` with services-first startup and explicit app startup commands.
+- Updated `.agents/AGENTS.md`, `.agents/AGENT_QUIZ.md`, and `.agents/AGENT_QUIZ_ANSWERS.md` to reflect the new default compose behavior.
 - Developer confirmed the jobs-to-services refactor task is complete.
 - Marked final verification subtask complete in `.agents/tasks/ARC-139/TODO.md` and set `ARC-139` status to `Developer Verified` in `.agents/tasks/README.md`.
 - Moved `lib/box/traject/ead2_config.rb` to `config/traject/ead2_config.rb` and removed the legacy lib copy to avoid Zeitwerk constant autoload mismatch.
@@ -69,8 +83,19 @@ ARC-139-IngestAutomationJob
 ## Key Context
 - The quiz should grade against current repository state, not bootstrap assumptions.
 - Archive guidance must be explicitly present in `AGENTS.md` if the answer key requires it.
+- `compose.yml` default startup now intentionally excludes `app`; bring up Rails explicitly with `docker compose up -d app`.
+- Local-development command guidance in `.agents` now prefers binstubs over `bundle exec` for Rails and RuboCop.
+- Local-development guidance in `.agents` now treats Docker as infrastructure-only and explicitly disallows using the Docker `app` service.
 
 ## Verification Evidence
+- Command: `grep_search` for `exec app|run --rm app|docker compose up -d app` in `.agents/**/*.md` -> no results after documentation updates.
+- Command: `grep_search` for `bundle exec` in `.agents/**/*.md` -> no results after doc updates.
+- Developer confirmation: received explicit in-session `yes` that compose default-services and onboarding-doc updates are complete.
+- Command: `docker compose -f /Users/gkostin/GitHub/mlibrary/boxrunner/compose.yml config | cat` -> compose config is valid after adding `app` profile.
+- Command: `docker compose -f /Users/gkostin/GitHub/mlibrary/boxrunner/compose.yml config --profiles | cat` -> output `app` confirms explicit profile exists.
+- Command: `docker compose -f /Users/gkostin/GitHub/mlibrary/boxrunner/compose.yml stop app | cat` then `docker compose -f /Users/gkostin/GitHub/mlibrary/boxrunner/compose.yml up -d | cat` then `docker compose -f /Users/gkostin/GitHub/mlibrary/boxrunner/compose.yml ps --services --status running | cat` -> running services exclude `app` by default (`redis`, `resque`, `resque-web`, `solr`, `zookeeper`).
+- Command: `docker compose -f /Users/gkostin/GitHub/mlibrary/boxrunner/compose.yml up -d app | cat` -> explicit startup brings `app` up successfully.
+- Command: `docker compose -f /Users/gkostin/GitHub/mlibrary/boxrunner/compose.yml exec -e RAILS_ENV=test app bundle exec rspec spec/services/finding_aids/index_from_ead_spec.rb spec/jobs/index_finding_aid_job_spec.rb | cat` -> targeted specs pass (`3 examples, 0 failures`).
 - Command: `git --no-pager branch --show-current && git --no-pager status` -> confirmed branch `ARC-139-IngestAutomationJob` with clean working tree before closeout updates.
 - Command: `read_file` on `.agents/tasks/ARC-139/TODO.md` and `.agents/tasks/ARC-139/STATUS.md` -> verified only one remaining unchecked subtask before developer confirmation.
 - Developer confirmation: received explicit confirmation in session chat that the warning reduction change is complete.
@@ -84,5 +109,6 @@ ARC-139-IngestAutomationJob
 - Remaining unverified scope: post-merge archive step.
 
 ## Next Steps
-1. After the related PR merges, archive with `git mv .agents/tasks/ARC-139 .agents/archive/ARC-139`.
+1. Verify with the developer that the binstub and no-Docker-app-service guidance updates are complete.
+2. After the related PR merges, archive with `git mv .agents/tasks/ARC-139 .agents/archive/ARC-139`.
 

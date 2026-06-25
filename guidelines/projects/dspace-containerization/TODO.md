@@ -19,6 +19,7 @@ cleanup PR/operation — it must not block the `DEEPBLUE-466/Refactor` merge.
 - [ ] Verify the current state of the project achieves the task goal
 - [ ] Verify with the developer that the task is complete
 
+
 ## Fix Demo Backend: Solr Race Condition on Startup
 The `demo` backend pod's Spring Boot context failed to initialize on 2026-04-15
 because Solr was still loading when the backend started. Tomcat deployed the

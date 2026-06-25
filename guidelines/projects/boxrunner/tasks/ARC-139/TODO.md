@@ -35,4 +35,15 @@
 - [x] Add or update job specs to validate queueing and service delegation for all job classes in `app/jobs/`
 - [x] Run targeted job and service specs and confirm they pass
 - [x] Verify with the developer that the jobs-to-services refactor task is complete
+- [x] Configure `compose.yml` so default `docker compose up -d` starts only supporting services and `app` starts explicitly
+- [x] Verify compose behavior: default startup excludes `app`, and `docker compose up -d app` starts it successfully
+- [x] Update startup documentation in `README.md` for services-first local development
+- [x] Update agent onboarding docs (`.agents/AGENTS.md`, `.agents/AGENT_QUIZ.md`, `.agents/AGENT_QUIZ_ANSWERS.md`) to reflect explicit `app` startup
+- [x] Verify with the developer that the compose default-services and onboarding-doc updates are complete
+- [x] Update `.agents/AGENTS.md` Ruby command guidance to prefer binstubs (`bin/rails`, `bin/rubocop`) in local development
+- [x] Update `.agents/AGENT_QUIZ.md` and `.agents/AGENT_QUIZ_ANSWERS.md` command expectations to match binstub usage
+- [x] Update `.agents/AGENTS.md` Ruby conventions so local development never uses Docker `app` service
+- [x] Update `.agents/AGENT_QUIZ.md` and `.agents/AGENT_QUIZ_ANSWERS.md` startup/test/lint command expectations to avoid Docker `app` service
+- [x] Verify no `.agents` command guidance still uses `docker compose exec app`, `docker compose run --rm app`, or `docker compose up -d app`
+- [ ] Verify with the developer that the binstub and no-Docker-app-service guidance updates are complete
 
