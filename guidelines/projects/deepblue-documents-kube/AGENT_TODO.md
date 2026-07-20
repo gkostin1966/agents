@@ -100,20 +100,31 @@ the same time.
 Run every step in `plans/PLAN466DEMO.md` against `environments/deepblue-documents/demo`
 and verify the integration works before proceeding to production.
 
-**Findings from MITS follow-up (2026-06-24):**
-- MITS granted Greg access to Elements DEV at `https://dev.umich.elements.symplectic.org/` using Level 1 login.
-- Current observed behavior in Elements DEV is deposit failure with HTTP 403.
-- Enabling "Automated Metadata Updates" changed the error to HTTP 401.
-- Disabling that feature reverted behavior back to HTTP 403.
-- MITS requested additional configuration/permission guidance and offered a live troubleshooting call.
+**Findings from MITS follow-up thread (2026-04-24 → 2026-06-24) — see `communications/email-mits-deepblue-466-dev-thread.md`:**
+- Greg's **April 24 email** to MITS specified `dbrrds@umich.edu` as the demo REST credentials.
+  ⚠️ **Credential discrepancy:** `deepblue@umich.edu` was created as the dedicated demo service account on
+  2026-05-15 — Greg's original email predated this. It is unknown which account MITS actually configured.
+  This mismatch is the primary suspect for the HTTP 403 failures.
+- MITS applied new config (license + API password) in DEV on 2026-06-12; synchroniser running.
+- Rebecca Welzenbach tested via researcher UI on 2026-06-19: workflow completed through all steps;
+  error only at final deposit step (screenshot + Zoom recording sent to MITS).
+- MITS confirmed HTTP 403 on deposit; enabling "Automated Metadata Updates" → HTTP 401; disabling → HTTP 403.
+- MITS interpretation: 403 = auth succeeds but insufficient permissions; 401 = auth failure.
+- MITS granted Greg direct access to DEV (`https://dev.umich.elements.symplectic.org/`) on 2026-06-24 using Level 1 login.
+- MITS offered a live troubleshooting call.
+- **License identifier**: MITS used a placeholder in May; correct identifier `deepblue-docs-terms-of-use-v2.1` has not been confirmed to MITS.
 
 **Next investigation checklist (DEV, before production changes):**
+- [ ] Log in to Elements DEV (`https://dev.umich.elements.symplectic.org/`) with Level 1 credentials.
+- [ ] Confirm which REST account email is actually configured (expect `deepblue@umich.edu`; may be `dbrrds@umich.edu` per April email).
+  - If `dbrrds@umich.edu`: update to `deepblue@umich.edu` and supply correct password.
+  - If `deepblue@umich.edu`: verify password is current and account has Administrator rights in demo DSpace.
+- [ ] Confirm deposit license identifier is `deepblue-docs-terms-of-use-v2.1` (correct MITS if they used a placeholder).
 - [ ] Use runbook `/.agents/DEEPBLUE-466-DEV-LIVE-TROUBLESHOOTING.md` during the next live Elements DEV troubleshooting session.
 - [ ] Use one-page in-call checklist `/.agents/DEEPBLUE-466-DEV-CALL-CHECKLIST.md` during the live session.
-- [ ] Reproduce the DEV deposit workflow with the new account access and capture exact timestamp, user, and item used.
+- [ ] Reproduce the DEV deposit workflow and capture exact timestamp, user, and item used.
 - [ ] Confirm the Elements data source `DSpace 7.0+` setting and API/OAI URLs still match the current demo backend endpoints.
-- [ ] Verify which REST account is configured in Elements DEV (`deepblue@umich.edu` expected for demo service account) and whether it differs from prior `dbrrds@umich.edu` testing.
-- [ ] Verify the configured REST account has required DSpace permissions for deposit target collection access in demo.
+- [ ] Verify the configured REST account has required DSpace permissions for deposit target collection in demo (`pacerda Testing ground` / `80ca6e1d-fcc4-407f-9484-d3c64a420c73`).
 - [ ] Request MITS-side error details tied to the failing deposit attempt (status code + endpoint + response body or stack trace).
 
 - [x] Step 1 — Verify demo prerequisites: REST API (`https://backend.demo.deepblue-documents.lib.umich.edu/server/api`) ✓ DSpace 7.6; OAI-PMH (`https://backend.demo.deepblue-documents.lib.umich.edu/server/oai/request`) ✓ HTTP 200; ⚠️ OAI path corrected from `/oai/request` to `/server/oai/request` in `plans/PLAN466DEMO.md` — Elements version, data source status, and admin credentials require manual verification
