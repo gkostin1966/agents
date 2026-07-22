@@ -12,6 +12,7 @@ STACK_MARKERS: dict[str, tuple[str, ...]] = {
     "k8s-gitops": ("jsonnetfile.json", "environments"),
     "java-spring": ("build.gradle", "src"),
     "react-vite": ("package.json", "vite.config.js"),
+    "angular-ssr": ("package.json", "angular.json"),
     "dspace-docker": ("docker-compose.yml", "Makefile"),
     "rails-arclight": ("Gemfile", "docker-compose.yml"),
 }

@@ -2,6 +2,14 @@
 
 <!-- Entries are prepended (newest first). -->
 
+## 2026-07-22 — Add new mounted project: dspace-angular
+
+- [x] Inspect `config/projects.json` schema and naming conventions for project entries
+- [x] Add `dspace-angular` entry pointing to `/Users/gkostin/GitHub/mlibrary/dspace-angular`
+- [x] Create initial `guidelines/projects/dspace-angular/` scaffolding files required by framework conventions
+- [x] Run framework tests: `PYTHONPATH=src python3 -m unittest discover -s tests -p 'test_*.py'`
+- [x] Verified with the developer that the task is complete
+
 ## 2026-06-16T15:56:51Z — Audit dspace-containerization agent files outside vs inside .agents/
 
 Audited root-level dspace agent/task files against `.agents` equivalents and identified migration requirements.

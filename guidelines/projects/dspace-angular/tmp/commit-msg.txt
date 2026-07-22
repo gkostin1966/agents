@@ -1,0 +1,16 @@
+chore: migrate agent tracking files to .agents/ framework (out of project root)
+
+AGENTS.md, TODO.md, DONE.md, PLAN_DSPACE_ANGULAR_PASSWORD_LOGIN.md, and
+PULL_REQUEST.md are agent-framework metadata files that belong in the
+agents framework repository (.agents/ symlink), not in the project repo.
+
+Migrated to:
+  .agents/AGENT_TODO.md
+  .agents/AGENT_DONE.md
+  .agents/PLAN_DSPACE_ANGULAR_PASSWORD_LOGIN.md
+  .agents/DEEPBLUE-466-PR.md
+  .agents/DEEPBLUE-466-AGENTS.md  (archived feature-specific context)
+
+.agents/ is a symlink to the external agents framework and is gitignored.
+The project root is now free of agent-specific tracking files.
+

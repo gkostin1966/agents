@@ -79,6 +79,13 @@
       "relative_path": "boxrunner",
       "commands": {},
       "source_path": "/Users/gkostin/GitHub/mlibrary/boxrunner"
+    },
+    {
+      "name": "dspace-angular",
+      "stack": "angular-ssr",
+      "relative_path": "dspace-angular",
+      "commands": {},
+      "source_path": "/Users/gkostin/GitHub/mlibrary/dspace-angular"
     }
   ]
 }
