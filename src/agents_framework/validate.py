@@ -17,13 +17,12 @@ from .config import FrameworkConfig
 REQUIRED_FILES: tuple[str, ...] = (
     "AGENTS.md",
     "AGENT_PROMPT.md",
-)
-
-# Files that are strongly recommended but not required to pass.
-RECOMMENDED_FILES: tuple[str, ...] = (
     "AGENT_QUIZ.md",
     "AGENT_QUIZ_ANSWERS.md",
 )
+
+# Reserved for optional files that should not fail validation.
+RECOMMENDED_FILES: tuple[str, ...] = ()
 
 
 @dataclass

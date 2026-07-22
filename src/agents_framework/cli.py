@@ -84,6 +84,14 @@ def _ensure_project_guidelines(root: Path, project: str) -> list[str]:
             "AGENT_PROMPT.md",
             f"# {project} prompt\n\n## Startup Workflow\n\nAdd project startup instructions here.\n",
         ),
+        (
+            "AGENT_QUIZ.md",
+            f"# AGENT_QUIZ — {project}\n\n## Q1\nWhat are the active branch and task focus for this project?\n",
+        ),
+        (
+            "AGENT_QUIZ_ANSWERS.md",
+            f"# AGENT_QUIZ_ANSWERS — {project}\n\n## Q1\nFill in after verifying against repository files.\n",
+        ),
     ):
         target = project_dir / filename
         if target.exists():

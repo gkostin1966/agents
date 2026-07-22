@@ -2,6 +2,13 @@
 
 <!-- Entries are prepended (newest first). -->
 
+## 2026-07-22T15:26:13Z — Apply onboarding quiz pattern to all current and future projects
+
+- [x] Update project scaffolding so new projects automatically include `AGENT_QUIZ.md` and `AGENT_QUIZ_ANSWERS.md`
+- [x] Add missing onboarding quiz files to currently configured projects
+- [x] Run framework tests: `PYTHONPATH=src python3 -m unittest discover -s tests -p 'test_*.py'`
+- [x] Verify with the developer that onboarding-pattern rollout is complete
+
 ## 2026-07-22T15:04:02Z — Migrate dspace-angular agent files from project root to .agents/
 
 - [x] Copy `AGENTS.md`, `TODO.md`, `DONE.md`, `PLAN_DSPACE_ANGULAR_PASSWORD_LOGIN.md`, `PULL_REQUEST.md` from project root to `.agents/` with framework naming (`AGENT_TODO.md`, `AGENT_DONE.md`, etc.)

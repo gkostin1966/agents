@@ -374,6 +374,8 @@ class ValidateTests(unittest.TestCase):
             proj_dir.mkdir(parents=True)
             (proj_dir / "AGENTS.md").write_text("", encoding="utf-8")
             (proj_dir / "AGENT_PROMPT.md").write_text("", encoding="utf-8")
+            (proj_dir / "AGENT_QUIZ.md").write_text("", encoding="utf-8")
+            (proj_dir / "AGENT_QUIZ_ANSWERS.md").write_text("", encoding="utf-8")
 
             cfg = FrameworkConfig(
                 projects_root=Path("mounted-projects"),
@@ -399,22 +401,23 @@ class ValidateTests(unittest.TestCase):
             self.assertFalse(results[0].ok)
             self.assertIn("AGENT_PROMPT.md", results[0].missing_required)
 
-    def test_missing_recommended_does_not_fail(self) -> None:
+    def test_missing_quiz_files_now_fail_validation(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)
             proj_dir = root / "guidelines" / "projects" / "demo"
             proj_dir.mkdir(parents=True)
             (proj_dir / "AGENTS.md").write_text("", encoding="utf-8")
             (proj_dir / "AGENT_PROMPT.md").write_text("", encoding="utf-8")
-            # No quiz files
+            # Quiz files deliberately absent.
 
             cfg = FrameworkConfig(
                 projects_root=Path("mounted-projects"),
                 projects=(ProjectConfig(name="demo", stack="react-vite", relative_path="demo", commands={}),),
             )
             results = validate_projects(root, cfg)
-            self.assertTrue(results[0].ok)
-            self.assertIn("AGENT_QUIZ.md", results[0].missing_recommended)
+            self.assertFalse(results[0].ok)
+            self.assertIn("AGENT_QUIZ.md", results[0].missing_required)
+            self.assertIn("AGENT_QUIZ_ANSWERS.md", results[0].missing_required)
 
     def test_cli_validate_parser(self) -> None:
         parser = build_parser()
