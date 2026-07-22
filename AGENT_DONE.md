@@ -2,6 +2,21 @@
 
 <!-- Entries are prepended (newest first). -->
 
+## 2026-07-22T15:59:09Z — Seed DSpace project-specific onboarding guidance
+
+- [x] Add project task-state files for `dspace` (`AGENT_TODO.md`, `AGENT_DONE.md`)
+- [x] Replace default copied `dspace` `AGENTS.md` with project-specific workflow notes
+- [x] Replace default copied `dspace` `AGENT_PROMPT.md` with project-specific startup/task flow
+- [x] Validate `dspace` project files via framework CLI
+- [x] Verify with the developer that the task is complete
+
+## 2026-07-22T15:59:09Z — Add and mount project: DSpace
+
+- [x] Register `DSpace` source path in `config/projects.json`
+- [x] Initialize the mounted symlink under `mounted-projects/`
+- [x] Verify mount and `.agents` link exist
+- [x] Verify with the developer that the task is complete
+
 ## 2026-07-22T15:26:13Z — Apply onboarding quiz pattern to all current and future projects
 
 - [x] Update project scaffolding so new projects automatically include `AGENT_QUIZ.md` and `AGENT_QUIZ_ANSWERS.md`
