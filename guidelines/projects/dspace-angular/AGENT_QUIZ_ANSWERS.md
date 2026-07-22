@@ -3,7 +3,7 @@
 > Fill this only after quiz answers are complete and the developer explicitly allows comparison.
 
 ## Q1
-Record branch and ticket mapping verified from git output and `AGENTS.md`.
+Record branch and ticket mapping verified from git output and `AGENTS.md`, noting that `umich` contains customizations to the upstream fork at release 7.6.0.
 
 ## Q2
 Record exact task-state file paths (`AGENT_TODO.md`, `AGENT_DONE.md`) used for this session.

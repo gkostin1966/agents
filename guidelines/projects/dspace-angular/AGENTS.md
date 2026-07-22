@@ -8,11 +8,11 @@ Base framework rules still apply from `guidelines/base/AGENTS.md`.
 | Item              | Value                                              |
 |-------------------|----------------------------------------------------|
 | Repo              | `mlibrary/dspace-angular`                          |
-| Framework         | Angular 14 / DSpace 7.6                            |
+| Framework         | Angular 14 / DSpace 7.6.0                          |
 | Language          | TypeScript + HTML templates                        |
-| Base branch       | `umich`                                            |
+| Base branch       | `umich` (customized downstream branch at 7.6.0)    |
 | Ticket prefix     | `DEEPBLUE-`                                        |
-| Commit convention | `feat|fix|chore|docs|test: message (DEEPBLUE-NNN)` |
+| Commit convention | `feat\|fix\|chore\|docs\|test: message (DEEPBLUE-NNN)` |
 
 ## Task Files
 
@@ -25,6 +25,7 @@ Base framework rules still apply from `guidelines/base/AGENTS.md`.
 
 ## Branch Naming
 
+- `umich` is the downstream branch with customizations to the upstream fork at release 7.6.0.
 - `show-password-login` maps to `DEEPBLUE-466` (already merged to `umich`).
 - New feature branches should be cut from `umich`.
 

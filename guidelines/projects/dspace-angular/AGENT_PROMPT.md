@@ -22,6 +22,7 @@ Do not read `AGENT_QUIZ_ANSWERS.md` until all answers are written and the develo
 ## Startup Workflow
 
 - Map branch name to ticket key (`DEEPBLUE-<id>`) where possible.
+- Treat `umich` as the downstream branch with customizations to the upstream fork at release 7.6.0.
 - State whether the current work is app-code, `.agents` bookkeeping, or both.
 - If `.agents` task files are stale but fixable without ambiguity, correct them before coding.
 
