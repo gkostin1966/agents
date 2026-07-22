@@ -1,5 +1,31 @@
 # DONE
 
+## 2026-07-22T00:00:00 — Update Agent Guidance After dotpy Removal
+Updated project agent guidance to remove `dotpy/` assumptions after the decision
+to delete that directory. Script guidance now points to `.agents/scripts/shared/`
+for reusable helpers and `.agents/tmp/run.py` for one-offs.
+
+- [x] Find all `dotpy/` references in `.agents/` project guidance and quiz files
+- [x] Replace `dotpy/` instructions with `.agents/scripts` (or `.agents/tmp/run.py` for one-offs)
+- [x] Re-check edited guidance for consistency and no stale `dotpy/` mentions
+- [x] Verify the current state of the project achieves the task goal
+- [x] Verify with the developer that the task is complete
+
+Developer confirmation received on 2026-07-22; task is officially closed.
+
+## 2026-07-22T00:00:00 — Reconcile AGENT Quiz Answer Key with Repository Facts
+Compared `.agents/AGENT_QUIZ.md` and `.agents/AGENT_QUIZ_ANSWERS.md` against current
+project sources (`README.md`, `Makefile`, `docker-compose.yml`, `.agents/AGENTS.md`,
+`.agents/TODO.md`). The quiz prompts were kept; the answer key was corrected where it
+was stale or inconsistent (service descriptions, target lists, Dockerfile coverage,
+env-var encoding guidance, and the stated blocker for the open `.cpt` history task).
+
+- [x] Compare quiz prompts and key answers with project files (`README.md`, `Makefile`, `docker-compose.yml`, `.agents/AGENTS.md`, `.agents/TODO.md`)
+- [x] Update only the incorrect artifact (`AGENT_QUIZ.md` or `AGENT_QUIZ_ANSWERS.md`)
+- [x] Re-check corrected entries against source files
+- [x] Verify the current state of the project achieves the task goal
+- [x] Verify with the developer that the task is complete
+
 ## 2026-06-24T00:00:00 — Add Perl Module Text::CSV to Backend Images
 Added `libtext-csv-perl` to both backend Docker image variants so `Text::CSV`
 is present for backend Perl scripts in local/CI and deployment image paths.

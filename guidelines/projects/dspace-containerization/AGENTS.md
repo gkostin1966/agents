@@ -41,8 +41,8 @@
 
 ## Python Utility Scripts
 
-- Use existing scripts in `dotpy/` before writing ad-hoc helpers.
-- Save reusable scripts to `dotpy/` with shebang + Usage docstring + README entry.
+- Use existing scripts in `.agents/scripts/shared/` before writing ad-hoc helpers.
+- Save reusable scripts to `.agents/scripts/shared/` with shebang + Usage docstring + README entry.
 - No utility dir → write to `.agents/tmp/run.py`.
 
 ## Git Commits
@@ -50,7 +50,7 @@
 - `[when-committing]` Never amend. Never force-push. Never push to `main`.
 - `[when-committing]` Base commit suggestions on tracked/staged files only (`git status`, `git diff --staged`).
 - `[when-committing]` **Never `git commit -m "..."` for multiline** — write to `.agents/tmp/commit-msg.txt`, then `git commit -F .agents/tmp/commit-msg.txt | cat`.
-- `[when-committing]` If project has `scripts/commit.py` or `dotpy/commit.py`, use that instead.
+- `[when-committing]` If project has `scripts/commit.py` or `.agents/scripts/shared/commit.py`, use that instead.
 - `[when-committing]` Single-line exception: `git commit -m "chore: one line" | cat`.
 
 ## Pull Request Summaries
@@ -67,9 +67,9 @@
 Data rows define required column width. Pad header and separator to match widest data cell.
 
 - After editing Markdown tables, run in order:
-  1. `python3 dotpy/format_table.py <file.md>`
-  2. `python3 dotpy/check_tables.py <file.md>`
-- For separator guidance without rewriting: `python3 dotpy/calc_widths.py <file.md>`.
+  1. `python3 .agents/scripts/shared/format_table.py <file.md>`
+  2. `python3 .agents/scripts/shared/check_tables.py <file.md>`
+- For separator guidance without rewriting: `python3 .agents/scripts/shared/calc_widths.py <file.md>`.
 
 ## Response Hygiene
 

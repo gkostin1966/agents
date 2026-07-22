@@ -7,41 +7,48 @@
 
 ## Section 1 — Project Structure and Purpose
 
-**A1.** `dspace-containerization` containerises DSpace (v7+) using Docker and Docker Compose,
-enabling local development and CI testing. Services typically include: `backend` (Spring Boot),
-`frontend` (Node/React), `db` (PostgreSQL), and `solr` (Solr search).
+**A1.** `dspace-containerization` is the containerization and deployment infrastructure for
+Deep Blue Documents (U-M Library), built on DSpace 7+. It supports local development
+and CI testing with Docker/Docker Compose. The targeted upstream patch level called out
+in `README.md` is **DSpace 7.6.0** (`DSPACE_VERSION=7.6`). Core services are `backend`
+(Spring Boot), `frontend` (Angular SSR app), `db` (PostgreSQL), and `solr` (Solr).
+Optional services are `apache` and `express`.
 
-**A2.** Make targets are defined in `Makefile`. Run `make help` (or read the Makefile directly)
-to see all targets. Key targets from `AGENTS.md`: `make build`, `make up`, `make up-all`,
-`make down`, `make clean`, `make rebuild`, `make test`.
+**A2.** Make targets are defined in `Makefile`, with `help` as the default goal.
+Run `make help` (or simply `make`) to see available targets. Key targets called out in
+`AGENTS.md`: `make build`, `make up`, `make down`, `make test`.
 
 **A3.** Multiple Dockerfiles:
+- `Dockerfile` — shared source image (`dspace-containerization-source`)
 - `backend.dockerfile` — Spring Boot DSpace backend service
-- `frontend.dockerfile` — Node/React DSpace UI frontend
+- `frontend.dockerfile` — Angular SSR DSpace UI frontend
 - `db.dockerfile` — PostgreSQL database
 - `solr.dockerfile` — Solr search service
+- `apache.dockerfile` — optional Apache service
+- `express.dockerfile` — optional Express metrics service
 
 Always build through `docker compose build` or `make build`, never `docker build` directly.
 
 **A4.** Copy `.env.example` to `.env` and fill in required values before running `make up`.
 `.env` must never be committed.
 
-**A5.** GitHub Actions workflows live in `.github/workflows/`. CI must pass before any
-work is declared complete.
+**A5.** GitHub Actions workflows live in `.github/workflows/`.
+Before declaring work complete, CI should pass and local smoke checks should pass
+for changed build/runtime behavior (see `make test` / `tests/smoke.sh`).
 
 ---
 
 ## Section 2 — Configuration Pattern
 
-**A6.** DSpace property names are encoded for Docker Compose `environment:` keys using the
-same `__P__`/`__D__` encoding as the Kubernetes ConfigMap:
+**A6.** DSpace property names are encoded for Docker Compose `environment:` keys by
+replacing dot separators with `__P__`:
 - `__P__` encodes a dot (`.`)
-- `__D__` encodes a hyphen (`-`)
 
-Example with dot: `dspace.server.url` → `dspace__P__server__P__url`
-Example with hyphen: `handle.remote-resolver.enabled` → `handle__P__remote__D__resolver__P__enabled`
+Example with dot: `dspace.server.url` -> `dspace__P__server__P__url`
+Example with hyphen-containing segment (hyphen preserved, dots encoded):
+`rest.cors.allowed-origins` -> `rest__P__cors__P__allowed-origins`
 
-**A7.** Both use the `__P__`/`__D__` encoding because DSpace reads configuration from
+**A7.** Both use the same env-var key encoding pattern because DSpace reads configuration from
 environment variables injected at startup. The Docker Compose file mirrors what the
 Kubernetes ConfigMap (`backend-cm.jsonnet`) provides in production, allowing the same
 DSpace startup behavior locally and in-cluster.
@@ -60,9 +67,9 @@ format-agnostic across DSpace versions.
 and `DONE.md` (archived tasks) — note the absence of the `AGENT_` prefix used by other projects.
 
 **A10.** The open task in `TODO.md` is "Scrub Deleted `.cpt` Files from Git History".
-It is blocked because: the `.cpt` files are ccrypt-encrypted, and verifying whether they
-ever contained real credentials requires the decryption passphrase — which must be confirmed
-by the developer before running `git filter-repo` to rewrite history.
+It is blocked/deferred because it is explicitly a post-merge cleanup action that must not
+block `DEEPBLUE-466/Refactor` from merging. (Related credential/passphrase verification is
+tracked context, but the explicit blocker in `TODO.md` is the post-merge dependency.)
 
 ---
 
