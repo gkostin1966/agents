@@ -186,6 +186,32 @@ class InitMountsTests(unittest.TestCase):
             self.assertEqual(agents_link.resolve(), guidelines_dir.resolve())
             self.assertTrue(any("skip .agents: already exists" in line for line in results))
 
+    def test_creates_scaffold_directories_for_mounted_project(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            source = root / "sources" / "demo"
+            source.mkdir(parents=True)
+
+            cfg = FrameworkConfig(
+                projects_root=Path("mounted-projects"),
+                projects=(
+                    ProjectConfig(
+                        name="demo",
+                        stack="react-vite",
+                        relative_path="demo",
+                        commands={},
+                        source_path=str(source),
+                        scaffold_dirs=("communications",),
+                    ),
+                ),
+            )
+
+            results = init_mounts(root, cfg)
+
+            scaffold_dir = root / "mounted-projects" / "demo" / "communications"
+            self.assertTrue(scaffold_dir.is_dir())
+            self.assertTrue(any("created scaffold: communications" in line for line in results))
+
 
 class RunTaskTests(unittest.TestCase):
     def _make_status(self, tmp: Path, cmd: str):

@@ -35,6 +35,18 @@ def _project_guidelines_path(repo_root: Path, project: ProjectConfig) -> Path:
     return repo_root / "guidelines" / "projects" / project.name
 
 
+def _create_scaffold_dirs(dst: Path, project: ProjectConfig) -> list[str]:
+    messages: list[str] = []
+    for scaffold_dir in project.scaffold_dirs:
+        scaffold_path = dst / scaffold_dir
+        if scaffold_path.exists():
+            messages.append(f"skip scaffold: {scaffold_dir} already exists")
+            continue
+        scaffold_path.mkdir(parents=True, exist_ok=True)
+        messages.append(f"created scaffold: {scaffold_dir}")
+    return messages
+
+
 def _ensure_symlink(link: Path, target: Path) -> bool:
     if link.is_symlink():
         if link.resolve(strict=False) == target.resolve(strict=False):
@@ -114,6 +126,9 @@ def init_mounts(
         if not (dst.exists() or dst.is_symlink()):
             os.symlink(src, dst, target_is_directory=True)
             messages.append(f"linked mount -> {src}")
+
+        if dst.exists() or dst.is_symlink():
+            messages.extend(_create_scaffold_dirs(dst, project))
 
         agents_link = dst / ".agents"
         if not guidelines_dir.exists():

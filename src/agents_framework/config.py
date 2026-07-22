@@ -13,6 +13,7 @@ class ProjectConfig:
     relative_path: str
     commands: dict[str, str]
     source_path: str | None = None
+    scaffold_dirs: tuple[str, ...] = ()
 
 
 @dataclass(frozen=True)
@@ -46,6 +47,7 @@ def load_config(repo_root: Path) -> FrameworkConfig:
                 relative_path=item["relative_path"],
                 commands=item.get("commands", {}),
                 source_path=item["source_path"],
+                scaffold_dirs=tuple(item.get("scaffold_dirs", ())),
             )
         )
 
@@ -79,6 +81,7 @@ def add_project_to_config(
         "commands": {},
     }
     entry["source_path"] = source_path
+    entry["scaffold_dirs"] = []
 
     projects.append(entry)
     config_path.write_text(json.dumps(raw, indent=2) + "\n", encoding="utf-8")

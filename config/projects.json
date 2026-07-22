@@ -6,6 +6,7 @@
       "stack": "rails-arclight",
       "relative_path": "boxwalker",
       "source_path": "/Users/gkostin/GitHub/mlibrary/boxwalker",
+      "scaffold_dirs": ["communications"],
       "commands": {
         "up": "docker compose up",
         "build": "docker compose build",
@@ -18,6 +19,7 @@
       "stack": "k8s-gitops",
       "relative_path": "deepblue-documents-kube",
       "source_path": "/Users/gkostin/GitHub/mlibrary/deepblue-documents-kube",
+      "scaffold_dirs": ["communications"],
       "commands": {
         "validate": "tk show environments/clusters/deepblue-documents --dangerous-allow-redirect | head -n 30",
         "diff": "tk diff environments/clusters/deepblue-documents"
@@ -28,6 +30,7 @@
       "stack": "java-spring",
       "relative_path": "dor-depot",
       "source_path": "/Users/gkostin/GitHub/mlibrary/dor-depot",
+      "scaffold_dirs": ["communications"],
       "commands": {
         "test": "./gradlew test",
         "dev": "./gradlew bootRun"
@@ -38,6 +41,7 @@
       "stack": "react-vite",
       "relative_path": "dor-react-app",
       "source_path": "/Users/gkostin/GitHub/mlibrary/dor-react-app",
+      "scaffold_dirs": ["communications"],
       "commands": {
         "test": "npm run test -- --run",
         "lint": "npm run lint",
@@ -49,6 +53,7 @@
       "stack": "dspace-docker",
       "relative_path": "dspace-containerization",
       "source_path": "/Users/gkostin/GitHub/mlibrary/dspace-containerization",
+      "scaffold_dirs": ["communications"],
       "commands": {
         "test": "make test",
         "up": "make up"
@@ -59,6 +64,7 @@
       "stack": "k8s-gitops",
       "relative_path": "findingaids-argocd",
       "source_path": "/Users/gkostin/GitHub/mlibrary/findingaids-argocd",
+      "scaffold_dirs": ["communications"],
       "commands": {
         "validate": "tk show environments/clusters/findingaids --dangerous-allow-redirect | head -n 30"
       }
@@ -68,6 +74,7 @@
       "stack": "rails-arclight",
       "relative_path": "umich-arclight",
       "source_path": "/Users/gkostin/GitHub/mlibrary/umich-arclight",
+      "scaffold_dirs": ["communications"],
       "commands": {
         "test": "docker-compose exec -T app bundle exec rspec",
         "lint": "docker-compose exec -T app bundle exec rubocop"
@@ -78,6 +85,7 @@
       "stack": "rails-arclight",
       "relative_path": "boxrunner",
       "commands": {},
+      "scaffold_dirs": ["communications"],
       "source_path": "/Users/gkostin/GitHub/mlibrary/boxrunner"
     },
     {
@@ -85,6 +93,7 @@
       "stack": "angular-ssr",
       "relative_path": "dspace-angular",
       "commands": {},
+      "scaffold_dirs": ["communications"],
       "source_path": "/Users/gkostin/GitHub/mlibrary/dspace-angular"
     }
   ]
