@@ -2,6 +2,23 @@
 
 <!-- Entries are prepended (newest first). -->
 
+## 2026-07-30T13:23:52Z — Update deepblue scaffold_dirs defaults
+
+- [x] Add `communications` to `deepblue.scaffold_dirs` in `config/projects.json`
+- [x] Verify config entry reflects the requested scaffold directory
+- [x] Verify with the developer that the task is complete
+
+
+## 2026-07-30T13:23:52Z — Add and mount project: deepblue
+
+- [x] Add `deepblue` entry in `config/projects.json` with required fields
+- [x] Initialize the mounted symlink under `mounted-projects/`
+- [x] Seed project guideline defaults for `guidelines/projects/deepblue/`
+- [x] Validate with framework tests: `PYTHONPATH=src python3 -m unittest discover -s tests -p 'test_*.py'`
+- [x] Verify with the developer that the task is complete
+
+
+
 ## 2026-07-22T15:59:09Z — Seed DSpace project-specific onboarding guidance
 
 - [x] Add project task-state files for `dspace` (`AGENT_TODO.md`, `AGENT_DONE.md`)
