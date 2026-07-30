@@ -121,6 +121,14 @@
       "commands": {},
       "source_path": "/Users/gkostin/GitHub/mlibrary/DSpace",
       "scaffold_dirs": []
+    },
+    {
+      "name": "deepblue",
+      "stack": "rails-arclight",
+      "relative_path": "deepblue",
+      "commands": {},
+      "source_path": "/Users/gkostin/GitHub/mlibrary/deepblue",
+      "scaffold_dirs": []
     }
   ]
 }

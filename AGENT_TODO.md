@@ -11,4 +11,12 @@
 
 <!-- Add new tasks below this line. Keep the most urgent task first. -->
 
+## 2026-07-30T00:00:00Z — Add and mount project: deepblue
+
+- [x] Add `deepblue` entry in `config/projects.json` with required fields
+- [x] Initialize the mounted symlink under `mounted-projects/`
+- [x] Seed project guideline defaults for `guidelines/projects/deepblue/`
+- [x] Validate with framework tests: `PYTHONPATH=src python3 -m unittest discover -s tests -p 'test_*.py'`
+- [ ] Verify with the developer that the task is complete
+
 
