@@ -20,8 +20,9 @@ in the separate `agents` repository.
 
 ## Required Developer Input
 
-Before reading any cross-repository file, ask for the absolute path to the `agents`
-repository root on this machine. Record it as `AGENTS_ROOT` for this session.
+Default to `.agents/` in the mounted project for framework-managed metadata.
+Only ask for the absolute path to the `agents` repository root (record as `AGENTS_ROOT`)
+if `.agents/` is missing, broken, or does not contain the required task/guideline files.
 
 Do not hardcode machine-specific paths.
 
@@ -61,8 +62,9 @@ Session defaults for every new run:
 
 2. **Read local `AGENTS.md`** from the mounted project repository and follow it for all actions.
 
-3. **Read framework-managed task state** under `AGENTS_ROOT/guidelines/projects/<project>/...`
-   as defined in the project-specific `## Task Files` block.
+3. **Read framework-managed task state** from local `.agents/...` paths first.
+   If `.agents/` is unavailable, ask for `AGENTS_ROOT` and read
+   `AGENTS_ROOT/guidelines/projects/<project>/...`.
 
 4. **Ask the developer:** "Should I take the onboarding quiz?" — wait for the answer before proceeding.
    - **Yes** → follow the project-specific `## Quiz Gate` block.

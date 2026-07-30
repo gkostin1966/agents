@@ -2,6 +2,22 @@
 
 <!-- Entries are prepended (newest first). -->
 
+## 2026-07-30T13:48:10Z — Tune deepblue onboarding quiz wording for verified-only responses
+
+- [x] Update `guidelines/projects/deepblue/AGENT_QUIZ.md` Q3/Q4 to explicitly allow `N/A` when verified facts are absent
+- [x] Update `guidelines/projects/deepblue/AGENT_QUIZ_ANSWERS.md` A3/A4 to model strict verified-only `N/A` phrasing
+- [x] Run framework tests: `PYTHONPATH=src python3 -m unittest discover -s tests -p 'test_*.py'`
+- [x] Verify with the developer that the task is complete
+
+
+## 2026-07-30T13:48:10Z — Make startup prompt .agents-first for current and new projects
+
+- [x] Update `guidelines/base/AGENT_PROMPT.md` so `.agents/` is primary and `AGENTS_ROOT` is fallback-only
+- [x] Regenerate prompt outputs for all configured projects
+- [x] Run framework tests: `PYTHONPATH=src python3 -m unittest discover -s tests -p 'test_*.py'`
+- [x] Verify with the developer that the task is complete
+
+
 ## 2026-07-30T13:28:48Z — Fix token budget test failure
 
 - [x] Inspect budget limits and failing file in token guardrails

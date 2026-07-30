@@ -12,8 +12,12 @@ Which files in this project define agent operating rules and startup behavior?
 ## Q3
 Where are active and completed task records stored for this project?
 
+If no active/completed task files exist in the current `.agents/` snapshot, answer with explicit verified `N/A` wording instead of assumptions.
+
 ## Q4
 What command(s) should be used to run relevant tests for the current task?
+
+If this task does not select or require application test commands, answer with explicit verified `N/A` wording.
 
 ## Q5
 What file-access or commit constraints in the project `AGENTS.md` are most likely to affect this task?
