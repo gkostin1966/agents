@@ -1,0 +1,13 @@
+chore(setup): finalize local dev bootstrap changes
+
+Prepare repository-tracked setup updates after initial local environment bring-up.
+
+- comment out Gemfile auto bundle-config execution block used during install
+- add gkostin@umich.edu to development admin role map
+- persist current database migration state in db/schema.rb
+
+Notes:
+- local runtime compatibility fixes were applied under .bundle/ and tmp/ paths
+  for wrapper startup; those are environment-local and not part of this commit
+- services verified during setup: Fedora (8984), Solr (8983), Redis (6379)
+
