@@ -1,78 +1,65 @@
-# Agent Rules — Base Guidelines
+# Agent Rules - Base Guidelines
 
-> Shared rules for all mounted projects. Project `## Heading` overrides replace base sections.
+> Shared rules for mounted projects. Matching `## Heading` in project files replaces base sections.
 
 ## Quick Session Checklist
 
-- `[always]` Run startup orientation commands and stop for unexpected branch/working state.
-- `[always]` Read local project `AGENTS.md` and follow project-specific overrides.
-- `[always]` Identify the active ticket key from branch naming rules.
-- `[when-bookkeeping]` Read/update task state files before and after substantive work.
+- `[always]` Run startup orientation commands; stop for unexpected branch or working state.
+- `[always]` Read local `AGENTS.md` and apply project overrides.
+- `[when-bookkeeping]` Read/update task files before and after substantive work.
 - `[when-committing]` Base commit guidance on tracked/staged files only.
 
-## Rule Tags
+## .agents Policy
 
-- `[always]` Applies to every session/task.
-- `[when-bookkeeping]` Applies when maintaining `.agents` task/status metadata.
-- `[when-committing]` Applies when preparing, suggesting, or executing commit actions.
-
-## `.agents` Policy (Canonical)
-
-- `[always]` Treat `.agents/` as shared agent-framework metadata and long-term memory.
-- `[always]` Maintain relevant `.agents/` files in place when required for the active task.
-- `[always]` Do not treat `.agents/` updates as normal app-code commit content in mounted repositories.
-- `[always]` Agents do not commit `.agents/` files in mounted repositories unless the developer explicitly directs otherwise.
+- Treat `.agents/` as shared framework metadata and long-term memory.
+- Keep `.agents/` updates separate from normal app-code commit scope.
+- Do not commit `.agents/` files in mounted repos unless the developer explicitly asks.
 
 ## File Access
 
-- Stay within the project directory. Outside file: read only the specific file requested — no browsing.
-- **Never read `AGENT_QUIZ_ANSWERS.md`** until all quiz answers written **and** developer explicitly grants permission.
-- Create temporary files in `.agents/tmp/` only (for example `.agents/tmp/run.py`, `.agents/tmp/commit-msg.txt`) — never system `/tmp`.
-- Follow `## .agents Policy (Canonical)` for ownership and commit-boundary rules.
+- Stay in the project directory; outside files are read-only and only when explicitly requested.
+- Never read `AGENT_QUIZ_ANSWERS.md` until all quiz answers are written and permission is explicit.
+- Temporary files go in `.agents/tmp/` (for example `.agents/tmp/run.py`, `.agents/tmp/commit-msg.txt`), not system `/tmp`.
 
-## Command-Line Tool Usage
+## Command-Line Safety
 
-- Paging: `git --no-pager <cmd>` or `| cat`. Never interactive input.
-- **Never multiline code via `-c` flags** — zsh triggers `dquote>` heredoc mode, corrupts session silently.
-- **Never shell heredocs** (`<< 'MARKER'`) — same corruption risk; previous unclosed `<<` swallows all subsequent commands.
-- Fix for both: write to file, run the file:
-  ```shell
-  python3 scripts/myscript.py | cat   # reusable
-  python3 .agents/tmp/run.py | cat    # one-off
-  ```
-- If terminal stuck (no output / garbled): run the heredoc end-marker (`EOF`, `PYEOF`, etc.) as a standalone command to escape.
+- Use `git --no-pager <cmd>` or `| cat`; avoid interactive paging.
+- Never use multiline code with `-c` flags in zsh.
+- Never use shell heredocs (`<< 'MARKER'`) in zsh sessions.
+- Write code to a file, then run it (for example `python3 scripts/myscript.py | cat` or `python3 .agents/tmp/run.py | cat`).
+- If terminal output is stuck/garbled, run the heredoc end marker (`EOF`, `PYEOF`, and similar) as a standalone command.
 
 ## Python Utility Scripts
 
-- Check project utility-script dir first (`scripts/README.md` or `dotpy/README.md`) before writing ad-hoc helpers.
-- Save reusable scripts there; add shebang + Usage docstring + README entry.
-- No utility dir → write to `.agents/tmp/run.py`.
+- Check `scripts/README.md` or `dotpy/README.md` before creating ad-hoc helpers.
+- Save reusable scripts in the project utility dir with shebang, Usage docstring, and README entry.
+- If no utility dir exists, use `.agents/tmp/run.py`.
 
 ## Git Commits
 
-- Never amend. Never force-push. Never push to `main`.
-- When preparing or discussing commits in this repository, reason only from the current tracked/staged file set (`git status` / `git diff --staged`). Do not ask to commit `.agents/` files when they are not trackable/staged.
-- Do not make speculative commit suggestions. Only suggest commit actions grounded in the current tracked/staged set.
-- **Never `git commit -m "..."` for multiline** — write to `.agents/tmp/commit-msg.txt`, then `git commit -F .agents/tmp/commit-msg.txt | cat`.
-- If project has `scripts/commit.py` or `dotpy/commit.py`, use that instead.
+- Never amend, force-push, or push to `main`.
+- Commit suggestions must come from current tracked/staged state (`git status`, `git diff --staged`).
+- Do not suggest speculative commits or include untracked `.agents/` files.
+- For multiline messages, write `.agents/tmp/commit-msg.txt`, then run `git commit -F .agents/tmp/commit-msg.txt | cat`.
+- If available, prefer `scripts/commit.py` or `dotpy/commit.py` for multiline commit flow.
 - Single-line exception: `git commit -m "chore: one line" | cat`.
 
 ## Pull Request Summaries
 
-- Write to `pr-summary.md` (gitignored). Structure: `## Title`, `### Summary`, `### Changes`, `### Notes`. Delete after use.
+- Write to `pr-summary.md` (gitignored): `## Title`, `### Summary`, `### Changes`, `### Notes`.
 
-## Email Drafts for Third Parties
+## Email Drafts
 
-- Write drafts as `.md` files under `communications/<channel>-<topic>.md` (e.g. `communications/email-its-request.md`).
-- `communications/` is tracked in git. Do not gitignore individual draft files.
+- Write drafts as Markdown under `communications/<channel>-<topic>.md`.
+- `communications/` is tracked; do not gitignore individual draft files.
 
 ## Markdown Tables
 
-Data rows define required column width. Pad header and separator to match widest data cell.
+Data rows define required column width. Pad header and separator to the widest data cell.
 
 ## Response Hygiene
 
-- Distinguish verified facts from assumptions. If something is not verified, label it explicitly.
+- Separate verified facts from assumptions; label unknowns explicitly.
 - Do not suggest next steps that conflict with repository rules.
-- If task metadata is clearly stale or inconsistent (for example ticket index summary/status drift, or `STATUS.md` not matching `TODO.md`), fix it proactively and report the change. Do not ask for permission first when the correction is clear and non-destructive.
+- If task metadata is clearly stale or inconsistent, fix it proactively and report the correction.
 

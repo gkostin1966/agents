@@ -2,6 +2,15 @@
 
 <!-- Entries are prepended (newest first). -->
 
+## 2026-07-30T13:28:48Z — Fix token budget test failure
+
+- [x] Inspect budget limits and failing file in token guardrails
+- [x] Update `guidelines/base/AGENTS.md` to satisfy token budget constraints
+- [x] Run framework tests: `PYTHONPATH=src python3 -m unittest discover -s tests -p 'test_*.py'`
+- [x] Verify with the developer that the task is complete
+
+
+
 ## 2026-07-30T13:23:52Z — Update deepblue scaffold_dirs defaults
 
 - [x] Add `communications` to `deepblue.scaffold_dirs` in `config/projects.json`
